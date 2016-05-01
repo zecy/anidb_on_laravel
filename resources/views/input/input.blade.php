@@ -53,7 +53,6 @@
                     </div>
                 </td>
             </tr>
-
             <tr v-for="title in basicData.title" track-by="$index">
                 <td>
                     <div style="width: 35%">
@@ -85,16 +84,20 @@
                     </div>
                 </td>
             </tr>
-
             <tr>
                 <td>
-                    <pre>@{{ basicData.oriGenreLv1.haschild | json }}</pre>
+                    <pre>@{{ basicData.oriWorks | json }}</pre>
                 </td>
             </tr>
-
             <tr>
                 <td class="row">
-                    <originalworks data="{{ $oriWorks }}"></originalworks>
+                    <originalwork orilist="{{ $oriWorks }}"
+                                  :data.sync="basicData.oriWorks"
+                                  pid="0"
+                                  multiple="false"
+                                  haschild="true"
+                                  lv="0"
+                    ></originalwork>
                 </td>
             </tr>
             <tr>
@@ -227,75 +230,6 @@
         </table>
         <button @click="createData" class="btn btn-success">创建数据</button>
         </form>
-
-        <template id="original-works">
-            <div style="width: 10%">
-                <label>
-                    原作类型
-                </label>
-            </div>
-
-            <div class="ori-item" style="width: 15%">
-                <select v-model="oriGenreLv1" class="form-control">
-                    <option v-for="lv1 in data | orderBy 'ori_id' | filtByValue 0 'ori_pid'"
-                            v-bind:value="{ id:lv1.ori_id, haschild:lv1.haschild }"
-                    >
-                        @{{ lv1.ori_catalog }}
-                    </option>
-                </select>
-            </div>
-
-            <div v-if="haschild" class="ori-item" style="width: 75%">
-                <originalworkschild v-if="oriGenreLv1.id == 65"
-                                    :haschild="false"
-                                    :pid="65"
-                                    :data="data"
-                                    :selected.sync="oriGenreLv2"
-                ></originalworkschild>
-                <originalworkschild v-else
-                                    :haschild="haschild"
-                                    :pid="oriGenreLv1.id"
-                                    :data="data"
-                                    :selected.sync="oriGenreLv2"
-                ></originalworkschild>
-            </div>
-        </template>
-
-        <template id="original-works-child">
-            <div v-if="haschild" class="ori-item" style="width: 60%">
-                <div v-for="lv2 in data | filtByValue pid 'ori_pid'">
-                    <label class="ori-item" style="width:30%">@{{ lv2.ori_catalog }}</label>
-
-                    <div class="ori-item" style="width: 70%">
-                        <select v-model="selected[$index]" class="form-control">
-                            <option v-for="lv3 in data | filtByValue lv2.ori_id 'ori_pid'"
-                                    v-bind:value="{ 'id':lv3.ori_id }"
-                            >
-                                @{{ lv3.ori_catalog }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div v-if="selected[0].id == 24 || selected[0].id == 29">
-                <originalworkschild :haschild="false"
-                                    :pid="selected[0].id"
-                                    :data="data"
-                                    :selected.sync="basicData.oriGenreLv3"
-                ></originalworkschild>
-            </div>
-
-            <div v-if="!haschild"
-                 class="ori-item"
-                 style="margin-left:15px;width: 30%"
-            >
-                <select v-model="selected[$index]" class="form-control">
-                    <option v-for="lv2 in data | filtByValue pid 'ori_pid'"
-                            v-bind:value="{ 'id':lv2.ori_id }">@{{ lv2.ori_catalog }}</option>
-                </select>
-            </div>
-        </template>
 
                                                                 <!-- STAFF BIGIN -->
 
@@ -442,11 +376,7 @@
 
         <br>
 
-        <button class="btn btn-primary"
-        @click="onairDataFormat"
-                                                                >
-                                                                格式化日期
-        </button>
+        <button class="btn btn-primary" @click="onairDataFormat">格式化日期</button>
 
         <button class="btn btn-primary" @click="onairDataInput = ''">清除数据</button>
 
@@ -515,30 +445,6 @@
 
                                                                 <!-- ONAIR END -->
 
-        <template id="text-format">
-            <button class="btn btn-primary"
-            @click="format(text, pos, 'separator')"
-                  >
-                  转换分隔符
-            </button>
-            <button class="btn btn-primary"
-            @click="format(text, pos, 'cleanHTML')"
-                  >
-                  清除HTML标签
-            </button>
-            <button class="btn btn-primary"
-            @click="format(text, pos, 'oddEven')"
-                  >
-                  奇偶行合并
-            </button>
-            <button class="btn btn-primary"
-            @click="format(text, pos, 'wikiCV')"
-                  v-if="pos == 'cast'"
-                  >
-                  维基百科声优
-            </button>
-        </template>
-
         <button class="btn btn-primary" @click="outputData">转换为 JSON</button>
         <br>
         <br>
@@ -551,6 +457,100 @@
             </div>
         </div>
 
+        <!-- TEMPLATE -->
+
+        <!-- 原作类型 -->
+        <template id="ori-work">
+            <!-- Argument:
+                    pid      : 父项目 ID
+                    data     : basicData.oriWorks
+                    orilist  : 来自数据库的全部原作类型列表
+                    multiple : 子项目是否多选
+                    haschild : 是否有子项目, haschild
+                    lv       : 当前层数, ori_level
+            -->
+
+            <!-- 第一级父项目 -->
+            <div v-if="pid==0" class="">
+                <select v-model="res">
+                    <option v-for="item in orilist | filtByValue 0 'ori_pid'"
+                            :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple}">
+                        @{{ item.ori_catalog }}
+                    </option>
+                </select>
+                <div v-if="res.haschild">
+                    <originalwork
+                            :pid="res.id"
+                            :data.sync="data"
+                            :orilist="orilist"
+                            :multiple="res.multiple"
+                            :haschild="res.haschild"
+                            lv="1"
+                    >
+                    </originalwork>
+                </div>
+            </div>
+
+            <!-- 子项目 -->
+            <div v-if="pid>0">
+                <!-- 子项目单选 -->
+                <div v-if="!multiple">
+                    <select v-model="data[lv]">
+                        <option v-for="item in orilist | filtByValue pid 'ori_pid'"
+                                v-bind:value="item.ori_id"
+                        >
+                            @{{ item.ori_catalog }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 子项目多选 -->
+                <div v-if="multiple"
+                     v-for="lv1 in orilist | filtByValue pid 'ori_pid'"
+                >
+                    <!--  -->
+                    <label>@{{ lv1.ori_catalog }}</label>
+                    <input class="hidden" type="text" v-model="data[lv][$index]" :value="lv1.id">
+
+                    <!-- 模板递归 -->
+                    <originalwork
+                              :pid="item.ori_id"
+                              :data.sync="data"
+                              orilist="{{ $oriWorks }}"
+                              :multiple="item.multiple"
+                              :haschild="item.haschild"
+                              lv="lv+1"
+                    ></originalwork>
+                </div>
+            </div>
+        </template>
+
+        <!-- 信息栏内容格式化按钮 -->
+        <template id="text-format">
+            <button class="btn btn-primary"
+                    @click="format(text, pos, 'separator')"
+            >
+                  转换分隔符
+            </button>
+            <button class="btn btn-primary"
+                    @click="format(text, pos, 'cleanHTML')"
+            >
+                  清除HTML标签
+            </button>
+            <button class="btn btn-primary"
+                    @click="format(text, pos, 'oddEven')"
+            >
+                  奇偶行合并
+            </button>
+            <button class="btn btn-primary"
+                    @click="format(text, pos, 'wikiCV')"
+                    v-if="pos == 'cast'"
+            >
+                  维基百科声优
+            </button>
+        </template>
+
+        <!-- 重要按钮 -->
         <template id="toggle-button">
             <button @click="toggle = !toggle" type="button"
                           v-bind:class="toggle?'btn-primary':'btn-default'"
@@ -561,6 +561,7 @@
             </button>
         </template>
 
+        <!-- 行上下增删操作 -->
         <template id="row-control">
             <div class="@{{ style }}">
                 <div class="col-xs-3">

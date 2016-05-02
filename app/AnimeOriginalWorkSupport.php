@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AnimeOriginalWork extends Model
+class AnimeOriginalWorkSupport extends Model
 {
     protected $table      = 'anime_original_work_support';
     protected $primaryKey = 'ori_id';

@@ -27,7 +27,7 @@ class AnimeInput extends Controller
         $animeDurationFormat = \App\ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
         //$oriGrenres = new TreeData(\App\AnimeOriginalWork::all()->toArray(),'ori_id','ori_pid');
         //$oriWorks = json_encode($oriGrenres->result());
-        $oriWorks = \App\AnimeOriginalWork::all()->toJson();
+        $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
         //dd($oriWorks);
         //数据库内容赋值到 view
         return view('input.input', compact('transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));

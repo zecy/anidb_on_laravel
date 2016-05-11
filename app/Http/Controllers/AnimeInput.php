@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AnimeBasicData;
 use App\AnimeLinks;
 use App\AnimeTrans;
+use App\AnimeOriginalWork;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -57,6 +58,7 @@ class AnimeInput extends Controller
         $res = array();
 
         \DB::transaction(function () use ($data, &$res) {
+            //基本信息
             $basicData = AnimeBasicData::create([
                 'anime_series_id'       => $data['seriesID']['value'],
                 'anime_abbr'            => $data['abbr']['value'],
@@ -75,7 +77,7 @@ class AnimeInput extends Controller
             $basicData->anime_description = $data['description']['value'];
 
             $basicData->save();
-
+            //生成 ID
             $ID = $basicData->anime_id;
 
             // Title
@@ -93,7 +95,25 @@ class AnimeInput extends Controller
             }
 
             // Original Works
-
+            //TODO
+            foreach ($data['oriWorks'] as $lv) {
+                $i = 0;
+                foreach ( $lv as $origenres ) {
+                    if($origenres['id'] != '' && $origenres['id'] != 0) {
+                        $origenres = AnimeOriginalWork::create(
+                            [
+                                'anime_id' => $ID,
+                                'ori_id'   => $origenres['ori_id'],
+                                'ori_pid'  => $origenres['ori_pid'],
+                                'lv'       => $i,
+                                'haschild' => $origenres['haschild'],
+                                'multiple' => $origenres['multiple']
+                            ]
+                        );
+                    }
+                }
+                $i++;
+            }
 
             // Links
             foreach ($data['links'] as $theLink) {

@@ -91,12 +91,13 @@
             </tr>
             <tr>
                 <td class="row">
-                    <originalwork orilist="{{ $oriWorks }}"
+                    <originalwork :orilist="{{ $oriWorks }}"
                                   :data.sync="basicData.oriWorks"
                                   pid="0"
                                   multiple="false"
                                   haschild="true"
-                                  lv="0"
+                                  :lv=0
+                                  :index="0"
                     ></originalwork>
                 </td>
             </tr>
@@ -231,7 +232,7 @@
         <button @click="createData" class="btn btn-success">创建数据</button>
         </form>
 
-                                                                <!-- STAFF BIGIN -->
+                                                                {{-- STAFF BIGIN --}}
 
         <h2>Staff信息</h2>
 
@@ -300,11 +301,11 @@
             </table>
         </form>
 
-                                                                <!-- STAFF END -->
+                                                                {{-- STAFF END --}}
 
         <br>
 
-                                                                <!-- CAST BEGIN -->
+                                                                {{-- CAST BEGIN --}}
         <h2>Cast信息</h2>
 
         <textformat :text.sync="castSource" :pos="'cast'"></textformat>
@@ -364,9 +365,9 @@
             </table>
         </form>
 
-                                                                <!-- CAST END -->
+                                                                {{-- CAST END --}}
 
-                                                                <!-- ONAIR BEGIN -->
+                                                                {{-- ONAIR BEGIN --}}
 
         <h2>播放信息</h2>
 
@@ -443,7 +444,7 @@
             </table>
         </form>
 
-                                                                <!-- ONAIR END -->
+                                                                {{-- ONAIR END --}}
 
         <button class="btn btn-primary" @click="outputData">转换为 JSON</button>
         <br>
@@ -457,75 +458,97 @@
             </div>
         </div>
 
-        <!-- TEMPLATE -->
+        {{-- TEMPLATE --}}
 
-        <!-- 原作类型 -->
+        {{-- 原作类型 --}}
         <template id="ori-work">
-            <!-- Argument:
+            {{-- Argument:
                     pid      : 父项目 ID
                     data     : basicData.oriWorks
                     orilist  : 来自数据库的全部原作类型列表
                     multiple : 子项目是否多选
                     haschild : 是否有子项目, haschild
                     lv       : 当前层数, ori_level
-            -->
+                    index    : 用于结合 v-for 插入数组, $index
+            --}}
 
-            <!-- 第一级父项目 -->
+            {{-- 第一级父项目 --}}
             <div v-if="pid==0" class="">
-                <select v-model="res">
+                <select v-model="data[0]">
                     <option v-for="item in orilist | filtByValue 0 'ori_pid'"
-                            :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple}">
+                            :value="[{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple}]">
                         @{{ item.ori_catalog }}
                     </option>
                 </select>
-                <div v-if="res.haschild">
+                <div v-if="data[0].haschild">
                     <originalwork
-                            :pid="res.id"
+                            :pid="data[0].id"
                             :data.sync="data"
                             :orilist="orilist"
-                            :multiple="res.multiple"
-                            :haschild="res.haschild"
-                            lv="1"
+                            :multiple="data[0].multiple"
+                            :haschild="data[0].haschild"
+                            :lv="1"
+                            :index="0"
                     >
                     </originalwork>
                 </div>
             </div>
 
-            <!-- 子项目 -->
+            {{-- 子项目 --}}
             <div v-if="pid>0">
-                <!-- 子项目单选 -->
+                {{-- 子项目单选 --}}
                 <div v-if="!multiple">
-                    <select v-model="data[lv]">
+                    <select v-model="data[lv][index]">
                         <option v-for="item in orilist | filtByValue pid 'ori_pid'"
-                                v-bind:value="item.ori_id"
+                                :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}"
                         >
                             @{{ item.ori_catalog }}
                         </option>
                     </select>
+
+                    {{-- 模板递归 --}}
+                    {{-- 生成单选第二项及第四项等 --}}
+                    <div v-if="data[lv][index] ? data[lv][index].haschild : false">
+                        <originalwork
+                                :pid="data[lv][index].id"
+                                :data.sync="data"
+                                :orilist="orilist"
+                                :multiple="data[lv][index].multiple"
+                                :haschild="data[lv][index].haschild"
+                                :lv="lv+1"
+                                :index="0"
+                        ></originalwork>
+                    </div>
                 </div>
 
-                <!-- 子项目多选 -->
+                {{-- 子项目多选 --}}
                 <div v-if="multiple"
-                     v-for="lv1 in orilist | filtByValue pid 'ori_pid'"
+                     v-for="item in orilist | filtByValue pid 'ori_pid'"
                 >
-                    <!--  -->
-                    <label>@{{ lv1.ori_catalog }}</label>
-                    <input class="hidden" type="text" v-model="data[lv][$index]" :value="lv1.id">
+                    {{-- 多选第二项 --}}
+                    <label>@{{ item.ori_catalog }}</label>
+                    <select class="hidden" type="text" v-model="data[lv][$index]">
+                        <option selected
+                                :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}">
+                        </option>
+                    </select>
 
-                    <!-- 模板递归 -->
+                    {{-- 第三项 --}}
+                    {{-- 模板递归 --}}
                     <originalwork
                               :pid="item.ori_id"
                               :data.sync="data"
-                              orilist="{{ $oriWorks }}"
+                              :orilist="orilist"
                               :multiple="item.multiple"
                               :haschild="item.haschild"
-                              lv="lv+1"
+                              :lv="lv+1"
+                              :index="$index"
                     ></originalwork>
                 </div>
             </div>
         </template>
 
-        <!-- 信息栏内容格式化按钮 -->
+        {{-- 信息栏内容格式化按钮 --}}
         <template id="text-format">
             <button class="btn btn-primary"
                     @click="format(text, pos, 'separator')"
@@ -550,7 +573,7 @@
             </button>
         </template>
 
-        <!-- 重要按钮 -->
+        {{-- 重要按钮 --}}
         <template id="toggle-button">
             <button @click="toggle = !toggle" type="button"
                           v-bind:class="toggle?'btn-primary':'btn-default'"
@@ -561,7 +584,7 @@
             </button>
         </template>
 
-        <!-- 行上下增删操作 -->
+        {{-- 行上下增删操作 --}}
         <template id="row-control">
             <div class="@{{ style }}">
                 <div class="col-xs-3">

@@ -273,6 +273,7 @@ var formatedTextToArray = function (str) {
  *
  **/
 var onairFormatedTextToArray = function (str) {
+
     var arr = [], rows = [];
     var tvName,
         oaDate, startDate, startYear, startMonth, startDay, endDate, endYear, endMonth, endDay,
@@ -349,33 +350,25 @@ var onairFormatedTextToArray = function (str) {
 
     return arr;
 };
-/**
- * VUE.jS
- **/
 
+/** VUE.jS **/
+
+// 打开 debug 模式
 Vue.config.debug = true;
 
-/**
- * 组件
- **/
+/** 组件 **/
 
 Vue.component('basicinput', {
     template: '#basic-input',
     props:    ['item']
 });
 
-Vue.component('originalworks', {
-    template: '#original-works',
-    props:    ['data','haschild','oriGenreLv1','oriGenreLv2'],
-    created:  function () {
-        this.data = JSON.parse(this.data);
-    }
-});
-
-Vue.component('originalworkschild', {
-    name:     'originalworkschild',
-    template: '#original-works-child',
-    props:    ['haschild', 'data', 'pid', 'selected'],
+Vue.component('originalwork', {
+    template: '#ori-work',
+    props:    [ 'pid', 'data', 'orilist', 'multiple', 'haschild', 'lv','index' ]
+    //created:  function () {
+    //    this.orilist = JSON.parse(this.orilist);
+    //}
 });
 
 Vue.component('rowcontrol', {
@@ -458,6 +451,8 @@ Vue.component('textformat', {
     }
 });
 
+/** 过滤器 **/
+
 Vue.filter('filtByValue', function (arr, search, key) {
     var res = [];
     for (var i = 0, l = arr.length; i < l; i++) {
@@ -467,9 +462,7 @@ Vue.filter('filtByValue', function (arr, search, key) {
 });
 
 
-/**
- * VUE JS 实例
- **/
+/** VUE JS 实例 **/
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
 
@@ -478,27 +471,30 @@ var vue = new Vue({
     data:    {
         'basicData':      {
             'id':            {'label': '动画ID', 'value': ''},
-            'seriesID':      {'label': '系列ID', 'value': ''},
-            'seriesTitle':   {'label': '系列ID', 'value': ''},
+            'seriesID':      {'label': '系列ID', 'value': '123'},
+            'seriesTitle':   {'label': '系列ID', 'value': '高达'},
             'title':         [
-                {'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
-                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''},
-                {'label': '罗马拼音', 'lang': 'romaji', 'isOfficial': false, 'value': '', 'comment': ''}
+                {'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '機動戦士ガンダム', 'comment': ''},
+                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '机动战士高达', 'comment': ''},
+                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': true, 'value': '机动战士敢达', 'comment': ''}
             ],
-            'abbr':          {'label': '简称', 'value': ''},
-            'kur':           {'label': '长度', 'value': 1},
-            'eps':           {'label': '集数', 'value': ''},
+            'abbr':          {'label': '简称', 'value': 'gundam0079'},
+            'kur':           {'label': '长度', 'value': 3},
+            'eps':           {'label': '集数', 'value': '38'},
             'duration':      {'label': '时间规格', 'value': 'general'},
-            'oriGenreLv1': {'id':1, 'haschild':true},
-            'oriGenreLv2': [{'id': ''}],
-            'oriGenreLv3': [{'id': ''}],
+            'oriWorks':      [
+                [{'id':'', 'haschild':false, 'multiple': false}],
+                [{'id':'', 'haschild':false, 'multiple': false}],
+                [{'id':'', 'haschild':false, 'multiple': false}],
+                [{'id':'', 'haschild':false, 'multiple': false}]
+            ],
             'premiereMedia':  {'label': '首播媒体', 'value': 'tv'},
             'links':         [
-                {'label': '官方网站', 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
+                {'label': '官方网站', 'class': 'hp', 'isOfficial': true, 'value': 'http://www.gundam.com', 'comment': ''}
             ],
             'isSequel':      {'label': '是否续作', 'value': false},
             'sequelComment': {'label': '备注', 'value': ''},
-            'isEnd':         {'label': '是否完结', 'value': false},
+            'isEnd':         {'label': '是否完结', 'value': true},
             'isCounted':     {'label': '是否纳入统计', 'value': true},
             'story':         {'label': '故事', 'value': ''},
             'description':   {'label': '介绍', 'value': ''}
@@ -541,6 +537,29 @@ var vue = new Vue({
             }
         ],
         'onairDataInput': ''
+    },
+    watch: {
+        'basicData.oriWorks[0][0]': function(newVal, oldVal) {
+            if( oldVal.id != '' && newVal != oldVal) {
+                var item = this.basicData.oriWorks[1];
+                // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
+                var items = [{ 'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
+                if(newVal.haschild){
+                    items = [];
+                    for(var i = 0; i < item.length; i++){
+                        if(item[i].pid == newVal.id) {
+                            items.push(item[i])
+                        }
+                    }
+                }
+                this.basicData.oriWorks = [
+                    newVal,
+                    items,
+                    [{'id':'', 'haschild':false, 'multiple': false}],
+                    [{'id':'', 'haschild':false, 'multiple': false}]
+                ]
+            }
+        }
     },
     methods: {
         /*
@@ -597,7 +616,6 @@ var vue = new Vue({
 
                         item.charaNameOri = items[j][0];
                         item.cvNameOri    = items[j][1];
-
 
                         vue.castMembers.push(item);
                     }

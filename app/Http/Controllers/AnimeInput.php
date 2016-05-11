@@ -95,8 +95,8 @@ class AnimeInput extends Controller
             }
 
             // Original Works
+            $i = 0;
             foreach ($data['oriWorks'] as $lv) {
-                $i = 0;
                 foreach ( $lv as $origenres ) {
                     if($origenres['id'] != '' && $origenres['id'] != 0) {
                         $origenres = AnimeOriginalWork::create(
@@ -111,7 +111,7 @@ class AnimeInput extends Controller
                         );
                     }
                 }
-                $i++;
+                ++$i; // the level
             }
 
             // Links

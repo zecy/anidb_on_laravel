@@ -480,13 +480,13 @@
                         @{{ item.ori_catalog }}
                     </option>
                 </select>
-                <div v-if="data[0].haschild">
+                <div v-if="data[0][0].haschild">
                     <originalwork
-                            :pid="data[0].id"
+                            :pid="data[0][0].id"
                             :data.sync="data"
                             :orilist="orilist"
-                            :multiple="data[0].multiple"
-                            :haschild="data[0].haschild"
+                            :multiple="data[0][0].multiple"
+                            :haschild="data[0][0].haschild"
                             :lv="1"
                             :index="0"
                     >

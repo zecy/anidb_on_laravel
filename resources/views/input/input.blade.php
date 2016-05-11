@@ -476,7 +476,7 @@
             <div v-if="pid==0" class="">
                 <select v-model="data[0]">
                     <option v-for="item in orilist | filtByValue 0 'ori_pid'"
-                            :value="[{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple}]">
+                            :value="[{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': 0}]">
                         @{{ item.ori_catalog }}
                     </option>
                 </select>

@@ -95,7 +95,6 @@ class AnimeInput extends Controller
             }
 
             // Original Works
-            //TODO
             foreach ($data['oriWorks'] as $lv) {
                 $i = 0;
                 foreach ( $lv as $origenres ) {
@@ -103,8 +102,8 @@ class AnimeInput extends Controller
                         $origenres = AnimeOriginalWork::create(
                             [
                                 'anime_id' => $ID,
-                                'ori_id'   => $origenres['ori_id'],
-                                'ori_pid'  => $origenres['ori_pid'],
+                                'ori_id'   => $origenres['id'],
+                                'ori_pid'  => $origenres['pid'],
                                 'lv'       => $i,
                                 'haschild' => $origenres['haschild'],
                                 'multiple' => $origenres['multiple']

@@ -540,6 +540,7 @@ var vue = new Vue({
     },
     watch: {
         'basicData.oriWorks[0][0]': function(newVal, oldVal) {
+            console.log(newVal);
             if( oldVal.id != '' && newVal != oldVal) {
                 var item = this.basicData.oriWorks[1];
                 // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空

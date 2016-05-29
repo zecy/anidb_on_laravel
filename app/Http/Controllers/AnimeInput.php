@@ -35,6 +35,14 @@ class AnimeInput extends Controller
     }
 
     /**
+     *
+     * @param pos $array
+     *
+     * 返回传递过来的名词返回唯一的 ID
+     *
+     */
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

@@ -504,14 +504,15 @@ var vue = new Vue({
         'castSource':     '',
         'staffMembers':   [
             {
-                'id':              '',
-                'staffMemberID':   '',
-                'staffBelongsToID':  '',
-                'staffNameOri':    '',
-                'staffNameZhCN':   '',
-                'staffMemberName': '',
-                'staffBelongsToName':  '',
-                'isImportant':     true
+                'id':                 '',
+                'staffNameID':        '',
+                'staffMemberID':      '',
+                'staffBelongsToID':   '',
+                'staffNameOri':       '',
+                'staffNameZhCN':      '',
+                'staffMemberName':    '',
+                'staffBelongsToName': '',
+                'isImportant':        true
             }
         ],
         'castMembers':    [{
@@ -579,28 +580,41 @@ var vue = new Vue({
          */
         toArray:         function (data, pos) {
 
-            var item, items;
+            var item, items, res;
 
             items = formatedTextToArray(data);
 
             switch (pos) {
                 case 'staff':
+
                     vue.staffMembers = [];
-                    for (var i = 0; i < items.length; i++) {
-                        item = {
-                            'id':              '',
-                            'staffMemberID':   '',
-                            'staffNameOri':    '',
-                            'staffNameZhCN':   '',
-                            'staffMemberName': '',
-                            'isImportant':     true
-                        };
 
-                        item.staffNameOri    = items[i][0];
-                        item.staffMemberName = items[i][1];
+                    console.log('the function works');
 
-                        vue.staffMembers.push(item);
-                    }
+                    this.$http.post('anime/stafftranslate', {data: items}).then(function(r){
+                        res = r.data;
+                        console.log(res);
+                        if(r.status == 200) {
+                            console.log(r);
+                            for (var i = 0; i < res.length; i++) {
+                                item = {
+                                    'id':              '',
+                                    'staffMemberID':   '',
+                                    'staffNameOri':    '',
+                                    'staffNameZhCN':   '',
+                                    'staffMemberName': '',
+                                    'isImportant':     true
+                                };
+
+                                item.staffNameOri    = items[i][0];
+                                item.staffMemberName = items[i][1];
+
+                                vue.staffMembers.push(res[i]);
+                            }
+                        } else {
+                            console.log('失败:\n' + r);
+                        }
+                    });
                     break;
                 case 'cast':
                     vue.castMembers = [];

@@ -85,11 +85,6 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    <pre>@{{ basicData.oriWorks | json }}</pre>
-                </td>
-            </tr>
-            <tr>
                 <td class="row">
                     <originalwork :orilist="{{ $oriWorks }}"
                                   :data.sync="basicData.oriWorks"

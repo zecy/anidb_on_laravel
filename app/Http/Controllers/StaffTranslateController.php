@@ -34,7 +34,11 @@ class StaffTranslateController extends Controller
             $staffMemberName = $item[1];
 
             // 人员 ID
-            $staffMemberID = \App\AnimeTrans::where('trans_class', 'people')->where('trans_name', $staffMemberName)->first()['trans_name_id'];
+            $staffMemberID = \App\AnimeTrans
+                ::where('trans_class', 'people')
+                ->orWhere('trans_class', 'company')
+                ->where('trans_name', $staffMemberName)
+                ->first()['trans_name_id'];
 
             // TODO: 所属公司 ID
 

@@ -8,7 +8,7 @@
     <div id="animedata" class="container">
         <h2>主要信息</h2>
 
-        <form id="maininfo" class="form form-horizontal" @submit="createData">
+        <form id="maininfo" class="form form-horizontal">
         <table class="table">
             <tr style="display: none">
                 <td>
@@ -224,7 +224,7 @@
                 </td>
             </tr>
         </table>
-        <button @click="createData" class="btn btn-success">创建数据</button>
+        <button @click="createData('basicData')" class="btn btn-success">创建数据</button>
         </form>
 
                                                                 {{-- STAFF BIGIN --}}
@@ -244,6 +244,7 @@
             </div>
         </div>
         <button class="btn btn-primary" @click="toArray(staffSource ,'staff')">获取Staff数据</button>
+        <button class="btn btn-danger" @click="staffMembers = []">清除Staff列表</button>
         <button class="btn btn-danger" @click="staffSource = ''">清除输入框</button>
 
         <br>
@@ -251,6 +252,23 @@
 
         <form id="staff" class="form">
             <table class="sco">
+                <thead style="text-align: center;background-color: #EEEEEE;border-bottom:1px solid #ccc">
+                <tr>
+                    <td style="width:10%">ID</td>
+                    {{--<td style="width:10%">
+                        <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
+                    </td>--}}
+                    <td style="width:15%">岗位名称（原）</td>
+                    <td style="width:15%">岗位名称（中）</td>
+                    <td style="width:20%">人员名称</td>
+                    <td style="width:20%">所属公司名称</td>
+                    <td>
+                        <span class="glyphicon glyphicon-star"></span>
+                    </td>
+                    <td>条目操作</td>
+                </tr>
+                </thead>
+                <tbody>
                 <tr style="display:none">
                     <td>
                         防止 Lastpass 注入输入框
@@ -265,19 +283,21 @@
                     <td style="width:10%">
                         <input v-model="staffMember.id" type="text" disabled="disabled" placeholder="ID">
                     </td>
-                    <td style="width:10%">
-                        <input v-model="staffMember.staffNameID" type="text" disabled="disabled" placeholder="岗位ID">
+                    {{--<td style="width:10%">
+                        <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
+                    </td>--}}
+                    <td style="width:15%">
+                        <input v-model="staffMember.staffPostOri" type="text" placeholder="岗位名称（原）">
+                    </td>
+                    <td style="width:15%">
+                        <input v-model="staffMember.staffPostZhCN" type="text" placeholder="岗位名称（中）">
                     </td>
                     <td style="width:20%">
-                        <input v-model="staffMember.staffNameOri" type="text" placeholder="岗位名称（原）">
-                        <input v-model="staffMember.staffNameZhCN" type="text" placeholder="岗位名称（中）">
-                    </td>
-                    <td style="width:20%">
-                        <input style="width:50%" v-model="staffMember.staffMemberID" type="text" disabled="disabled" placeholder="人员ID">
+                        {{--<input style="width:50%" v-model="staffMember.staffMemberID" type="text" disabled="disabled" placeholder="人员ID">--}}
                         <input v-model="staffMember.staffMemberName" type="text" placeholder="人员名称">
                     </td>
                     <td style="width:20%">
-                        <input style="width:50%" v-model="staffMember.staffBelongsToID" type="text" disabled="disabled" placeholder="所属公司ID">
+                        {{--<input style="width:50%" v-model="staffMember.staffBelongsToID" type="text" disabled="disabled" placeholder="所属公司ID">--}}
                         <input v-model="staffMember.staffBelongsToName" type="text" placeholder="所属公司名称">
                     </td>
                     <td>
@@ -293,8 +313,11 @@
                         ></rowcontrol>
                     </td>
                 </tr>
+                </tbody>
             </table>
         </form>
+
+        <button @click="createData('staff')" class="btn btn-success">创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
 
                                                                 {{-- STAFF END --}}
 
@@ -573,6 +596,7 @@
             <button @click="toggle = !toggle" type="button"
                           v-bind:class="toggle?'btn-primary':'btn-default'"
                           class="btn btn-xs"
+                          tabindex="-1"
                           >
             <span class="@{{ style }}">@{{ content }}</span>
             <input type="checkbox" v-model="toggle" class="hidden"/>
@@ -583,22 +607,22 @@
         <template id="row-control">
             <div class="@{{ style }}">
                 <div class="col-xs-3">
-                    <button @click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs">
+                    <button @click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-arrow-up"></span>
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button @click="rowDown(arr,index)" type="button" class="btn btn-default btn-xs">
+                    <button @click="rowDown(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-arrow-down"></span>
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button @click="removeRow(arr,index)" type="button" class="btn btn-danger btn-xs">
+                    <button @click="removeRow(arr,index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button @click="addRow(arr,index)" type="button" class="btn btn-success btn-xs">
+                    <button @click="addRow(arr,index)" type="button" class="btn btn-success btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-plus"></span>
                     </button>
                 </div>

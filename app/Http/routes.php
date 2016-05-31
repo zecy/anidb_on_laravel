@@ -17,6 +17,8 @@ Route::resource('anime', 'AnimeInput');
 
 Route::resource('anime/stafftranslate', 'StaffTranslateController');
 
+Route::resource('anime/staff', 'staffController');
+
 /*
 $api = app('Dingo\Api\Routing\Router');
 

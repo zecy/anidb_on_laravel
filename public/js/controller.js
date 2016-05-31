@@ -365,7 +365,7 @@ Vue.component('basicinput', {
 
 Vue.component('originalwork', {
     template: '#ori-work',
-    props:    [ 'pid', 'data', 'orilist', 'multiple', 'haschild', 'lv','index' ]
+    props:    ['pid', 'data', 'orilist', 'multiple', 'haschild', 'lv', 'index']
     //created:  function () {
     //    this.orilist = JSON.parse(this.orilist);
     //}
@@ -483,12 +483,12 @@ var vue = new Vue({
             'eps':           {'label': '集数', 'value': '38'},
             'duration':      {'label': '时间规格', 'value': 'general'},
             'oriWorks':      [
-                [{'id':'', 'haschild':false, 'multiple': false}],
-                [{'id':'', 'haschild':false, 'multiple': false}],
-                [{'id':'', 'haschild':false, 'multiple': false}],
-                [{'id':'', 'haschild':false, 'multiple': false}]
+                [{'id': '', 'haschild': false, 'multiple': false}],
+                [{'id': '', 'haschild': false, 'multiple': false}],
+                [{'id': '', 'haschild': false, 'multiple': false}],
+                [{'id': '', 'haschild': false, 'multiple': false}]
             ],
-            'premiereMedia':  {'label': '首播媒体', 'value': 'tv'},
+            'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
             'links':         [
                 {'label': '官方网站', 'class': 'hp', 'isOfficial': true, 'value': 'http://www.gundam.com', 'comment': ''}
             ],
@@ -504,12 +504,10 @@ var vue = new Vue({
         'castSource':     '',
         'staffMembers':   [
             {
-                'id':                 '',
-                'staffNameID':        '',
-                'staffMemberID':      '',
-                'staffBelongsToID':   '',
-                'staffNameOri':       '',
-                'staffNameZhCN':      '',
+                'staffID':            '',
+                'staffPostID':        '',
+                'staffPostOri':       '',
+                'staffPostZhCN':      '',
                 'staffMemberName':    '',
                 'staffBelongsToName': '',
                 'isImportant':        true
@@ -539,16 +537,16 @@ var vue = new Vue({
         ],
         'onairDataInput': ''
     },
-    watch: {
-        'basicData.oriWorks[0][0]': function(newVal, oldVal) {
-            if( oldVal.id != '' && newVal != oldVal) {
+    watch:   {
+        'basicData.oriWorks[0][0]': function (newVal, oldVal) {
+            if (oldVal.id != '' && newVal != oldVal) {
                 var item = this.basicData.oriWorks[1];
                 // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
-                var items = [{ 'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
-                if(newVal.haschild){
+                var items = [{'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
+                if (newVal.haschild) {
                     items = [];
-                    for(var i = 0; i < item.length; i++){
-                        if(item[i].pid == newVal.id) {
+                    for (var i = 0; i < item.length; i++) {
+                        if (item[i].pid == newVal.id) {
                             items.push(item[i])
                         }
                     }
@@ -556,8 +554,8 @@ var vue = new Vue({
                 this.basicData.oriWorks = [
                     newVal,
                     items,
-                    [{'id':'', 'haschild':false, 'multiple': false}],
-                    [{'id':'', 'haschild':false, 'multiple': false}]
+                    [{'id': '', 'haschild': false, 'multiple': false}],
+                    [{'id': '', 'haschild': false, 'multiple': false}]
                 ]
             }
         }
@@ -566,21 +564,40 @@ var vue = new Vue({
         /*
          * Display the Anime Basic Data
          * */
-        createData:      function (e) {
-            e.preventDefault();
-            this.$http.post('anime', {data: this.basicData}).then(function (r) {
-                console.log(r);
-                if(r.status == 200) alert('录入成功!!');
-                //TODO: 根据返回的 ID 跳转到数据编辑页面
-                //this.basicData.id.value = r.data.anime_id;
-            })
+        createData:      function (pos) {
+
+            //e.preventDefault();
+
+            switch(pos) {
+                case 'basicData':
+                    this.$http.post('anime', {data: this.basicData}).then(function (r) {
+                        console.log(r);
+                        if (r.status == 200) alert('录入成功!!');
+                        //TODO: 根据返回的 ID 跳转到数据编辑页面
+                        //this.basicData.id.value = r.data.anime_id;
+                    });
+                    break;
+                case 'staff':
+                    console.log('正在录入 STAFF...');
+                    this.$http.post('anime/staff', {data: this.staffMembers}).then(function (r) {
+                        console.log(r);
+                        console.log('录入成功!!');
+                        if (r.status == 200) alert('录入成功!!');
+                    });
+                    break;
+                case 'cast':
+                    break;
+                case 'onair':
+                    break;
+            }
         },
+
         /**
          * Get the Formated Text from sourceBox
          */
         toArray:         function (data, pos) {
 
-            var item, items, res;
+            var item, items; //res;
 
             items = formatedTextToArray(data);
 
@@ -589,32 +606,44 @@ var vue = new Vue({
 
                     vue.staffMembers = [];
 
-                    console.log('the function works');
+                    for (var i = 0; i < items.length; i++) {
+                        item = {
+                            'animeID':              vue.basicData.id.value,
+                            'staffPostOri':         items[i][0],
+                            'staffPostZhCN':        '',
+                            'staffMemberName':      items[i][1],
+                            'staffBelongsToName':   '',
+                            'isImportant':          false
+                        };
 
-                    this.$http.post('anime/stafftranslate', {data: items}).then(function(r){
-                        res = r.data;
-                        console.log(res);
-                        if(r.status == 200) {
-                            console.log(r);
-                            for (var i = 0; i < res.length; i++) {
-                                item = {
-                                    'id':              '',
-                                    'staffMemberID':   '',
-                                    'staffNameOri':    '',
-                                    'staffNameZhCN':   '',
-                                    'staffMemberName': '',
-                                    'isImportant':     true
-                                };
+                        vue.staffMembers.push(item);
+                    }
 
-                                item.staffNameOri    = items[i][0];
-                                item.staffMemberName = items[i][1];
-
-                                vue.staffMembers.push(res[i]);
-                            }
-                        } else {
-                            console.log('失败:\n' + r);
-                        }
-                    });
+                    console.log(vue.staffMembers);
+                    //this.$http.post('anime/stafftranslate', {data: items}).then(function (r) {
+                    //    res = r.data;
+                    //    console.log(res);
+                    //    if (r.status == 200) {
+                    //        console.log(r);
+                    //        for (var i = 0; i < res.length; i++) {
+                    //            item = {
+                    //                'animeID':         this.basicData.id.value,
+                    //                'staffPostID':     '',
+                    //                'staffPostOri':    '',
+                    //                'staffPostZhCN':   '',
+                    //                'staffMemberName': '',
+                    //                'isImportant':     true
+                    //            };
+                    //
+                    //            item.staffNameOri    = items[i][0];
+                    //            item.staffMemberName = items[i][1];
+                    //
+                    //            vue.staffMembers.push(res[i]);
+                    //        }
+                    //    } else {
+                    //        console.log('失败:\n' + r);
+                    //    }
+                    //});
                     break;
                 case 'cast':
                     vue.castMembers = [];

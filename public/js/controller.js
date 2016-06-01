@@ -470,7 +470,7 @@ var vue = new Vue({
     el:      '#animedata',
     data:    {
         'basicData':      {
-            'id':            {'label': '动画ID', 'value': ''},
+            'id':            {'label': '动画ID', 'value': '1212'},
             'seriesID':      {'label': '系列ID', 'value': '123'},
             'seriesTitle':   {'label': '系列ID', 'value': '高达'},
             'title':         [
@@ -578,14 +578,14 @@ var vue = new Vue({
                     });
                     break;
                 case 'staff':
-                    console.log('正在录入 STAFF...');
                     this.$http.post('anime/staff', {data: this.staffMembers}).then(function (r) {
-                        console.log(r);
-                        console.log('录入成功!!');
                         if (r.status == 200) alert('录入成功!!');
                     });
                     break;
                 case 'cast':
+                    this.$http.post('anime/cast', {data: this.castMembers}).then(function (r) {
+                        if (r.status == 200) alert('录入成功!!');
+                    });
                     break;
                 case 'onair':
                     break;
@@ -646,22 +646,20 @@ var vue = new Vue({
                     //});
                     break;
                 case 'cast':
+
                     vue.castMembers = [];
+
                     for (var j = 0; j < items.length; j++) {
                         item = {
-                            'id':           '',
-                            'charaID':      '',
-                            'cvID':         '',
-                            'charaNameOri': '',
-                            'cvNameOri':    '',
-                            'isImportant':  true
+                            'animeID':      vue.basicData.id.value,
+                            'charaNameOri': items[j][0],
+                            'cvNameOri':    items[j][1],
+                            'isImportant':  false
                         };
-
-                        item.charaNameOri = items[j][0];
-                        item.cvNameOri    = items[j][1];
 
                         vue.castMembers.push(item);
                     }
+                    console.log(vue.castMembers);
                     break;
             }
         },

@@ -244,7 +244,7 @@
             </div>
         </div>
         <button class="btn btn-primary" @click="toArray(staffSource ,'staff')">获取Staff数据</button>
-        <button class="btn btn-danger" @click="staffMembers = []">清除Staff列表</button>
+        <button class="btn btn-danger" @click="staffMembers = []">Staff列表</button>
         <button class="btn btn-danger" @click="staffSource = ''">清除输入框</button>
 
         <br>
@@ -345,6 +345,9 @@
 
         <textformat :text.sync="castSource" :pos="'cast'"></textformat>
 
+        <br>
+        <br>
+
         <div class="form-group row">
             <div>
                 <textarea class="form-control" rows="10" v-model="castSource" placeholder="请输入源数据"></textarea>
@@ -352,7 +355,11 @@
         </div>
 
         <button class="btn btn-primary" @click="toArray(castSource ,'cast')">获取Cast数据</button>
+        <button class="btn btn-danger" @click="castMembers = []">清除Cast列表</button>
         <button class="btn btn-danger" @click="castSource = ''">清除输入框</button>
+
+        <br>
+        <br>
 
         <form id="cast" class="form">
             <table class="sco">
@@ -370,24 +377,27 @@
                     <td style="width:10%">
                         <input v-model="castMember.id" type="text" disabled="disabled" placeholder="ID">
                     </td>
+                    {{--
                     <td style="width:10%">
                         <input v-model="castMember.charaID" type="text" disabled="disabled" placeholder="角色ID">
                     </td>
-                    <td style="width:30%">
+                    --}}
+                    <td style="width:40%">
                         <input v-model="castMember.charaNameOri" type="text" placeholder="角色名称（原）">
                     </td>
+                    {{--
                     <td style="width:10%">
                         <input v-model="castMember.cvID" type="text" disabled="disabled" placeholder="演员ID">
                     </td>
-                    <td style="width:20%">
+                    --}}
+                    <td style="width:30%">
                         <input v-model="castMember.cvNameOri" type="text" placeholder="演员名称">
                     </td>
                     <td>
                         <togglebutton :toggle.sync="castMember.isImportant"
                                       :style="'glyphicon glyphicon-star'"
                                       :content=""
-                        ></span>'"
-                                >
+                        >
                         </togglebutton>
                     </td>
                     <td>
@@ -399,6 +409,10 @@
                 </tr>
             </table>
         </form>
+
+        <br>
+
+        <button @click="createData('cast')" class="btn btn-success">创建CAST@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
 
                                                                 {{-- CAST END --}}
 

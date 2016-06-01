@@ -665,6 +665,31 @@ var vue = new Vue({
                     break;
             }
         },
+
+        /**
+         * Input Focus Move
+         */
+        focusMove: function (id,index,e) {
+
+            var key = e.keyCode;
+
+            var preIndex = Number(index) - 1;
+
+            var nextIndex = Number(index) + 1;
+
+            switch(key){
+                // Down
+                case 40:
+                    document.getElementById(id + nextIndex.toString()).focus();
+                    break;
+                // Up
+                case 38:
+                    document.getElementById(id + preIndex.toString()).focus();
+                    break;
+            }
+            //TODO: 到底或到顶报错处理
+        },
+
         /**
          * Clean the sourceBox
          */

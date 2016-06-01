@@ -287,7 +287,12 @@
                         <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
                     </td>--}}
                     <td style="width:15%">
-                        <input v-model="staffMember.staffPostOri" type="text" placeholder="岗位名称（原）">
+                        <input type="text"
+                               id="staffPostOri-@{{ $index }}"
+                               v-model="staffMember.staffPostOri"
+                               v-on:keyup="focusMove('staffPostOri-', $index, $event)"
+                               placeholder="岗位名称（原）"
+                        >
                     </td>
                     <td style="width:15%">
                         <input v-model="staffMember.staffPostZhCN" type="text" placeholder="岗位名称（中）">

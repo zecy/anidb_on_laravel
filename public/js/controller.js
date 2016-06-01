@@ -680,14 +680,15 @@ var vue = new Vue({
             switch(key){
                 // Down
                 case 40:
-                    document.getElementById(id + nextIndex.toString()).focus();
+                    var item = document.getElementById(id + nextIndex.toString());
+                    if ( item ) item.focus();
                     break;
                 // Up
                 case 38:
-                    document.getElementById(id + preIndex.toString()).focus();
+                    var item = document.getElementById(id + preIndex.toString());
+                    if ( item ) item.focus();
                     break;
             }
-            //TODO: 到底或到顶报错处理
         },
 
         /**

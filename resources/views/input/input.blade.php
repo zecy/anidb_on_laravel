@@ -258,8 +258,7 @@
                     {{--<td style="width:10%">
                         <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
                     </td>--}}
-                    <td style="width:15%">岗位名称（原）</td>
-                    <td style="width:15%">岗位名称（中）</td>
+                    <td style="width:30%">岗位名称</td>
                     <td style="width:20%">人员名称</td>
                     <td style="width:20%">所属公司名称</td>
                     <td>
@@ -286,24 +285,37 @@
                     {{--<td style="width:10%">
                         <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
                     </td>--}}
-                    <td style="width:15%">
+                    <td style="width:30%">
                         <input type="text"
                                id="staffPostOri-@{{ $index }}"
                                v-model="staffMember.staffPostOri"
                                v-on:keyup="focusMove('staffPostOri-', $index, $event)"
                                placeholder="岗位名称（原）"
                         >
-                    </td>
-                    <td style="width:15%">
-                        <input v-model="staffMember.staffPostZhCN" type="text" placeholder="岗位名称（中）">
+                        <input type="text"
+                               id="staffPostZhCN-@{{ $index }}"
+                               v-model="staffMember.staffPostZhCN"
+                               v-on:keyup="focusMove('staffPostZhCN-', $index, $event)"
+                               placeholder="岗位名称（中）"
+                        >
                     </td>
                     <td style="width:20%">
                         {{--<input style="width:50%" v-model="staffMember.staffMemberID" type="text" disabled="disabled" placeholder="人员ID">--}}
-                        <input v-model="staffMember.staffMemberName" type="text" placeholder="人员名称">
+                        <input v-model="staffMember.staffMemberName"
+                               id="staffMemberName-@{{ $index }}"
+                               type="text"
+                               v-on:keyup="focusMove('staffMemberName-', $index, $event)"
+                               placeholder="人员名称"
+                        >
                     </td>
                     <td style="width:20%">
                         {{--<input style="width:50%" v-model="staffMember.staffBelongsToID" type="text" disabled="disabled" placeholder="所属公司ID">--}}
-                        <input v-model="staffMember.staffBelongsToName" type="text" placeholder="所属公司名称">
+                        <input type="text"
+                               id="staffBelongsToName-@{{ $index }}"
+                               v-model="staffMember.staffBelongsToName"
+                               v-on:keyup="focusMove('staffBelongsToName-', $index, $event)"
+                               placeholder="所属公司名称"
+                        >
                     </td>
                     <td>
                         <togglebutton :toggle.sync="staffMember.isImportant"
@@ -601,7 +613,6 @@
             <button @click="toggle = !toggle" type="button"
                           v-bind:class="toggle?'btn-primary':'btn-default'"
                           class="btn btn-xs"
-                          tabindex="-1"
                           >
             <span class="@{{ style }}">@{{ content }}</span>
             <input type="checkbox" v-model="toggle" class="hidden"/>

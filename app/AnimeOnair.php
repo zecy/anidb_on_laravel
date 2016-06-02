@@ -17,6 +17,6 @@ class AnimeOnair extends Model
         'oa_end_time',
         'oa_weekday',
         'oa_tv_column',
-        'is_produxtion',
-        'oa_descritption'];
+        'is_production',
+        'oa_description'];
 }

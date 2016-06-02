@@ -526,16 +526,16 @@ var vue = new Vue({
         }],
         'onair':          [
             {
-                'id':         '',
-                'tvID':       '',
-                'tvName':     '',
-                'startDate':  '',
-                'endDate':    '',
-                'startTime':  '',
-                'endTime':    '',
-                'weekday':    1,
-                'tvColumn':   '',
-                'description': '',
+                'id':           '',
+                'tvID':         '',
+                'tvName':       '',
+                'startDate':    '',
+                'endDate':      '',
+                'startTime':    '',
+                'endTime':      '',
+                'weekday':      1,
+                'tvColumn':     '',
+                'description':  '',
                 'isProduction': false
             }
         ],

@@ -510,14 +510,6 @@
         <br>
         <br>
 
-        <div class="panel panel-default">
-            <p class="panel-title panel-heading">JSON输出</p>
-
-            <div class="panel-body">
-                <pre>@{{ basicData | json }}</pre>
-            </div>
-        </div>
-
         {{-- TEMPLATE --}}
 
         {{-- 原作类型 --}}

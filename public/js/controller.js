@@ -473,17 +473,16 @@ var vue = new Vue({
     el:      '#animedata',
     data:    {
         'basicData':      {
-            'id':            {'label': '动画ID', 'value': '1212'},
-            'seriesID':      {'label': '系列ID', 'value': '123'},
-            'seriesTitle':   {'label': '系列ID', 'value': '高达'},
+            'id':            {'label': '动画ID', 'value': ''},
+            'seriesID':      {'label': '系列ID', 'value': ''},
+            'seriesTitle':   {'label': '系列ID', 'value': ''},
             'title':         [
-                {'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '機動戦士ガンダム', 'comment': ''},
-                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '机动战士高达', 'comment': ''},
-                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': true, 'value': '机动战士敢达', 'comment': ''}
+                {'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
+                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''}
             ],
-            'abbr':          {'label': '简称', 'value': 'gundam0079'},
-            'kur':           {'label': '长度', 'value': 3},
-            'eps':           {'label': '集数', 'value': '38'},
+            'abbr':          {'label': '简称', 'value': ''},
+            'kur':           {'label': '长度', 'value': ''},
+            'eps':           {'label': '集数', 'value': ''},
             'duration':      {'label': '时间规格', 'value': 'general'},
             'oriWorks':      [
                 [{'id': '', 'haschild': false, 'multiple': false}],
@@ -493,7 +492,7 @@ var vue = new Vue({
             ],
             'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
             'links':         [
-                {'label': '官方网站', 'class': 'hp', 'isOfficial': true, 'value': 'http://www.gundam.com', 'comment': ''}
+                {'label': '官方网站', 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
             ],
             'isSequel':      {'label': '是否续作', 'value': false},
             'sequelComment': {'label': '备注', 'value': ''},

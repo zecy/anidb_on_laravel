@@ -426,7 +426,7 @@
 
         <br>
 
-        <button class="btn btn-primary" @click="onairDataFormat">格式化日期</button>
+        <button class="btn btn-primary" @click="toArray(onairDataInput, 'onair')">格式化日期</button>
 
         <button class="btn btn-primary" @click="onairDataInput = ''">清除数据</button>
 
@@ -451,10 +451,12 @@
                     <td style="width:8%">
                         <input v-model="datetime.id" type="text" placeholder="ID"/>
                     </td>
+                    {{--
                     <td style="width:8%">
                         <input v-model="datetime.tvID" type="text" placeholder="电视台ID"/>
                     </td>
-                    <td style="width:19%">
+                    --}}
+                    <td style="width:24%">
                         <input v-model="datetime.tvName" type="text" placeholder="电视台"/>
                     </td>
                     <td style="width:15%">
@@ -482,6 +484,13 @@
                         <input v-model="datetime.tvColumn" type="text" placeholder="播放栏目"/>
                         <input v-model="datetime.description" type="text" placeholder="备注"/>
                     </td>
+                    <td style="width:3%">
+                        <togglebutton :toggle.sync="datetime.isProduction"
+                                      :style="'glyphicon glyphicon-usd'"
+                                      :content=""
+                        >
+                        </togglebutton>
+                    </td>
                     <td style="width:14%">
                         <rowcontrol :arr.sync="onair"
                                     :index.sync="$index"
@@ -492,6 +501,8 @@
                 </tbody>
             </table>
         </form>
+
+        <button @click="createData('onair')" class="btn btn-success">创建播放信息@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
 
                                                                 {{-- ONAIR END --}}
 

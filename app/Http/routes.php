@@ -21,6 +21,8 @@ Route::resource('anime/staff', 'staffController');
 
 Route::resource('anime/cast', 'castController');
 
+Route::resource('anime/onair', 'onairController');
+
 /*
 $api = app('Dingo\Api\Routing\Router');
 

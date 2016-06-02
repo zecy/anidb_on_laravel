@@ -243,6 +243,7 @@ var formatedTextToArray = function (str) {
  *
  *   [
  *     {
+ *       animeID:       '',
  *       oaID:          '',
  *       tvID:          '',
  *       tvName:        '毎日放送',
@@ -257,6 +258,7 @@ var formatedTextToArray = function (str) {
  *     },
  *
  *     {
+ *       animeID:       '',
  *       oaID:          '',
  *       tvID:          '',
  *       tvName:        'ニコニコチャンネル',
@@ -272,7 +274,7 @@ var formatedTextToArray = function (str) {
  *   ]
  *
  **/
-var onairFormatedTextToArray = function (str) {
+var onairFormatedTextToArray = function (str, animeID) {
 
     var arr = [], rows = [];
     var tvName,
@@ -334,8 +336,9 @@ var onairFormatedTextToArray = function (str) {
         weekday = new Date(startDate).getDay();
 
         arr.push({
+            'animeID':      animeID,
             'oaID':         '',
-            'tvID':         '',
+            //'tvID':         '',
             'tvName':       tvName,
             'startDate':    startDate,
             'endDate':      endDate,
@@ -532,7 +535,8 @@ var vue = new Vue({
                 'endTime':    '',
                 'weekday':    1,
                 'tvColumn':   '',
-                'escription': ''
+                'description': '',
+                'isProduction': false
             }
         ],
         'onairDataInput': ''
@@ -588,6 +592,9 @@ var vue = new Vue({
                     });
                     break;
                 case 'onair':
+                    this.$http.post('anime/onair', {data: this.onair}).then(function (r) {
+                        if (r.status == 200) alert('录入成功!!');
+                    });
                     break;
             }
         },
@@ -599,10 +606,11 @@ var vue = new Vue({
 
             var item, items; //res;
 
-            items = formatedTextToArray(data);
-
             switch (pos) {
+
                 case 'staff':
+
+                    items = formatedTextToArray(data);
 
                     vue.staffMembers = [];
 
@@ -647,6 +655,8 @@ var vue = new Vue({
                     break;
                 case 'cast':
 
+                    items = formatedTextToArray(data);
+
                     vue.castMembers = [];
 
                     for (var j = 0; j < items.length; j++) {
@@ -659,7 +669,10 @@ var vue = new Vue({
 
                         vue.castMembers.push(item);
                     }
-                    console.log(vue.castMembers);
+                    break;
+                case 'onair':
+                    items = data.replace(/\t/g, '\,');
+                    vue.onair          = onairFormatedTextToArray(items, vue.basicData.id.value);
                     break;
             }
         },
@@ -700,8 +713,6 @@ var vue = new Vue({
             vue.member = JSON.stringify(vue.staffMembers)
         },
         onairDataFormat: function () {
-            vue.onairDataInput = vue.onairDataInput.replace(/\t/g, '\,');
-            vue.onair          = onairFormatedTextToArray(vue.onairDataInput);
         }
     }
 });

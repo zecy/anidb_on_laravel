@@ -464,7 +464,6 @@ Vue.filter('filtByValue', function (arr, search, key) {
     return res;
 });
 
-
 /** VUE JS 实例 **/
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
@@ -472,7 +471,7 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAt
 var vue = new Vue({
     el:      '#animedata',
     data:    {
-        'basicData':      {
+        'basicData': {
             'id':            {'label': '动画ID', 'value': ''},
             'seriesID':      {'label': '系列ID', 'value': ''},
             'seriesTitle':   {'label': '系列ID', 'value': ''},
@@ -492,7 +491,7 @@ var vue = new Vue({
             ],
             'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
             'links':         [
-                {'label': '官方网站', 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
+                {'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
             ],
             'isSequel':      {'label': '是否续作', 'value': false},
             'sequelComment': {'label': '备注', 'value': ''},
@@ -501,9 +500,6 @@ var vue = new Vue({
             'story':         {'label': '故事', 'value': ''},
             'description':   {'label': '介绍', 'value': ''}
         },
-        'workComment':    '',
-        'staffSource':    '',
-        'castSource':     '',
         'staffMembers':   [
             {
                 'staffID':            '',
@@ -538,30 +534,34 @@ var vue = new Vue({
                 'isProduction': false
             }
         ],
-        'onairDataInput': ''
     },
-    watch:   {
-        'basicData.oriWorks[0][0]': function (newVal, oldVal) {
-            if (oldVal.id != '' && newVal != oldVal) {
-                var item = this.basicData.oriWorks[1];
-                // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
-                var items = [{'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
-                if (newVal.haschild) {
-                    items = [];
-                    for (var i = 0; i < item.length; i++) {
-                        if (item[i].pid == newVal.id) {
-                            items.push(item[i])
-                        }
-                    }
-                }
-                this.basicData.oriWorks = [
-                    newVal,
-                    items,
-                    [{'id': '', 'haschild': false, 'multiple': false}],
-                    [{'id': '', 'haschild': false, 'multiple': false}]
-                ]
-            }
-        }
+    //watch:   {
+    //    'basicData.oriWorks[0][0]': function (newVal, oldVal) {
+    //        if (oldVal.id != '' && newVal != oldVal) {
+    //            var item = this.basicData.oriWorks[1];
+    //            // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
+    //            var items = [{'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
+    //            if (newVal.haschild) {
+    //                items = [];
+    //                for (var i = 0; i < item.length; i++) {
+    //                    if (item[i].pid == newVal.id) {
+    //                        items.push(item[i])
+    //                    }
+    //                }
+    //            }
+    //            this.basicData.oriWorks = [
+    //                newVal,
+    //                items,
+    //                [{'id': '', 'haschild': false, 'multiple': false}],
+    //                [{'id': '', 'haschild': false, 'multiple': false}]
+    //            ]
+    //        }
+    //    }
+    //},
+    created: function(){
+        console.log(basicDataFromDB);
+        console.log(this.basicData);
+        this.basicData = basicDataFromDB;
     },
     methods: {
         /*

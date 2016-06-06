@@ -20,4 +20,19 @@ class AnimeBasicData extends Model
         'anime_descritption',
         'anime_counted'
     ];
+    protected $visible = array(
+        'anime_id',
+        'anime_series_id',
+        'anime_abbr',
+        'anime_kur',
+        'anime_premiere_media',
+        'anime_sequel',
+        'anime_sequel_comment',
+        'anime_duration_format',
+        'anime_end',
+        'anime_story',
+        'anime_description',
+        'anime_counted',
+        'anime_attribute'
+    );
 }

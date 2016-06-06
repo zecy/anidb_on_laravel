@@ -5,7 +5,13 @@
 @stop
 
 @section('content')
+
     <div id="animedata" class="container">
+
+        <script>
+            var basicDataFromDB = JSON.parse('{!! $basicData !!}');
+        </script>
+
         <h2>主要信息</h2>
 
         <form id="maininfo" class="form form-horizontal">

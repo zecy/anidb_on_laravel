@@ -31,7 +31,69 @@ class AnimeInput extends Controller
         $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
         //dd($oriWorks);
         //数据库内容赋值到 view
-        return view('input.input', compact('transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
+
+        $animeBasicData = \App\AnimeBasicData::where('anime_id', 64)->get()->toArray()[0];
+        $animeLinks = \App\AnimeLinks::where('anime_id', 43)->get()->toArray();
+        $animeTitles = \App\AnimeTrans::where('trans_class', 'anime_title')
+            ->where('trans_name_id', 28)
+            ->get(array(
+                'trans_name',
+                'trans_name_id',
+                'trans_language',
+                'trans_default',
+                'trans_description'
+            ))->toArray();
+        $animeOriWorks = \App\AnimeOriginalWork::where('anime_id', 65)->get()->toArray();
+
+        $basicData = [
+            'id'            => ['label' => '动画ID', 'value' => $animeBasicData['anime_id']],
+            'seriesID'      => ['label' => '系列ID', 'value' => $animeBasicData['anime_series_id']],
+            'seriesTitle'   => ['label' => '系列ID', 'value' => ''],
+            'abbr'          => ['label' => '简称', 'value' => $animeBasicData['anime_abbr']],
+            'kur'           => ['label' => '长度', 'value' => $animeBasicData['anime_kur']],
+            'duration'      => ['label' => '时间规格', 'value' => $animeBasicData['anime_duration_format']],
+            'premiereMedia' => ['label' => '首播媒体', 'value' => $animeBasicData['anime_premiere_media']],
+            'isSequel'      => ['label' => '是否续作', 'value' => $animeBasicData['anime_sequel']],
+            'sequelComment' => ['label' => '备注', 'value' => $animeBasicData['anime_sequel_comment']],
+            'isEnd'         => ['label' => '是否完结', 'value' => $animeBasicData['anime_end']],
+            'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['anime_counted']],
+            'story'         => ['label' => '故事', 'value' => ''],
+            'description'   => ['label' => '介绍', 'value' => $animeBasicData['anime_description']],
+            'title'         => [],
+            'links'         => [],
+            'oriWorks'      => []
+        ];
+
+        foreach ($animeTitles as $title) {
+            $basicData['title'][] = [
+                'lang'       => $title['trans_language'],
+                'isOfficial' => $title['trans_default'],
+                'value'      => $title['trans_name'],
+                'comment'    => $title['trans_description']
+            ];
+        }
+
+        foreach ($animeLinks as $link ) {
+            $basicData['links'][] = [
+                'class' => $link['link_class'],
+                'isOfficial' => $link['link_is_official'],
+                'value' => $link['link_url'],
+                'comment' => $link['link_comment']
+            ];
+        }
+
+        foreach ( $animeOriWorks as $work ) {
+            $basicData['oriWorks'][$work['lv']][] = [
+                'id'       => $work['ori_id'],
+                'haschild' => $work['haschild'],
+                'multiple' => $work['multiple'],
+                'pid'      => $work['ori_pid']
+            ];
+        }
+
+        $basicData = json_encode($basicData);
+
+        return view('input.input', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
 
     /**
@@ -149,7 +211,7 @@ class AnimeInput extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -161,7 +223,37 @@ class AnimeInput extends Controller
      */
     public function edit($id)
     {
-        //
+        // Basic Data
+        $basicData = \App\AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
+
+        $res = [
+            'id'            => ['label' => '动画ID', 'value' => $basicData['anime_id']],
+            'seriesID'      => ['label' => '系列ID', 'value' => $basicData['anime_series_id']],
+            'seriesTitle'   => ['label' => '系列ID', 'value' => ''],
+            'abbr'          => ['label' => '简称', 'value' => $basicData['anime_abbr']],
+            'kur'           => ['label' => '长度', 'value' => $basicData['anime_kur']],
+            'duration'      => ['label' => '时间规格', 'value' => $basicData['anime_duration_format']],
+            'premiereMedia' => ['label' => '首播媒体', 'value' => $basicData['anime_premiere_media']],
+            'isSequel'      => ['label' => '是否续作', 'value' => $basicData['anime_sequel']],
+            'sequelComment' => ['label' => '备注', 'value' => $basicData['anime_sequel_comment']],
+            'isEnd'         => ['label' => '是否完结', 'value' => $basicData['anime_end']],
+            'isCounted'     => ['label' => '是否纳入统计', 'value' => $basicData['anime_counted']],
+            'story'         => ['label' => '故事', 'value' => ''],
+            'description'   => ['label' => '介绍', 'value' => $basicData['anime_description']]
+        ];
+
+        // Staff
+        // Cast
+        // Onair
+
+        $transLangs = \App\ClassSupport::where('class', '=', 'language')->get(array('content', 'comment'));
+        $links = \App\ClassSupport::where('class', '=', 'links')->get(array('content', 'comment'));
+        $premiereMedia = \App\ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
+        $animeDurationFormat = \App\ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
+        $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
+
+
+        return view('input.input', compact('res','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
 
     /**

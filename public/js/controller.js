@@ -534,34 +534,31 @@ var vue = new Vue({
                 'isProduction': false
             }
         ],
+        'animeNameSearchInput' : '',
+        'animeNameList': []
     },
-    //watch:   {
-    //    'basicData.oriWorks[0][0]': function (newVal, oldVal) {
-    //        if (oldVal.id != '' && newVal != oldVal) {
-    //            var item = this.basicData.oriWorks[1];
-    //            // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
-    //            var items = [{'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
-    //            if (newVal.haschild) {
-    //                items = [];
-    //                for (var i = 0; i < item.length; i++) {
-    //                    if (item[i].pid == newVal.id) {
-    //                        items.push(item[i])
-    //                    }
-    //                }
-    //            }
-    //            this.basicData.oriWorks = [
-    //                newVal,
-    //                items,
-    //                [{'id': '', 'haschild': false, 'multiple': false}],
-    //                [{'id': '', 'haschild': false, 'multiple': false}]
-    //            ]
-    //        }
-    //    }
-    //},
-    created: function(){
-        console.log(basicDataFromDB);
-        console.log(this.basicData);
-        this.basicData = basicDataFromDB;
+    watch:   {
+        'basicData.oriWorks[0][0]': function (newVal, oldVal) {
+            if (oldVal.id != '' && newVal != oldVal) {
+                var item = this.basicData.oriWorks[1];
+                // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
+                var items = [{'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
+                if (newVal.haschild) {
+                    items = [];
+                    for (var i = 0; i < item.length; i++) {
+                        if (item[i].pid == newVal.id) {
+                            items.push(item[i])
+                        }
+                    }
+                }
+                this.basicData.oriWorks = [
+                    newVal,
+                    items,
+                    [{'id': '', 'haschild': false, 'multiple': false}],
+                    [{'id': '', 'haschild': false, 'multiple': false}]
+                ]
+            }
+        }
     },
     methods: {
         /*
@@ -598,6 +595,40 @@ var vue = new Vue({
             }
         },
 
+        searchAnime: function() {
+            this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
+
+                if( r.data.id ) {
+                    this.basicData = r.data;
+                } else {
+                    var animeNames;
+
+                    animeNames = r.data;
+
+                    for(var i = 0; i < animeNames.length; i++) {
+
+                        var anime = {};
+
+                        var animeName = animeNames[i];
+
+                        anime.id = animeName[0].trans_name_id;
+
+                        anime.ori = animeName[0].trans_name;
+
+                        anime.zh_CN = (animeName[1].trans_language == 'zh-cn') ? animeName[1].trans_name : '';
+
+                        this.animeNameList.push(anime);
+                    }
+                }
+
+            });
+        },
+
+        showAnime: function(id) {
+            this.$http.get('anime/' + id).then(function(r){
+                this.basicData = r.data;
+            });
+        },
         /**
          * Get the Formated Text from sourceBox
          */
@@ -671,7 +702,7 @@ var vue = new Vue({
                     break;
                 case 'onair':
                     items = data.replace(/\t/g, '\,');
-                    vue.onair          = onairFormatedTextToArray(items, vue.basicData.id.value);
+                    vue.onair = onairFormatedTextToArray(items, vue.basicData.id.value);
                     break;
             }
         },

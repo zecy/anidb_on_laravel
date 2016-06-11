@@ -8,9 +8,29 @@
 
     <div id="animedata" class="container">
 
-        <script>
-            var basicDataFromDB = JSON.parse('{!! $basicData !!}');
-        </script>
+        <div class="form-group" style="width: 75%;margin:50px auto">
+            <h2>查找</h2>
+            <div class="row">
+                <div class="col-xs-10">
+                    <input class="form-control" type="text"
+                           v-model="animeNameSearchInput"
+                    >
+                </div>
+                <button class="btn btn-primary col-xs-2"
+                        v-on:click="searchAnime"
+                >
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+            <div>
+                <button class="btn btn-block"
+                        v-for="animeName in animeNameList"
+                        v-on:click="showAnime(animeName.id)"
+                >
+                    @{{ animeName.ori + ' | ' + animeName.zh_CN }}
+                </button>
+            </div>
+        </div>
 
         <h2>主要信息</h2>
 
@@ -145,7 +165,7 @@
                         <label>集数</label>
                     </div>
                     <div style="width: 8%">
-                        <input type="text" v-model="basicData.eps.value">
+                        {{--<input type="text" v-model="basicData.eps.value">--}}
                     </div>
                 </td>
             </tr>

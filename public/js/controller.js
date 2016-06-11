@@ -575,8 +575,7 @@ var vue = new Vue({
                 case 'basicData':
                     this.$http.post('anime', {data: this.basicData}).then(function (r) {
                         if (r.status == 200) alert('录入成功!!');
-                        console.log(r);
-                        //this.showAnime()
+                        this.showAnime(r.data.basicData.anime_id);
                     });
                     break;
                 case 'staff':

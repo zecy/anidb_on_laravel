@@ -262,8 +262,16 @@ class AnimeInput extends Controller
             ->get(array('trans_name_id'))
             ->toArray();
 
+        $res = [];
+
+        foreach ( $animeIDs as $animeID ) {
+            $res[$animeID['trans_name_id']] = $animeID['trans_name_id'];
+        }
+
+        $animeIDs = $res;
+
         if ( count($animeIDs) == 1 ) {
-            return $this->show($animeIDs[0]['trans_name_id']);
+            return $this->show(current($animeIDs));
         } else {
             $animes = [];
 

@@ -472,8 +472,8 @@ var vue = new Vue({
     el:      '#animedata',
     data:    {
         'basicData': {
-            'id':            {'label': '动画ID', 'value': ''},
-            'seriesID':      {'label': '系列ID', 'value': ''},
+            'id':            {'label': '动画ID', 'value': 0},
+            'seriesID':      {'label': '系列ID', 'value': 0},
             'seriesTitle':   {'label': '系列ID', 'value': ''},
             'title':         [
                 {'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
@@ -534,6 +534,9 @@ var vue = new Vue({
                 'isProduction': false
             }
         ],
+        'staffSource': '',
+        'castSource': '',
+        'onairDataInput': '',
         'animeNameSearchInput' : '',
         'animeNameList': []
     },
@@ -564,17 +567,16 @@ var vue = new Vue({
         /*
          * Display the Anime Basic Data
          * */
-        createData:      function (pos) {
+        createData: function (pos) {
 
             //e.preventDefault();
 
             switch(pos) {
                 case 'basicData':
                     this.$http.post('anime', {data: this.basicData}).then(function (r) {
-                        console.log(r);
                         if (r.status == 200) alert('录入成功!!');
-                        //TODO: 根据返回的 ID 跳转到数据编辑页面
-                        //this.basicData.id.value = r.data.anime_id;
+                        console.log(r);
+                        //this.showAnime()
                     });
                     break;
                 case 'staff':

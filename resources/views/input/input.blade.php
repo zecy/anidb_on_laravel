@@ -250,9 +250,14 @@
                 </td>
             </tr>
         </table>
-        <button @click="createData('basicData')" class="btn btn-success">创建数据</button>
         </form>
+            <button class="btn btn-success"
+                    v-on:click="createData('basicData')"
+            >
+                创建数据
+            </button>
 
+        <div v-if="basicData.id.value != ''">
                                                                 {{-- STAFF BIGIN --}}
 
         <h2>Staff信息</h2>
@@ -269,9 +274,9 @@
                 <textarea class="form-control" rows="10" v-model="staffSource" placeholder="请输入源数据"></textarea>
             </div>
         </div>
-        <button class="btn btn-primary" @click="toArray(staffSource ,'staff')">获取Staff数据</button>
-        <button class="btn btn-danger" @click="staffMembers = []">Staff列表</button>
-        <button class="btn btn-danger" @click="staffSource = ''">清除输入框</button>
+        <button class="btn btn-primary" v-on:click="toArray(staffSource ,'staff')">获取Staff数据</button>
+        <button class="btn btn-danger" v-on:click="staffMembers = []">Staff列表</button>
+        <button class="btn btn-danger" v-on:click="staffSource = ''">清除输入框</button>
 
         <br>
         <br>
@@ -360,7 +365,11 @@
             </table>
         </form>
 
-        <button @click="createData('staff')" class="btn btn-success">创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
+            <button class="btn btn-success"
+                    v-on:click="createData('staff')"
+            >
+                创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
+            </button>
 
                                                                 {{-- STAFF END --}}
 
@@ -380,9 +389,9 @@
             </div>
         </div>
 
-        <button class="btn btn-primary" @click="toArray(castSource ,'cast')">获取Cast数据</button>
-        <button class="btn btn-danger" @click="castMembers = []">清除Cast列表</button>
-        <button class="btn btn-danger" @click="castSource = ''">清除输入框</button>
+        <button class="btn btn-primary" v-on:click="toArray(castSource ,'cast')">获取Cast数据</button>
+        <button class="btn btn-danger" v-on:click="castMembers = []">清除Cast列表</button>
+        <button class="btn btn-danger" v-on:click="castSource = ''">清除输入框</button>
 
         <br>
         <br>
@@ -438,7 +447,7 @@
 
         <br>
 
-        <button @click="createData('cast')" class="btn btn-success">创建CAST@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
+        <button v-on:click="createData('cast')" class="btn btn-success">创建CAST@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
 
                                                                 {{-- CAST END --}}
 
@@ -452,9 +461,9 @@
 
         <br>
 
-        <button class="btn btn-primary" @click="toArray(onairDataInput, 'onair')">格式化日期</button>
+        <button class="btn btn-primary" v-on:click="toArray(onairDataInput, 'onair')">格式化日期</button>
 
-        <button class="btn btn-primary" @click="onairDataInput = ''">清除数据</button>
+        <button class="btn btn-primary" v-on:click="onairDataInput = ''">清除数据</button>
 
         <br>
         <br>
@@ -528,13 +537,10 @@
             </table>
         </form>
 
-        <button @click="createData('onair')" class="btn btn-success">创建播放信息@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
+        <button v-on:click="createData('onair')" class="btn btn-success">创建播放信息@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
 
                                                                 {{-- ONAIR END --}}
-
-        <button class="btn btn-primary" @click="outputData">转换为 JSON</button>
-        <br>
-        <br>
+</div>
 
         {{-- TEMPLATE --}}
 
@@ -629,22 +635,22 @@
         {{-- 信息栏内容格式化按钮 --}}
         <template id="text-format">
             <button class="btn btn-primary"
-                    @click="format(text, pos, 'separator')"
+                    v-on:click="format(text, pos, 'separator')"
             >
                   转换分隔符
             </button>
             <button class="btn btn-primary"
-                    @click="format(text, pos, 'cleanHTML')"
+                    v-on:click="format(text, pos, 'cleanHTML')"
             >
                   清除HTML标签
             </button>
             <button class="btn btn-primary"
-                    @click="format(text, pos, 'oddEven')"
+                    v-on:click="format(text, pos, 'oddEven')"
             >
                   奇偶行合并
             </button>
             <button class="btn btn-primary"
-                    @click="format(text, pos, 'wikiCV')"
+                    v-on:click="format(text, pos, 'wikiCV')"
                     v-if="pos == 'cast'"
             >
                   维基百科声优
@@ -653,7 +659,7 @@
 
         {{-- 重要按钮 --}}
         <template id="toggle-button">
-            <button @click="toggle = !toggle" type="button"
+            <button v-on:click="toggle = !toggle" type="button"
                           v-bind:class="toggle?'btn-primary':'btn-default'"
                           class="btn btn-xs"
                           >
@@ -666,22 +672,22 @@
         <template id="row-control">
             <div class="@{{ style }}">
                 <div class="col-xs-3">
-                    <button @click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
+                    <button v-on:click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-arrow-up"></span>
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button @click="rowDown(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
+                    <button v-on:click="rowDown(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-arrow-down"></span>
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button @click="removeRow(arr,index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
+                    <button v-on:click="removeRow(arr,index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button @click="addRow(arr,index)" type="button" class="btn btn-success btn-xs" tabindex="-1">
+                    <button v-on:click="addRow(arr,index)" type="button" class="btn btn-success btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-plus"></span>
                     </button>
                 </div>

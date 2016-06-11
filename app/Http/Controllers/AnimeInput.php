@@ -21,17 +21,11 @@ class AnimeInput extends Controller
      */
     public function index()
     {
-        //取得数据库内容
         $transLangs = \App\ClassSupport::where('class', '=', 'language')->get(array('content', 'comment'));
         $links = \App\ClassSupport::where('class', '=', 'links')->get(array('content', 'comment'));
         $premiereMedia = \App\ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
         $animeDurationFormat = \App\ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
-        //$oriGrenres = new TreeData(\App\AnimeOriginalWork::all()->toArray(),'ori_id','ori_pid');
-        //$oriWorks = json_encode($oriGrenres->result());
         $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
-        //dd($oriWorks);
-        //数据库内容赋值到 view
-
 
         return view('input.input', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }

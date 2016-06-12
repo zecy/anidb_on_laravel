@@ -27,6 +27,7 @@ class AnimeInput extends Controller
         $animeDurationFormat = \App\ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
         $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
 
+
         return view('input.input', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
 
@@ -204,11 +205,96 @@ class AnimeInput extends Controller
             ];
         }
 
-        return \Response::json($basicData);
+
+        //TODO: 置空处理
+
+        $staffs = \App\AnimeStaff::where('staff_anime_id', $id)
+            ->get(array(
+                'staff_id',
+                'staff_important',
+                'staff_post_zh',
+                'staff_post_ori',
+                'staff_belong',
+                'staff_member'
+            ))->toArray();
+
+        $staffMembers = [];
+
+        foreach ( $staffs as $staff ) {
+            $staffMembers[] = [
+                'animeID'            => $id,
+                'id'                 => $staff['staff_id'],
+                'staffPostOri'       => $staff['staff_post_ori'],
+                'staffPostZhCN'      => $staff['staff_post_zh'],
+                'staffMemberName'    => $staff['staff_member'],
+                'staffBelongsToName' => $staff['staff_belong'],
+                'isImportant'        => $staff['staff_important']
+            ];
+        }
+
+        $casts = \App\AnimeCast::where('cast_anime_id', $id)
+            ->get(array(
+                'cast_id',
+                'cast_anime_id',
+                'charaNameOri',
+                'cvNameOri',
+                'cast_important'
+            ))->toArray();
+
+        $castMembers = [];
+
+        foreach ( $casts as $cast ) {
+            $castMembers[] = [
+                'animeID'      => $id,
+                'id'           => $cast['cast_id'],
+                'charaNameOri' => $cast['charaNameOri'],
+                'cvNameOri'    => $cast['cvNameOri'],
+                'isImportant'  => $cast['cast_important']
+            ];
+        }
+
+        $onairData = \App\AnimeOnair::where('anime_id', $id)
+            ->get(array(
+                'oa_id',
+                'anime_id',
+                'oa_start_date',
+                'oa_end_date',
+                'oa_start_time',
+                'oa_end_time',
+                'oa_weekday',
+                'oa_tv_column',
+                'oa_description',
+                'tv_name',
+                'is_production'
+            ))->toArray();
+
+        $onairs = [];
+
+        foreach ( $onairData as $onair ) {
+            $onairs[] = [
+                'id' =>            $onair['oa_id'],
+                'tvName' =>        $onair['tv_name'],
+                'startDate' =>     $onair['oa_start_date'],
+                'endDate' =>       $onair['oa_end_date'],
+                'startTime' =>     $onair['oa_start_time'],
+                'endTime' =>       $onair['oa_end_time'],
+                'weekday' =>       $onair['oa_weekday'],
+                'tvColumn' =>      $onair['oa_tv_column'],
+                'description' =>   $onair['oa_description'],
+                'isProduction' =>  $onair['is_production']
+            ];
+        }
+
+        return \Response::json([
+            'basicData'    => $basicData,
+            'staffMembers' => $staffMembers,
+            'castMembers'  => $castMembers,
+            'onairs'       => $onairs
+        ]);
 
     }
 
-    /**
+   /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id

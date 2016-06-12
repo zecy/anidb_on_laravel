@@ -262,7 +262,7 @@
 
         <h2>Staff信息</h2>
 
-        <textformat :text.sync="sourceBox"
+        <textformat :text.sync="staffSource"
                     :pos="'staff'"
         ></textformat>
 

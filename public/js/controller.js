@@ -86,6 +86,8 @@ var staffAndCastFormat = function (str) {
         return res.join('\n')
     };
 
+    //TODO: 两列合并
+
     fromSource = function (str) {
         str = str.replace(/ +/g, '');
         str = str.replace(/<.*?>\n*/g, '');
@@ -502,8 +504,7 @@ var vue = new Vue({
         },
         'staffMembers':   [
             {
-                'staffID':            '',
-                'staffPostID':        '',
+                'id':                 '',
                 'staffPostOri':       '',
                 'staffPostZhCN':      '',
                 'staffMemberName':    '',
@@ -599,8 +600,14 @@ var vue = new Vue({
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
 
-                if( r.data.id ) {
-                    this.basicData = r.data;
+                if( r.data.basicData.id ) {
+
+                    console.log(r.data.onairs);
+
+                    this.basicData    = r.data.basicData;
+                    this.staffMembers = r.data.staffMembers;
+                    this.castMembers  = r.data.castMembers;
+                    this.onair        = r.data.onairs;
                 } else {
                     var animeNames;
 
@@ -627,7 +634,9 @@ var vue = new Vue({
 
         showAnime: function(id) {
             this.$http.get('anime/' + id).then(function(r){
-                this.basicData = r.data;
+                this.basicData    = r.data.basicData;
+                this.staffMembers = r.data.staffMembers;
+                this.castMembers  = r.data.castMembers;
             });
         },
         /**
@@ -658,7 +667,6 @@ var vue = new Vue({
                         vue.staffMembers.push(item);
                     }
 
-                    console.log(vue.staffMembers);
                     //this.$http.post('anime/stafftranslate', {data: items}).then(function (r) {
                     //    res = r.data;
                     //    console.log(res);
@@ -743,7 +751,5 @@ var vue = new Vue({
         outputData:      function () {
             vue.member = JSON.stringify(vue.staffMembers)
         },
-        onairDataFormat: function () {
-        }
     }
 });

@@ -32,14 +32,6 @@ class AnimeInput extends Controller
     }
 
     /**
-     *
-     * @param pos $array
-     *
-     * 返回传递过来的名词返回唯一的 ID
-     *
-     */
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -60,9 +52,7 @@ class AnimeInput extends Controller
     {
         $data = $request->all()['data'];
 
-        $res = array();
-
-        \DB::transaction(function () use ($data, &$res) {
+        \DB::transaction(function () use ($data) {
             //基本信息
             $basicData = AnimeBasicData::create([
                 'anime_series_id'       => $data['seriesID']['value'],
@@ -134,7 +124,7 @@ class AnimeInput extends Controller
 
         \DB::commit();
 
-        return \Response::json($res);
+        return \Response::json();
     }
 
     /**
@@ -204,7 +194,6 @@ class AnimeInput extends Controller
                 'pid'      => $work['ori_pid']
             ];
         }
-
 
         //TODO: 置空处理
 
@@ -301,39 +290,29 @@ class AnimeInput extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function update(Request $request, $id)
     {
         // Basic Data
-        $basicData = \App\AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
+        $data = $request->all()['data'];
 
-        $res = [
-            'id'            => ['label' => '动画ID', 'value' => $basicData['anime_id']],
-            'seriesID'      => ['label' => '系列ID', 'value' => $basicData['anime_series_id']],
-            'seriesTitle'   => ['label' => '系列ID', 'value' => ''],
-            'abbr'          => ['label' => '简称', 'value' => $basicData['anime_abbr']],
-            'kur'           => ['label' => '长度', 'value' => $basicData['anime_kur']],
-            'duration'      => ['label' => '时间规格', 'value' => $basicData['anime_duration_format']],
-            'premiereMedia' => ['label' => '首播媒体', 'value' => $basicData['anime_premiere_media']],
-            'isSequel'      => ['label' => '是否续作', 'value' => $basicData['anime_sequel']],
-            'sequelComment' => ['label' => '备注', 'value' => $basicData['anime_sequel_comment']],
-            'isEnd'         => ['label' => '是否完结', 'value' => $basicData['anime_end']],
-            'isCounted'     => ['label' => '是否纳入统计', 'value' => $basicData['anime_counted']],
-            'story'         => ['label' => '故事', 'value' => ''],
-            'description'   => ['label' => '介绍', 'value' => $basicData['anime_description']]
-        ];
+        $basicData = \App\AnimeBasicData::find($id);
 
-        // Staff
-        // Cast
-        // Onair
+        \DB::transaction(function () use ($data, $basicData) {
+            $basicData->anime_series_id          = $data['seriesID']['value'];
+            $basicData->anime_abbr               = $data['abbr']['value'];
+            $basicData->anime_kur                = $data['kur']['value'];
+            $basicData->anime_premiere_media     = $data['premiereMedia']['value'];
+            $basicData->anime_sequel             = $data['isSequel']['value'];
+            $basicData->anime_duration_format    = $data['duration']['value'];
+            $basicData->anime_end                = $data['isEnd']['value'];
+            $basicData->anime_description        = $data['description']['value'];
+            $basicData->anime_counted            = $data['isCounted']['value'];
+        };
 
-        $transLangs = \App\ClassSupport::where('class', '=', 'language')->get(array('content', 'comment'));
-        $links = \App\ClassSupport::where('class', '=', 'links')->get(array('content', 'comment'));
-        $premiereMedia = \App\ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
-        $animeDurationFormat = \App\ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
-        $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
+        //TODO: 编辑完成后返回编辑后的结果
+        //      如果编辑失败,要返回失败码
+        //return $this->show($id);
 
-
-        return view('input.input', compact('res','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
 
     /**
@@ -377,19 +356,6 @@ class AnimeInput extends Controller
 
            return \Response::json($animes);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

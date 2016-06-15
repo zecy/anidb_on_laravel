@@ -381,7 +381,7 @@ Vue.component('rowcontrol', {
     props:    ['style', 'arr', 'index'],
     methods:  {
         /* Row Up */
-        rowUp:     function (arr, index) {
+        rowUp: function (arr, index) {
             var i = Number(index);
             if (i == 0) {
                 alert('这已经是首行，添加行请用「 + 」按钮')
@@ -409,6 +409,7 @@ Vue.component('rowcontrol', {
         /* Add A Row */
         addRow:    function (arr, index) {
             var obj = JSON.parse(JSON.stringify(arr[index]));
+            console.log(obj.id);
             arr.splice(Number(index), 0, obj);
         }
     }
@@ -478,8 +479,8 @@ var vue = new Vue({
             'seriesID':      {'label': '系列ID', 'value': 0},
             'seriesTitle':   {'label': '系列ID', 'value': ''},
             'title':         [
-                {'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
-                {'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''}
+                {'id': 0, 'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
+                {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''}
             ],
             'abbr':          {'label': '简称', 'value': ''},
             'kur':           {'label': '长度', 'value': ''},
@@ -493,7 +494,7 @@ var vue = new Vue({
             ],
             'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
             'links':         [
-                {'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
+                {'id':0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
             ],
             'isSequel':      {'label': '是否续作', 'value': false},
             'sequelComment': {'label': '备注', 'value': ''},
@@ -646,6 +647,8 @@ var vue = new Vue({
 
             var item, items; //res;
 
+            //TODO: 已有内容的, 在后面添加
+
             switch (pos) {
 
                 case 'staff':
@@ -656,6 +659,7 @@ var vue = new Vue({
 
                     for (var i = 0; i < items.length; i++) {
                         item = {
+                            'staffID':              0,
                             'animeID':              vue.basicData.id.value,
                             'staffPostOri':         items[i][0],
                             'staffPostZhCN':        '',

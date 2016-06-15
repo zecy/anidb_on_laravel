@@ -6,6 +6,10 @@ use App\AnimeBasicData;
 use App\AnimeLinks;
 use App\AnimeTrans;
 use App\AnimeOriginalWork;
+use App\AnimeOriginalWorkSupport;
+use App\ClassSupport;
+use App\AnimeStaff;
+use App\AnimeCast;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -21,11 +25,11 @@ class AnimeInput extends Controller
      */
     public function index()
     {
-        $transLangs = \App\ClassSupport::where('class', '=', 'language')->get(array('content', 'comment'));
-        $links = \App\ClassSupport::where('class', '=', 'links')->get(array('content', 'comment'));
-        $premiereMedia = \App\ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
-        $animeDurationFormat = \App\ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
-        $oriWorks = \App\AnimeOriginalWorkSupport::all()->toJson();
+        $transLangs = ClassSupport::where('class', '=', 'language')->get(array('content', 'comment'));
+        $links = ClassSupport::where('class', '=', 'links')->get(array('content', 'comment'));
+        $premiereMedia = ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
+        $animeDurationFormat = ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
+        $oriWorks = AnimeOriginalWorkSupport::all()->toJson();
 
 
         return view('input.input', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
@@ -136,18 +140,19 @@ class AnimeInput extends Controller
      */
     public function show($id)
     {
-        $animeBasicData = \App\AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
-        $animeLinks = \App\AnimeLinks::where('anime_id', $id)->get()->toArray();
-        $animeTitles = \App\AnimeTrans::where('trans_class', 'anime_title')
+        $animeBasicData = AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
+        $animeLinks = AnimeLinks::where('anime_id', $id)->get()->toArray();
+        $animeTitles = AnimeTrans::where('trans_class', 'anime_title')
             ->where('trans_name_id', $id)
             ->get(array(
+                'trans_id',
                 'trans_name',
                 'trans_name_id',
                 'trans_language',
                 'trans_default',
                 'trans_description'
             ))->toArray();
-        $animeOriWorks = \App\AnimeOriginalWork::where('anime_id', $id)->get()->toArray();
+        $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)->get()->toArray();
 
         $basicData = [
             'id'            => ['label' => '动画ID', 'value' => $animeBasicData['anime_id']],
@@ -170,6 +175,7 @@ class AnimeInput extends Controller
 
         foreach ($animeTitles as $title) {
             $basicData['title'][] = [
+                'id'         => $title['trans_id'],
                 'lang'       => $title['trans_language'],
                 'isOfficial' => $title['trans_default'],
                 'value'      => $title['trans_name'],
@@ -179,10 +185,11 @@ class AnimeInput extends Controller
 
         foreach ($animeLinks as $link ) {
             $basicData['links'][] = [
-                'class' => $link['link_class'],
+                'id'         => $link['link_id'],
+                'class'      => $link['link_class'],
                 'isOfficial' => $link['link_is_official'],
-                'value' => $link['link_url'],
-                'comment' => $link['link_comment']
+                'value'      => $link['link_url'],
+                'comment'    => $link['link_comment']
             ];
         }
 
@@ -197,7 +204,7 @@ class AnimeInput extends Controller
 
         //TODO: 置空处理
 
-        $staffs = \App\AnimeStaff::where('staff_anime_id', $id)
+        $staffs = AnimeStaff::where('staff_anime_id', $id)
             ->get(array(
                 'staff_id',
                 'staff_important',
@@ -221,7 +228,7 @@ class AnimeInput extends Controller
             ];
         }
 
-        $casts = \App\AnimeCast::where('cast_anime_id', $id)
+        $casts = AnimeCast::where('cast_anime_id', $id)
             ->get(array(
                 'cast_id',
                 'cast_anime_id',
@@ -295,9 +302,10 @@ class AnimeInput extends Controller
         // Basic Data
         $data = $request->all()['data'];
 
-        $basicData = \App\AnimeBasicData::find($id);
+        $basicData = AnimeBasicData::find($id);
+        $titles = AnimeTrans::where('trans_class', 'anime_title')->where('trans_name_id', $id)->get();
 
-        \DB::transaction(function () use ($data, $basicData) {
+        \DB::transaction(function () use ($data, $basicData, $titles) {
             $basicData->anime_series_id          = $data['seriesID']['value'];
             $basicData->anime_abbr               = $data['abbr']['value'];
             $basicData->anime_kur                = $data['kur']['value'];
@@ -307,7 +315,10 @@ class AnimeInput extends Controller
             $basicData->anime_end                = $data['isEnd']['value'];
             $basicData->anime_description        = $data['description']['value'];
             $basicData->anime_counted            = $data['isCounted']['value'];
-        };
+
+            $basicData->save();
+
+        });
 
         //TODO: 编辑完成后返回编辑后的结果
         //      如果编辑失败,要返回失败码

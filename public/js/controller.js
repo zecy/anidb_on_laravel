@@ -601,9 +601,7 @@ var vue = new Vue({
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
 
-                if( r.data.basicData.id ) {
-
-                    console.log(r.data.onairs);
+                if( r.data.multiple == 0) {
 
                     this.basicData    = r.data.basicData;
                     this.staffMembers = r.data.staffMembers;
@@ -612,7 +610,7 @@ var vue = new Vue({
                 } else {
                     var animeNames;
 
-                    animeNames = r.data;
+                    animeNames = r.data.animes;
 
                     for(var i = 0; i < animeNames.length; i++) {
 

@@ -282,6 +282,7 @@ class AnimeInput extends Controller
         }
 
         return \Response::json([
+            'multiple'     => 0,
             'basicData'    => $basicData,
             'staffMembers' => $staffMembers,
             'castMembers'  => $castMembers,
@@ -365,7 +366,10 @@ class AnimeInput extends Controller
                 $animes[] = $anime_db;
             }
 
-           return \Response::json($animes);
+           return \Response::json([
+               'multiple' => 1,
+               'animes'   => $animes
+           ]);
         }
     }
 

@@ -600,6 +600,26 @@ var vue = new Vue({
             }
         },
 
+        editData: function (pos, id) {
+
+            let animeID = id;
+
+            switch (pos) {
+                case 'basicData':
+                    this.$http.put('anime/' + animeID, {data: this.basicData}).then(function (r) {
+                        if (r.status == 200) alert('更新成功!!');
+                        this.showAnime(animeID);
+                    });
+                    break;
+                case 'staff':
+                    break;
+                case 'cast':
+                    break;
+                case 'onair':
+                    break;
+            }
+        },
+
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
 

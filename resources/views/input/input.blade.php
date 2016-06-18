@@ -251,11 +251,20 @@
             </tr>
         </table>
         </form>
+        <div v-if="basicData.id.value == 0">
             <button class="btn btn-success"
                     v-on:click="createData('basicData')"
             >
                 创建数据
             </button>
+        </div>
+        <div v-if="basicData.id.value != 0">
+            <button class="btn btn-success"
+                    v-on:click="editData('basicData', basicData.id.value)"
+            >
+                更新数据（动画ID：@{{ basicData.id.value }}）
+            </button>
+        </div>
 
         <div v-if="basicData.id.value != ''">
                                                                 {{-- STAFF BIGIN --}}

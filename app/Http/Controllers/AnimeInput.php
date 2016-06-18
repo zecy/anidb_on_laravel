@@ -322,7 +322,7 @@ class AnimeInput extends Controller
                 $basicData->save();
 
                 // Titles
-                $Titles = $data['titles'];
+                $Titles = $data['title'];
 
                 foreach($Titles as $title) {
                     $titleID = $title['id'];
@@ -355,7 +355,7 @@ class AnimeInput extends Controller
                     $linkID = $link['id'];
 
                     if ( $linkID != 0 ) {
-                        $theLink = AnimeTrans::where('trans_class', 'anime_title')->find($linkID);
+                        $theLink = AnimeLinks::find($linkID);
 
                         $theLink->link_class        = $link['class'];
                         $theLink->link_comment      = $link['comment'];
@@ -366,7 +366,7 @@ class AnimeInput extends Controller
                     } else {
                         $theLink = AnimeLinks::create([
                             'link_class'       => $link['class'],
-                            'anime_id'         => $ID,
+                            'anime_id'         => $id,
                             'link_comment'     => $link['comment'],
                             'link_url'         => $link['value'],
                             'link_is_official' => $link['isOfficial']
@@ -385,7 +385,7 @@ class AnimeInput extends Controller
                         if($origenres['id'] != '' && $origenres['id'] != 0) {
                             $origenres = AnimeOriginalWork::create(
                                 [
-                                    'anime_id' => $ID,
+                                    'anime_id' => $id,
                                     'ori_id'   => $origenres['id'],
                                     'ori_pid'  => $origenres['pid'],
                                     'lv'       => $i,
@@ -405,7 +405,7 @@ class AnimeInput extends Controller
             return $this->show($id);
         }
         catch (\Exception $e) {
-            return \Response::json($e);
+            throw $e;
         }
     }
 

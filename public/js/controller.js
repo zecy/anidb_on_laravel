@@ -404,12 +404,14 @@ Vue.component('rowcontrol', {
         },
         /* Remove A Row */
         removeRow: function (arr, index) {
+            //TODO: 根据条目 ID 判断是仅仅从列表移除还是从数据库中删除
+            //TODO: 从数据库删除的, 需要弹出一个对话框进行提示
             arr.splice(Number(index), 1);
         },
         /* Add A Row */
         addRow:    function (arr, index) {
             var obj = JSON.parse(JSON.stringify(arr[index]));
-            console.log(obj.id);
+            obj.id = 0;
             arr.splice(Number(index), 0, obj);
         }
     }
@@ -653,11 +655,11 @@ var vue = new Vue({
 
                     items = formatedTextToArray(data);
 
-                    vue.staffMembers = [];
+                    vue.staffMembers = vue.staffMembers[0].id == 0 ? [] : vue.staffMembers;
 
                     for (var i = 0; i < items.length; i++) {
                         item = {
-                            'staffID':              0,
+                            'id':                   0,
                             'animeID':              vue.basicData.id.value,
                             'staffPostOri':         items[i][0],
                             'staffPostZhCN':        '',
@@ -669,43 +671,20 @@ var vue = new Vue({
                         vue.staffMembers.push(item);
                     }
 
-                    //this.$http.post('anime/stafftranslate', {data: items}).then(function (r) {
-                    //    res = r.data;
-                    //    console.log(res);
-                    //    if (r.status == 200) {
-                    //        console.log(r);
-                    //        for (var i = 0; i < res.length; i++) {
-                    //            item = {
-                    //                'animeID':         this.basicData.id.value,
-                    //                'staffPostID':     '',
-                    //                'staffPostOri':    '',
-                    //                'staffPostZhCN':   '',
-                    //                'staffMemberName': '',
-                    //                'isImportant':     true
-                    //            };
-                    //
-                    //            item.staffNameOri    = items[i][0];
-                    //            item.staffMemberName = items[i][1];
-                    //
-                    //            vue.staffMembers.push(res[i]);
-                    //        }
-                    //    } else {
-                    //        console.log('失败:\n' + r);
-                    //    }
-                    //});
                     break;
                 case 'cast':
 
                     items = formatedTextToArray(data);
 
-                    vue.castMembers = [];
+                    vue.castMembers = vue.castMembers[0].id == 0 ? [] : vue.castMembers;
 
                     for (var j = 0; j < items.length; j++) {
                         item = {
-                            'animeID':      vue.basicData.id.value,
-                            'charaNameOri': items[j][0],
-                            'cvNameOri':    items[j][1],
-                            'isImportant':  false
+                            'id'            : 0,
+                            'animeID'       : vue.basicData.id.value,
+                            'charaNameOri'  : items[j][0],
+                            'cvNameOri'     : items[j][1],
+                            'isImportant'   : false
                         };
 
                         vue.castMembers.push(item);

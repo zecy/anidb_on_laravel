@@ -303,28 +303,110 @@ class AnimeInput extends Controller
         // Basic Data
         $data = $request->all()['data'];
 
-        $basicData = AnimeBasicData::find($id);
-        $titles = AnimeTrans::where('trans_class', 'anime_title')->where('trans_name_id', $id)->get();
+        try {
+            \DB::transaction(function () use ($data, $id) {
 
-        \DB::transaction(function () use ($data, $basicData, $titles) {
-            $basicData->anime_series_id          = $data['seriesID']['value'];
-            $basicData->anime_abbr               = $data['abbr']['value'];
-            $basicData->anime_kur                = $data['kur']['value'];
-            $basicData->anime_premiere_media     = $data['premiereMedia']['value'];
-            $basicData->anime_sequel             = $data['isSequel']['value'];
-            $basicData->anime_duration_format    = $data['duration']['value'];
-            $basicData->anime_end                = $data['isEnd']['value'];
-            $basicData->anime_description        = $data['description']['value'];
-            $basicData->anime_counted            = $data['isCounted']['value'];
+                // BasicData
+                $basicData = AnimeBasicData::find($id);
 
-            $basicData->save();
+                $basicData->anime_series_id          = $data['seriesID']['value'];
+                $basicData->anime_abbr               = $data['abbr']['value'];
+                $basicData->anime_kur                = $data['kur']['value'];
+                $basicData->anime_premiere_media     = $data['premiereMedia']['value'];
+                $basicData->anime_sequel             = $data['isSequel']['value'];
+                $basicData->anime_duration_format    = $data['duration']['value'];
+                $basicData->anime_end                = $data['isEnd']['value'];
+                $basicData->anime_description        = $data['description']['value'];
+                $basicData->anime_counted            = $data['isCounted']['value'];
 
-        });
+                $basicData->save();
 
-        //TODO: 编辑完成后返回编辑后的结果
-        //      如果编辑失败,要返回失败码
-        //return $this->show($id);
+                // Titles
+                $Titles = $data['titles'];
 
+                foreach($Titles as $title) {
+                    $titleID = $title['id'];
+                    if ( $titleID != 0 ) {
+                        $theTitle = AnimeTrans::where('trans_class', 'anime_title')->find($titleID);
+
+                        $theTitle->trans_name           = $title['value'];
+                        $theTitle->trans_language       = $title['lang'];
+                        $theTitle->trans_default        = $title['isOfficial'];
+                        $theTitle->trans_description    = $title['comment'];
+
+                        $theTitle->save();
+                    } else {
+                        $theTitle = AnimeTrans::create(
+                            [
+                                'trans_class'       => 'anime_title',
+                                'trans_name_id'     => $id,
+                                'trans_name'        => $title['value'],
+                                'trans_language'    => $title['lang'],
+                                'trans_description' => $title['comment'],
+                                'trans_default'     => $title['isOfficial']
+                            ]
+                        );
+                    }
+                }
+
+                // Links
+                $Links = $data['links'];
+                foreach ( $Links as $link ) {
+                    $linkID = $link['id'];
+
+                    if ( $linkID != 0 ) {
+                        $theLink = AnimeTrans::where('trans_class', 'anime_title')->find($linkID);
+
+                        $theLink->link_class        = $link['class'];
+                        $theLink->link_comment      = $link['comment'];
+                        $theLink->link_url          = $link['value'];
+                        $theLink->link_is_official  = $link['isOfficial'];
+
+                        $theLink->save();
+                    } else {
+                        $theLink = AnimeLinks::create([
+                            'link_class'       => $link['class'],
+                            'anime_id'         => $ID,
+                            'link_comment'     => $link['comment'],
+                            'link_url'         => $link['value'],
+                            'link_is_official' => $link['isOfficial']
+                        ]);
+                    }
+                }
+
+                // Original Works
+
+                // 因为不同的原作信息记录的条数不一样, 所以索性全部修改删除重新输入
+                $deletOriWorks = AnimeOriginalWork::where('anime_id', $id)->delete();
+
+                $i = 0;
+                foreach ($data['oriWorks'] as $lv) {
+                    foreach ( $lv as $origenres ) {
+                        if($origenres['id'] != '' && $origenres['id'] != 0) {
+                            $origenres = AnimeOriginalWork::create(
+                                [
+                                    'anime_id' => $ID,
+                                    'ori_id'   => $origenres['id'],
+                                    'ori_pid'  => $origenres['pid'],
+                                    'lv'       => $i,
+                                    'haschild' => $origenres['haschild'],
+                                    'multiple' => $origenres['multiple']
+                                ]
+                            );
+                        }
+                    }
+                    ++$i; // the level
+                }
+
+            });
+
+            \DB::commit();
+
+            return $this->show($id);
+        }
+        catch (\Exception $e) {
+            return \Response::json($e);
+        }
     }
 
     /**

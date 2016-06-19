@@ -321,6 +321,7 @@
                 >
                     <td style="width:10%">
                         <input v-model="staffMember.id" type="text" disabled="disabled" placeholder="ID">
+                        <input v-model="staffMember.orderIndex" type="text" style="hidden: hidden;">
                     </td>
                     {{--<td style="width:10%">
                         <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
@@ -374,11 +375,20 @@
             </table>
         </form>
 
-            <button class="btn btn-success"
-                    v-on:click="createData('staff')"
-            >
-                创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
-            </button>
+            <div v-if="staffMembers[0].id == 0">
+                <button class="btn btn-success"
+                        v-on:click="createData('staff')"
+                >
+                    创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
+                </button>
+            </div>
+            <div v-if="staffMembers[0].id != 0">
+                <button class="btn btn-success"
+                        v-on:click="editData('staff', basicData.id.value)"
+                >
+                    更新STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
+                </button>
+            </div>
 
                                                                 {{-- STAFF END --}}
 

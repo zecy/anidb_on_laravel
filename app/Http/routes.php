@@ -17,8 +17,6 @@ Route::get('anime/search/{animeName}', 'AnimeInput@searchAnime');
 
 Route::resource('anime', 'AnimeInput');
 
-Route::resource('anime/stafftranslate', 'StaffTranslateController');
-
 Route::resource('anime/staff', 'staffController');
 
 Route::resource('anime/cast', 'castController');

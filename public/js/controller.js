@@ -507,12 +507,13 @@ var vue = new Vue({
         },
         'staffMembers':   [
             {
-                'id':                 '',
+                'id':                 0,
                 'staffPostOri':       '',
                 'staffPostZhCN':      '',
                 'staffMemberName':    '',
                 'staffBelongsToName': '',
-                'isImportant':        true
+                'isImportant':        true,
+                'orderIndex':         0
             }
         ],
         'castMembers':    [{
@@ -607,11 +608,19 @@ var vue = new Vue({
             switch (pos) {
                 case 'basicData':
                     this.$http.put('anime/' + animeID, {data: this.basicData}).then(function (r) {
-                        if (r.status == 200) alert('更新成功!!');
-                        this.showAnime(animeID);
+                        if (r.status == 200) {
+                            this.showAnime(animeID);
+                            alert('更新成功!!');
+                        }
                     });
                     break;
                 case 'staff':
+                    this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(r.data.animeID);
+                            alert('更新成功!!');
+                        }
+                    });
                     break;
                 case 'cast':
                     break;
@@ -685,7 +694,8 @@ var vue = new Vue({
                             'staffPostZhCN':        '',
                             'staffMemberName':      items[i][1],
                             'staffBelongsToName':   '',
-                            'isImportant':          false
+                            'isImportant':          false,
+                            'orderIndex':           ''
                         };
 
                         vue.staffMembers.push(item);

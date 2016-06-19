@@ -695,7 +695,7 @@ var vue = new Vue({
                             'staffMemberName':      items[i][1],
                             'staffBelongsToName':   '',
                             'isImportant':          false,
-                            'orderIndex':           ''
+                            'orderIndex':           i
                         };
 
                         vue.staffMembers.push(item);
@@ -714,7 +714,8 @@ var vue = new Vue({
                             'animeID'       : vue.basicData.id.value,
                             'charaNameOri'  : items[j][0],
                             'cvNameOri'     : items[j][1],
-                            'isImportant'   : false
+                            'isImportant'   : false,
+                            'orderIndex'    : i
                         };
 
                         vue.castMembers.push(item);

@@ -315,13 +315,12 @@
                         <input type="text">
                     </td>
                 </tr>
-                <tr v-for="staffMember in staffMembers"
+                <tr v-for="staffMember in staffMembers | orderBy 'orderIndex'"
                     track-by="$index"
                     v-bind:class="{ zebrarow:$index % 2 }"
                 >
                     <td style="width:10%">
                         <input v-model="staffMember.id" type="text" disabled="disabled" placeholder="ID">
-                        <input v-model="staffMember.orderIndex" type="text" style="hidden: hidden;">
                     </td>
                     {{--<td style="width:10%">
                         <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">

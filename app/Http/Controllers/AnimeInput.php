@@ -205,13 +205,15 @@ class AnimeInput extends Controller
         //TODO: 置空处理
 
         $staffs = AnimeStaff::where('staff_anime_id', $id)
+            ->orderBy('order_index', 'asc')
             ->get(array(
                 'staff_id',
                 'staff_important',
                 'staff_post_zh',
                 'staff_post_ori',
                 'staff_belong',
-                'staff_member'
+                'staff_member',
+                'order_index'
             ))->toArray();
 
         $staffMembers = [];
@@ -224,7 +226,8 @@ class AnimeInput extends Controller
                 'staffPostZhCN'      => $staff['staff_post_zh'],
                 'staffMemberName'    => $staff['staff_member'],
                 'staffBelongsToName' => $staff['staff_belong'],
-                'isImportant'        => $staff['staff_important']
+                'isImportant'        => $staff['staff_important'],
+                'orderIndex'         => $staff['order_index']
             ];
         }
 

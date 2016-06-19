@@ -26,6 +26,7 @@ class staffController extends Controller
                         'staff_post_ori'   => $staffMember['staffPostOri'],
                         'staff_member'    => $staffMember['staffMemberName'],
                         'staff_belong'    => $staffMember['staffBelongsToName'],
+                        'order_index'     => $staffMember['orderIndex'],
                         'staff_main'      => true
                     ]
                 );
@@ -55,6 +56,7 @@ class staffController extends Controller
                         $theStaff->staff_post_ori  = $staff['staffPostOri'];
                         $theStaff->staff_member    = $staff['staffMemberName'];
                         $theStaff->staff_belong    = $staff['staffBelongsToName'];
+                        $theStaff->order_index     = $staff['orderIndex'];
 
                         $theStaff->save();
                     } else {
@@ -66,6 +68,7 @@ class staffController extends Controller
                                 'staff_post_ori'  => $staff['staffPostOri'],
                                 'staff_member'    => $staff['staffMemberName'],
                                 'staff_belong'    => $staff['staffBelongsToName'],
+                                'order_index'     => $staff['orderIndex'],
                                 'staff_main'      => true
                             ]
                         );

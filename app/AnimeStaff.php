@@ -16,5 +16,6 @@ class AnimeStaff extends Model
         'staff_belong',
         'staff_main',
         'staff_important',
+        'order_index'
         ];
 }

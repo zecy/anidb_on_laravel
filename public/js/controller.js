@@ -479,7 +479,7 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAt
 *
 * */
 
-let basicDataTmp = {
+var basicDataTmp = {
     'id':            {'label': '动画ID', 'value': 0},
     'seriesID':      {'label': '系列ID', 'value': 0},
     'seriesTitle':   {'label': '系列ID', 'value': ''},
@@ -509,7 +509,7 @@ let basicDataTmp = {
     'description':   {'label': '介绍', 'value': ''}
 };
 
-let staffMembersTmp = [{
+var staffMembersTmp = [{
     'id':                 0,
     'staffPostOri':       '',
     'staffPostZhCN':      '',
@@ -519,7 +519,7 @@ let staffMembersTmp = [{
     'orderIndex':         0
 }];
 
-let castMembersTmp = [{
+var castMembersTmp = [{
     'id':           0,
     'charaID':      '',
     'cvID':         '',
@@ -528,7 +528,7 @@ let castMembersTmp = [{
     'isImportant':  false
 }];
 
-let onairTmp = [{
+var onairTmp = [{
     'id':           0,
     'tvID':         '',
     'tvName':       '',
@@ -545,12 +545,15 @@ let onairTmp = [{
 var vue = new Vue({
     el:      '#animedata',
     data: {
-        'basicData' : {},
-        'staffSource': '',
-        'castSource': '',
-        'onairDataInput': '',
-        'animeNameSearchInput' : '',
-        'animeNameList': []
+        'basicData':            JSON.parse(JSON.stringify(basicDataTmp)),
+        'staffMembers':         JSON.parse(JSON.stringify(staffMembersTmp)),
+        'castMembers':          JSON.parse(JSON.stringify(castMembersTmp)),
+        'onair':                JSON.parse(JSON.stringify(onairTmp)),
+        'staffSource':          '',
+        'castSource':           '',
+        'onairDataInput':       '',
+        'animeNameSearchInput': '',
+        'animeNameList':        []
     },
     watch:   {
         'basicData.oriWorks[0][0]': function (newVal, oldVal) {
@@ -645,6 +648,11 @@ var vue = new Vue({
 
                 if( r.data.multiple == 0) {
 
+                    // 初始化
+                    this.basicData    = JSON.parse(JSON.stringify(basicDataTmp));
+                    this.staffMembers = JSON.parse(JSON.stringify(staffMembersTmp));
+                    this.castMembers  = JSON.parse(JSON.stringify(castMembersTmp));
+
                     this.basicData    = r.data.basicData;
                     this.staffMembers = r.data.staffMembers;
                     this.castMembers  = r.data.castMembers;
@@ -675,10 +683,9 @@ var vue = new Vue({
 
         showAnime: function(id) {
             this.$http.get('anime/' + id).then(function(r){
-                //TODO: 初始化 basicData
-                this.basicData    = r.data.basicData;
-                this.staffMembers = r.data.staffMembers;
-                this.castMembers  = r.data.castMembers;
+                this.$set('basicData', r.data.basicData);
+                this.$set('staffMembers', r.data.staffMembers);
+                this.$set('castMembers', r.data.castMembers);
             });
         },
         /**

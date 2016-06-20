@@ -473,11 +473,7 @@ Vue.filter('filtByValue', function (arr, search, key) {
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
 
-/*
-* 空数据模板
-*
-*
-* */
+/** 空数据模板 **/
 
 var basicDataTmp = {
     'id':            {'label': '动画ID', 'value': 0},
@@ -511,6 +507,7 @@ var basicDataTmp = {
 
 var staffMembersTmp = [{
     'id':                 0,
+    'animeID':            0,
     'staffPostOri':       '',
     'staffPostZhCN':      '',
     'staffMemberName':    '',
@@ -521,6 +518,7 @@ var staffMembersTmp = [{
 
 var castMembersTmp = [{
     'id':           0,
+    'animeID':      0,
     'charaID':      '',
     'cvID':         '',
     'charaNameOri': '',
@@ -637,6 +635,16 @@ var vue = new Vue({
                     });
                     break;
                 case 'cast':
+                    for ( let i = 0; i < this.castMembers.length; i++) {
+                        let cast = this.castMembers[i];
+                        cast.orderIndex = i;
+                    }
+                    this.$http.put('anime/cast/' + animeID, {data: this.castMembers}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(r.data.animeID);
+                            alert('更新成功!!');
+                        }
+                    });
                     break;
                 case 'onair':
                     break;

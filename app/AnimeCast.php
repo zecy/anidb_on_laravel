@@ -14,5 +14,6 @@ class AnimeCast extends Model
         'cvNameOri',
         'cast_main',
         'cast_important',
+        'order_index'
     ];
 }

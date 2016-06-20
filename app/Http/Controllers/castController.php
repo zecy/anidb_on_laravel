@@ -31,4 +31,49 @@ class castController extends Controller
 
         return \Response::json(['status' => '200']);
     }
+
+    public function update(Request $request, $id) {
+
+        $casts = $request->all()['data'];
+
+        $ID = $id;
+
+        try {
+            \DB::transaction(function () use ($casts) {
+                foreach($casts as $cast) {
+                    $castID = $cast['id'];
+                    if ( $castID != 0 ) {
+                        $theCast = AnimeCast::find($castID);
+
+                        $theCast->charaNameOri    = $cast['charaNameOri'];
+                        $theCast->cvNameOri       = $cast['cvNameOri'];
+                        $theCast->cast_important  = $cast['isImportant'];
+                        $theCast->cast_main       = true;
+                        $theCast->order_index     = $cast['orderIndex'];
+
+                        $theCast->save();
+                    } else {
+                        $theCast = AnimeCast::create(
+                            [
+                                'cast_anime_id'  => $cast['animeID'],
+                                'charaNameOri'   => $cast['charaNameOri'],
+                                'cvNameOri'      => $cast['cvNameOri'],
+                                'cast_important' => $cast['isImportant'],
+                                'order_index'    => $cast['orderIndex'],
+                                'cast_main'      => true
+                            ]
+                        );
+                    }
+                }
+            });
+
+            \DB::commit();
+
+            return \Response::json(['POS' => 'CAST', 'animeID' => $ID]);
+
+        }
+        catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

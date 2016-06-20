@@ -232,12 +232,14 @@ class AnimeInput extends Controller
         }
 
         $casts = AnimeCast::where('cast_anime_id', $id)
+            ->orderBy('order_index', 'asc')
             ->get(array(
                 'cast_id',
                 'cast_anime_id',
                 'charaNameOri',
                 'cvNameOri',
-                'cast_important'
+                'cast_important',
+                'order_index'
             ))->toArray();
 
         $castMembers = [];

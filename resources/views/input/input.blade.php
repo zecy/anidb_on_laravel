@@ -465,7 +465,20 @@
 
         <br>
 
-        <button v-on:click="createData('cast')" class="btn btn-success">创建CAST@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
+            <div v-if="castMembers[0].id == 0">
+                <button class="btn btn-success"
+                        v-on:click="createData('cast')"
+                >
+                    创建CAST@{{ "（动画ID：" + basicData.id.value + "）" }}
+                </button>
+            </div>
+            <div v-if="castMembers[0].id != 0">
+                <button class="btn btn-success"
+                        v-on:click="editData('cast', basicData.id.value)"
+                >
+                    更新CAST@{{ "（动画ID：" + basicData.id.value + "）" }}
+                </button>
+            </div>
 
                                                                 {{-- CAST END --}}
 

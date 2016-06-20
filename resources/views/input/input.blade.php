@@ -374,14 +374,14 @@
             </table>
         </form>
 
-            <div v-if="staffMembers[0].id == 0">
+            <div v-if="staffMembers[0].id == 0 && staffMembers.length > 0">
                 <button class="btn btn-success"
                         v-on:click="createData('staff')"
                 >
                     创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
                 </button>
             </div>
-            <div v-if="staffMembers[0].id != 0">
+            <div v-if="staffMembers[0].id != 0 || staffMembers.length > 0">
                 <button class="btn btn-success"
                         v-on:click="editData('staff', basicData.id.value)"
                 >

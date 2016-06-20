@@ -315,7 +315,7 @@
                         <input type="text">
                     </td>
                 </tr>
-                <tr v-for="staffMember in staffMembers | orderBy 'orderIndex'"
+                <tr v-for="staffMember in staffMembers"
                     track-by="$index"
                     v-bind:class="{ zebrarow:$index % 2 }"
                 >

@@ -619,13 +619,12 @@ var vue = new Vue({
                         let staff = this.staffMembers[i];
                         staff.orderIndex = i;
                     }
-                    console.log(this.staffMembers);
-                    /*this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
+                    this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(r.data.animeID);
                             alert('更新成功!!');
                         }
-                    });*/
+                    });
                     break;
                 case 'cast':
                     break;

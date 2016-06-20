@@ -473,72 +473,79 @@ Vue.filter('filtByValue', function (arr, search, key) {
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
 
+/*
+* 空数据模板
+*
+*
+* */
+
+let basicDataTmp = {
+    'id':            {'label': '动画ID', 'value': 0},
+    'seriesID':      {'label': '系列ID', 'value': 0},
+    'seriesTitle':   {'label': '系列ID', 'value': ''},
+    'title':         [
+        {'id': 0, 'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
+        {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''}
+    ],
+    'abbr':          {'label': '简称', 'value': ''},
+    'kur':           {'label': '长度', 'value': ''},
+    'eps':           {'label': '集数', 'value': ''},
+    'duration':      {'label': '时间规格', 'value': 'general'},
+    'oriWorks':      [
+        [{'id': '', 'haschild': false, 'multiple': false}],
+        [{'id': '', 'haschild': false, 'multiple': false}],
+        [{'id': '', 'haschild': false, 'multiple': false}],
+        [{'id': '', 'haschild': false, 'multiple': false}]
+    ],
+    'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
+    'links':         [
+        {'id': 0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
+    ],
+    'isSequel':      {'label': '是否续作', 'value': false},
+    'sequelComment': {'label': '备注', 'value': ''},
+    'isEnd':         {'label': '是否完结', 'value': true},
+    'isCounted':     {'label': '是否纳入统计', 'value': true},
+    'story':         {'label': '故事', 'value': ''},
+    'description':   {'label': '介绍', 'value': ''}
+};
+
+let staffMembersTmp = [{
+    'id':                 0,
+    'staffPostOri':       '',
+    'staffPostZhCN':      '',
+    'staffMemberName':    '',
+    'staffBelongsToName': '',
+    'isImportant':        false,
+    'orderIndex':         0
+}];
+
+let castMembersTmp = [{
+    'id':           0,
+    'charaID':      '',
+    'cvID':         '',
+    'charaNameOri': '',
+    'cvNameOri':    '',
+    'isImportant':  false
+}];
+
+let onairTmp = [{
+    'id':           0,
+    'tvID':         '',
+    'tvName':       '',
+    'startDate':    '',
+    'endDate':      '',
+    'startTime':    '',
+    'endTime':      '',
+    'weekday':      1,
+    'tvColumn':     '',
+    'description':  '',
+    'isProduction': false
+}];
+
 var vue = new Vue({
     el:      '#animedata',
-    data:    {
-        'basicData': {
-            'id':            {'label': '动画ID', 'value': 0},
-            'seriesID':      {'label': '系列ID', 'value': 0},
-            'seriesTitle':   {'label': '系列ID', 'value': ''},
-            'title':         [
-                {'id': 0, 'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
-                {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''}
-            ],
-            'abbr':          {'label': '简称', 'value': ''},
-            'kur':           {'label': '长度', 'value': ''},
-            'eps':           {'label': '集数', 'value': ''},
-            'duration':      {'label': '时间规格', 'value': 'general'},
-            'oriWorks':      [
-                [{'id': '', 'haschild': false, 'multiple': false}],
-                [{'id': '', 'haschild': false, 'multiple': false}],
-                [{'id': '', 'haschild': false, 'multiple': false}],
-                [{'id': '', 'haschild': false, 'multiple': false}]
-            ],
-            'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
-            'links':         [
-                {'id':0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
-            ],
-            'isSequel':      {'label': '是否续作', 'value': false},
-            'sequelComment': {'label': '备注', 'value': ''},
-            'isEnd':         {'label': '是否完结', 'value': true},
-            'isCounted':     {'label': '是否纳入统计', 'value': true},
-            'story':         {'label': '故事', 'value': ''},
-            'description':   {'label': '介绍', 'value': ''}
-        },
-        'staffMembers':   [
-            {
-                'id':                 0,
-                'staffPostOri':       '',
-                'staffPostZhCN':      '',
-                'staffMemberName':    '',
-                'staffBelongsToName': '',
-                'isImportant':        true,
-                'orderIndex':         0
-            }
-        ],
-        'castMembers':    [{
-            'id':           '',
-            'charaID':      '',
-            'cvID':         '',
-            'charaNameOri': '',
-            'cvNameOri':    '',
-            'isImportant':  true
-        }],
-        'onair':          [
-            {
-                'id':           '',
-                'tvID':         '',
-                'tvName':       '',
-                'startDate':    '',
-                'endDate':      '',
-                'startTime':    '',
-                'endTime':      '',
-                'weekday':      1,
-                'tvColumn':     '',
-                'description':  '',
-                'isProduction': false
-            }
-        ],
+    data: {
+        'basicData' : {},
         'staffSource': '',
         'castSource': '',
         'onairDataInput': '',
@@ -668,6 +675,7 @@ var vue = new Vue({
 
         showAnime: function(id) {
             this.$http.get('anime/' + id).then(function(r){
+                //TODO: 初始化 basicData
                 this.basicData    = r.data.basicData;
                 this.staffMembers = r.data.staffMembers;
                 this.castMembers  = r.data.castMembers;

@@ -374,7 +374,7 @@
             </table>
         </form>
 
-            <div v-if="staffMembers[0].id == 0 && staffMembers.length > 0">
+            <div v-if="staffMembers[0].id == 0 && staffMembers.length == 1">
                 <button class="btn btn-success"
                         v-on:click="createData('staff')"
                 >

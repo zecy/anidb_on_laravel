@@ -175,11 +175,12 @@ class AnimeInput extends Controller
 
         foreach ($animeTitles as $title) {
             $basicData['title'][] = [
-                'id'         => $title['trans_id'],
+                'id'         => $title['id'],
                 'lang'       => $title['lang'],
-                'isOfficial' => $title['trans_default'],
+                'isOfficial' => $title['is_official'],
                 'value'      => $title['title'],
-                'comment'    => $title['trans_description']
+                'comment'    => $title['description'],
+                'orderIndex' => $title['order_index']
             ];
         }
 
@@ -189,7 +190,8 @@ class AnimeInput extends Controller
                 'class'      => $link['link_class'],
                 'isOfficial' => $link['link_is_official'],
                 'value'      => $link['link_url'],
-                'comment'    => $link['link_comment']
+                'comment'    => $link['link_comment'],
+                'orderIndex' => $title['order_index']
             ];
         }
 

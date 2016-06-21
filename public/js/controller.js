@@ -489,8 +489,8 @@ var basicDataTmp = {
     'seriesID':      {'label': '系列ID', 'value': 0},
     'seriesTitle':   {'label': '系列ID', 'value': ''},
     'title':         [
-        {'id': 0, 'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': ''},
-        {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': ''}
+        {'id': 0, 'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 0},
+        {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': '', 'orderIndex': 0}
     ],
     'abbr':          {'label': '简称', 'value': ''},
     'kur':           {'label': '长度', 'value': ''},
@@ -504,7 +504,7 @@ var basicDataTmp = {
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
     'links':         [
-        {'id': 0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': ''}
+        {'id': 0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 0}
     ],
     'isSequel':      {'label': '是否续作', 'value': false},
     'sequelComment': {'label': '备注', 'value': ''},
@@ -625,6 +625,16 @@ var vue = new Vue({
 
             switch (pos) {
                 case 'basicData':
+                    for(let i = 0; i < this.basicData.title.length; i++) {
+                        let title = this.basicData.title[i];
+                        title.orderIndex = i;
+                    }
+
+                    for(let j = 0; j < this.basicData.links.length; j++) {
+                        let link = this.basicData.links[j];
+                        link.orderIndex = j;
+                    }
+
                     this.$http.put('anime/' + animeID, {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
                             alert('更新成功!!');

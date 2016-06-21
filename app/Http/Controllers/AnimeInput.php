@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AnimeBasicData;
 use App\AnimeLinks;
-use App\AnimeTrans;
+use App\AnimeTitles;
 use App\AnimeOriginalWork;
 use App\AnimeOriginalWorkSupport;
 use App\ClassSupport;
@@ -81,14 +81,14 @@ class AnimeInput extends Controller
 
             // Title
             foreach ($data['title'] as $theTitle) {
-                $title = AnimeTrans::create(
+                $title = AnimeTitles::create(
                     [
-                        'trans_class'       => 'anime_title',
-                        'trans_name_id'     => $ID,
-                        'trans_name'        => $theTitle['value'],
-                        'trans_language'    => $theTitle['lang'],
-                        'trans_description' => $theTitle['comment'],
-                        'trans_default'     => $theTitle['isOfficial']
+                        'anime_id'    => $ID,
+                        'title'       => $theTitle['value'],
+                        'lang'        => $theTitle['lang'],
+                        'description' => $theTitle['comment'],
+                        'is_official' => $theTitle['isOfficial'],
+                        'order_index' => $theTitle['orderIndex']
                     ]
                 );
             }
@@ -142,15 +142,15 @@ class AnimeInput extends Controller
     {
         $animeBasicData = AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
         $animeLinks = AnimeLinks::where('anime_id', $id)->get()->toArray();
-        $animeTitles = AnimeTrans::where('trans_class', 'anime_title')
-            ->where('trans_name_id', $id)
+        $animeTitles = AnimeTitles::where('anime_id', $id)
             ->get(array(
-                'trans_id',
-                'trans_name',
-                'trans_name_id',
-                'trans_language',
-                'trans_default',
-                'trans_description'
+                'id',
+                'title',
+                'anime_id',
+                'lang',
+                'is_official',
+                'description',
+                'order_index'
             ))->toArray();
         $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)->get()->toArray();
 
@@ -176,9 +176,9 @@ class AnimeInput extends Controller
         foreach ($animeTitles as $title) {
             $basicData['title'][] = [
                 'id'         => $title['trans_id'],
-                'lang'       => $title['trans_language'],
+                'lang'       => $title['lang'],
                 'isOfficial' => $title['trans_default'],
-                'value'      => $title['trans_name'],
+                'value'      => $title['title'],
                 'comment'    => $title['trans_description']
             ];
         }
@@ -332,23 +332,24 @@ class AnimeInput extends Controller
                 foreach($Titles as $title) {
                     $titleID = $title['id'];
                     if ( $titleID != 0 ) {
-                        $theTitle = AnimeTrans::where('trans_class', 'anime_title')->find($titleID);
+                        $theTitle = AnimeTitles::find($titleID);
 
-                        $theTitle->trans_name           = $title['value'];
-                        $theTitle->trans_language       = $title['lang'];
-                        $theTitle->trans_default        = $title['isOfficial'];
-                        $theTitle->trans_description    = $title['comment'];
+                        $theTitle->title         = $title['value'];
+                        $theTitle->lang          = $title['lang'];
+                        $theTitle->is_official   = $title['isOfficial'];
+                        $theTitle->description   = $title['comment'];
+                        $theTitle->order_index   = $title['orderIndex'];
 
                         $theTitle->save();
                     } else {
-                        $theTitle = AnimeTrans::create(
+                        $theTitle = AnimeTitles::create(
                             [
-                                'trans_class'       => 'anime_title',
-                                'trans_name_id'     => $id,
-                                'trans_name'        => $title['value'],
-                                'trans_language'    => $title['lang'],
-                                'trans_description' => $title['comment'],
-                                'trans_default'     => $title['isOfficial']
+                                'id'          => $id,
+                                'title'       => $title['value'],
+                                'lang'        => $title['lang'],
+                                'description' => $title['comment'],
+                                'is_official' => $title['isOfficial'],
+                                'order_index' => $title['orderIndex']
                             ]
                         );
                     }
@@ -366,6 +367,7 @@ class AnimeInput extends Controller
                         $theLink->link_comment      = $link['comment'];
                         $theLink->link_url          = $link['value'];
                         $theLink->link_is_official  = $link['isOfficial'];
+                        $theLink->order_index       = $link['orderIndex'];
 
                         $theLink->save();
                     } else {
@@ -374,7 +376,8 @@ class AnimeInput extends Controller
                             'anime_id'         => $id,
                             'link_comment'     => $link['comment'],
                             'link_url'         => $link['value'],
-                            'link_is_official' => $link['isOfficial']
+                            'link_is_official' => $link['isOfficial'],
+                            'order_index'      => $link['orderIndex']
                         ]);
                     }
                 }
@@ -421,15 +424,14 @@ class AnimeInput extends Controller
 
     public function searchAnime(Request $request, $animeName)
     {
-        $animeIDs = \App\AnimeTrans::where('trans_class', 'anime_title')
-            ->where('trans_name', 'like', '%'.$animeName.'%')
-            ->get(array('trans_name_id'))
+        $animeIDs = \App\AnimeTitles::where('title', 'like', '%'.$animeName.'%')
+            ->get(array('anime_id'))
             ->toArray();
 
         $res = [];
 
         foreach ( $animeIDs as $animeID ) {
-            $res[$animeID['trans_name_id']] = $animeID['trans_name_id'];
+            $res[$animeID['anime_id']] = $animeID['anime_id'];
         }
 
         $animeIDs = $res;
@@ -440,13 +442,12 @@ class AnimeInput extends Controller
             $animes = [];
 
             foreach ( $animeIDs as $animeID ) {
-                $anime_db = \App\AnimeTrans::where('trans_class', 'anime_title')
-                    ->where('trans_default', true)
-                    ->where('trans_name_id', $animeID )
+                $anime_db = \App\AnimeTitles::where('is_official', true)
+                    ->where('anime_id', $animeID )
                     ->get(array(
-                        'trans_name_id',
-                        'trans_name',
-                        'trans_language'
+                        'anime_id',
+                        'title',
+                        'lang'
                     ))
                     ->toArray();
 

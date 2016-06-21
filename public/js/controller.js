@@ -378,7 +378,7 @@ Vue.component('originalwork', {
 
 Vue.component('rowcontrol', {
     template: '#row-control',
-    props:    ['style', 'arr', 'index'],
+    props:    ['style', 'arr', 'index', 'pos'],
     methods:  {
         /* Row Up */
         rowUp: function (arr, index) {
@@ -404,13 +404,19 @@ Vue.component('rowcontrol', {
         },
         /* Remove A Row */
         removeRow: function (pos, arr, index) {
-            if (arr[Number(index)].id == 0) {
+            const id = arr[Number(index)].id;
+            if (id == 0) {
                 arr.splice(Number(index), 1);
             } else {
                 let r = confirm("该记录存在于数据库中\n本操作将删除从数据库删除该记录！\n是否确认删除？");
                 if(r) {
-                    arr.splice(Number(index), 1);
-                    //TODO: 从数据库删除
+                    const res = vue.removeData(pos, id);
+                    if(res) {
+                        arr.splice(Number(index), 1);
+                        alert('删除成功！');
+                    } else {
+                        alert('删除失败！');
+                    }
                 }
             }
         },
@@ -658,52 +664,11 @@ var vue = new Vue({
         },
 
         removeData: function(pos, id) {
-
-            switch (pos) {
-                case 'title':
-
-                    this.$http.put('anime/' + id, {data: this.basicData}).then(function (r) {
-                        if (r.status == 200) {
-                            this.showAnime(id);
-                            alert('更新成功!!');
-                        }
-                    });
-                    break;
-                case 'link':
-                    this.$http.put('anime/' + id, {data: this.basicData}).then(function (r) {
-                        if (r.status == 200) {
-                            this.showAnime(id);
-                            alert('更新成功!!');
-                        }
-                    });
-                    break;
-                case 'staff':
-                    for ( let i = 0; i < this.staffMembers.length; i++) {
-                        let staff = this.staffMembers[i];
-                        staff.orderIndex = i;
-                    }
-                    this.$http.put('anime/staff/' + id, {data: this.staffMembers}).then(function (r) {
-                        if (r.status == 200) {
-                            this.showAnime(r.data.id);
-                            alert('更新成功!!');
-                        }
-                    });
-                    break;
-                case 'cast':
-                    for ( let i = 0; i < this.castMembers.length; i++) {
-                        let cast = this.castMembers[i];
-                        cast.orderIndex = i;
-                    }
-                    this.$http.put('anime/cast/' + id, {data: this.castMembers}).then(function (r) {
-                        if (r.status == 200) {
-                            this.showAnime(r.data.id);
-                            alert('更新成功!!');
-                        }
-                    });
-                    break;
-                case 'onair':
-                    break;
-            }
+            this.$http.delete('anime/' + pos + '/' + id).then(function (r) {
+                if (r.status == 200) {
+                    return true;
+                }
+            });
         },
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {

@@ -106,6 +106,7 @@
                     <div style="width: 18%">
                         <rowcontrol :arr.sync="basicData.title"
                                     :index.sync="$index"
+                                    :pos="title"
                         ></rowcontrol>
                     </div>
                 </td>
@@ -239,6 +240,7 @@
                     <div style="width: 17%">
                         <rowcontrol :arr.sync="basicData.links"
                                     :index.sync="$index"
+                                    :pos="link"
                         ></rowcontrol>
                     </div>
                 </td>
@@ -367,6 +369,7 @@
                         <rowcontrol :style="'snc-row-control'"
                                     :arr.sync="staffMembers"
                                     :index.sync="$index"
+                                    :pos="staff"
                         ></rowcontrol>
                     </td>
                 </tr>
@@ -457,6 +460,7 @@
                         <rowcontrol :style="'snc-row-control'"
                                     :arr.sync="castMembers"
                                     :index.sync="$index"
+                                    :pos = "cast"
                         ></rowcontrol>
                     </td>
                 </tr>
@@ -561,6 +565,7 @@
                         <rowcontrol :arr.sync="onair"
                                     :index.sync="$index"
                                     :style="row"
+                                    :pos="onair"
                         ></rowcontrol>
                     </td>
                 </tr>
@@ -713,7 +718,7 @@
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button v-on:click="removeRow(arr,index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
+                    <button v-on:click="removeRow(pos, arr, index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>

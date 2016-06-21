@@ -413,14 +413,7 @@ Vue.component('rowcontrol', {
             } else {
                 const r = confirm("该记录存在于数据库中\n本操作将删除从数据库删除该记录！\n是否确认删除？");
                 if(r) {
-                    const res = vue.removeData(p, id);
-                    //TODO: 获取返回值
-                    if(res == 1) {
-                        arr.splice(i, 1);
-                        alert('删除成功！');
-                    } else {
-                        alert('删除失败！');
-                    }
+                    vue.removeData(p, id, arr, i);
                 }
             }
         },
@@ -667,13 +660,18 @@ var vue = new Vue({
             }
         },
 
-        removeData: function(pos, id) {
-            this.$http.delete('anime/' + pos + '/' + id).then(function (r) {
-                if (r.status == 200) {
-                    console.log('success');
-                    return 1;
-                }
-            });
+        removeData: function (pos, id, arr, index) {
+            let res = 0;
+            this.$http.delete('anime/' + pos + '/' + id)
+                .then(function (r) {
+                    if (r.status == 200) {
+                        alert('删除成功！！');
+                        arr.splice(index, 1);
+                    } else {
+                        alert('删除失败！！');
+                        console.log('删除失败:\n' + r);
+                    }
+                });
         },
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {

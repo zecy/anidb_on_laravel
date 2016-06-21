@@ -15,6 +15,10 @@ Route::get('/','AnimeInput@index');
 
 Route::get('anime/search/{animeName}', 'AnimeInput@searchAnime');
 
+Route::DELETE('anime/title', 'titleController@destroy');
+
+Route::DELETE('anime/link', 'linkController@destroy');
+
 Route::resource('anime', 'AnimeInput');
 
 Route::resource('anime/staff', 'staffController');

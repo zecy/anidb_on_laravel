@@ -403,10 +403,16 @@ Vue.component('rowcontrol', {
             }
         },
         /* Remove A Row */
-        removeRow: function (arr, index) {
-            //TODO: 根据条目 ID 判断是仅仅从列表移除还是从数据库中删除
-            //TODO: 从数据库删除的, 需要弹出一个对话框进行提示
-            arr.splice(Number(index), 1);
+        removeRow: function (pos, arr, index) {
+            if (arr[Number(index)].id == 0) {
+                arr.splice(Number(index), 1);
+            } else {
+                let r = confirm("该记录存在于数据库中\n本操作将删除从数据库删除该记录！\n是否确认删除？");
+                if(r) {
+                    arr.splice(Number(index), 1);
+                    //TODO: 从数据库删除
+                }
+            }
         },
         /* Add A Row */
         addRow:    function (arr, index) {
@@ -651,6 +657,54 @@ var vue = new Vue({
             }
         },
 
+        removeData: function(pos, id) {
+
+            switch (pos) {
+                case 'title':
+
+                    this.$http.put('anime/' + id, {data: this.basicData}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(id);
+                            alert('更新成功!!');
+                        }
+                    });
+                    break;
+                case 'link':
+                    this.$http.put('anime/' + id, {data: this.basicData}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(id);
+                            alert('更新成功!!');
+                        }
+                    });
+                    break;
+                case 'staff':
+                    for ( let i = 0; i < this.staffMembers.length; i++) {
+                        let staff = this.staffMembers[i];
+                        staff.orderIndex = i;
+                    }
+                    this.$http.put('anime/staff/' + id, {data: this.staffMembers}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(r.data.id);
+                            alert('更新成功!!');
+                        }
+                    });
+                    break;
+                case 'cast':
+                    for ( let i = 0; i < this.castMembers.length; i++) {
+                        let cast = this.castMembers[i];
+                        cast.orderIndex = i;
+                    }
+                    this.$http.put('anime/cast/' + id, {data: this.castMembers}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(r.data.id);
+                            alert('更新成功!!');
+                        }
+                    });
+                    break;
+                case 'onair':
+                    break;
+            }
+        },
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
 

@@ -85,4 +85,18 @@ class staffController extends Controller
             throw $e;
         }
     }
+
+    public function destroy($id)
+    {
+        $ID = $id;
+
+        try {
+            $staff = AnimeStaff::find($ID);
+            $staff->delete();
+            return \Response::json();
+        }
+        catch(\Exception $e) {
+            throw $e;
+        }
+    }
 }

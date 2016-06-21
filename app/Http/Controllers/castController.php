@@ -76,4 +76,18 @@ class castController extends Controller
             throw $e;
         }
     }
+
+    public function destroy($id)
+    {
+        $ID = $id;
+
+        try {
+            $staff = AnimeCast::find($ID);
+            $staff->delete();
+            return \Response::json();
+        }
+        catch(\Exception $e) {
+            throw $e;
+        }
+    }
 }

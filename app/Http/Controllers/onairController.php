@@ -36,4 +36,18 @@ class onairController extends Controller
 
         return \Response::json();
     }
+
+    public function destroy($id)
+    {
+        $ID = $id;
+
+        try {
+            $staff = AnimeOnair::find($ID);
+            $staff->delete();
+            return \Response::json();
+        }
+        catch(\Exception $e) {
+            throw $e;
+        }
+    }
 }

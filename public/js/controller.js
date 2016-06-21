@@ -546,6 +546,7 @@ var onairTmp = [{
     'weekday':      1,
     'tvColumn':     '',
     'description':  '',
+    'orderIndex':   0,
     'isProduction': false
 }];
 
@@ -626,8 +627,8 @@ var vue = new Vue({
                 case 'basicData':
                     this.$http.put('anime/' + animeID, {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
-                            this.showAnime(animeID);
                             alert('更新成功!!');
+                            this.showAnime(animeID);
                         }
                     });
                     break;
@@ -638,8 +639,8 @@ var vue = new Vue({
                     }
                     this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
-                            this.showAnime(r.data.animeID);
                             alert('更新成功!!');
+                            this.showAnime(r.data.animeID);
                         }
                     });
                     break;
@@ -650,12 +651,22 @@ var vue = new Vue({
                     }
                     this.$http.put('anime/cast/' + animeID, {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) {
-                            this.showAnime(r.data.animeID);
                             alert('更新成功!!');
+                            this.showAnime(r.data.animeID);
                         }
                     });
                     break;
                 case 'onair':
+                    for (let i = 0; i < this.onair.length; i++) {
+                        let oa = this.onair[i];
+                        oa.orderIndex = i;
+                    }
+                    this.$http.put('anime/onair/' + animeID, {data: this.onair}).then(function (r) {
+                        if (r.status == 200) {
+                            alert('更新成功!!');
+                            this.showAnime(r.data.animeID);
+                        }
+                    });
                     break;
             }
         },
@@ -811,6 +822,6 @@ var vue = new Vue({
         },
         outputData:      function () {
             vue.member = JSON.stringify(vue.staffMembers)
-        },
+        }
     }
 });

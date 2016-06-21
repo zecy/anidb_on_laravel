@@ -573,7 +573,20 @@
             </table>
         </form>
 
-        <button v-on:click="createData('onair')" class="btn btn-success">创建播放信息@{{ "（动画ID：" + basicData.id.value + "）" }}</button>
+            <div v-if="onair[0].id == 0">
+                <button class="btn btn-success"
+                        v-on:click="createData('onair')"
+                >
+                    创建播出信息@{{ "（动画ID：" + basicData.id.value + "）" }}
+                </button>
+            </div>
+            <div v-if="onair[0].id != 0">
+                <button class="btn btn-success"
+                        v-on:click="editData('onair', basicData.id.value)"
+                >
+                    更新播出信息@{{ "（动画ID：" + basicData.id.value + "）" }}
+                </button>
+            </div>
 
                                                                 {{-- ONAIR END --}}
 </div>

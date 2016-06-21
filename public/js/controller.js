@@ -404,15 +404,19 @@ Vue.component('rowcontrol', {
         },
         /* Remove A Row */
         removeRow: function (pos, arr, index) {
-            const id = arr[Number(index)].id;
+            const i  = Number(index);
+            const id = arr[i].id;
+            const p  = pos;
+
             if (id == 0) {
-                arr.splice(Number(index), 1);
+                arr.splice(i, 1);
             } else {
-                let r = confirm("该记录存在于数据库中\n本操作将删除从数据库删除该记录！\n是否确认删除？");
+                const r = confirm("该记录存在于数据库中\n本操作将删除从数据库删除该记录！\n是否确认删除？");
                 if(r) {
-                    const res = vue.removeData(pos, id);
-                    if(res) {
-                        arr.splice(Number(index), 1);
+                    const res = vue.removeData(p, id);
+                    //TODO: 获取返回值
+                    if(res == 1) {
+                        arr.splice(i, 1);
                         alert('删除成功！');
                     } else {
                         alert('删除失败！');
@@ -666,7 +670,8 @@ var vue = new Vue({
         removeData: function(pos, id) {
             this.$http.delete('anime/' + pos + '/' + id).then(function (r) {
                 if (r.status == 200) {
-                    return true;
+                    console.log('success');
+                    return 1;
                 }
             });
         },

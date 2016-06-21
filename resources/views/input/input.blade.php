@@ -106,7 +106,7 @@
                     <div style="width: 18%">
                         <rowcontrol :arr.sync="basicData.title"
                                     :index.sync="$index"
-                                    :pos="title"
+                                    :pos="'title'"
                         ></rowcontrol>
                     </div>
                 </td>
@@ -240,7 +240,7 @@
                     <div style="width: 17%">
                         <rowcontrol :arr.sync="basicData.links"
                                     :index.sync="$index"
-                                    :pos="link"
+                                    :pos="'link'"
                         ></rowcontrol>
                     </div>
                 </td>
@@ -369,7 +369,7 @@
                         <rowcontrol :style="'snc-row-control'"
                                     :arr.sync="staffMembers"
                                     :index.sync="$index"
-                                    :pos="staff"
+                                    :pos="'staff'"
                         ></rowcontrol>
                     </td>
                 </tr>
@@ -460,7 +460,7 @@
                         <rowcontrol :style="'snc-row-control'"
                                     :arr.sync="castMembers"
                                     :index.sync="$index"
-                                    :pos = "cast"
+                                    :pos = "'cast'"
                         ></rowcontrol>
                     </td>
                 </tr>
@@ -565,7 +565,7 @@
                         <rowcontrol :arr.sync="onair"
                                     :index.sync="$index"
                                     :style="row"
-                                    :pos="onair"
+                                    :pos="'onair'"
                         ></rowcontrol>
                     </td>
                 </tr>

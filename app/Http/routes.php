@@ -15,9 +15,9 @@ Route::get('/','AnimeInput@index');
 
 Route::get('anime/search/{animeName}', 'AnimeInput@searchAnime');
 
-Route::DELETE('anime/title', 'titleController@destroy');
+Route::DELETE('anime/title/{id}', 'titleController@destroy');
 
-Route::DELETE('anime/link', 'linkController@destroy');
+Route::DELETE('anime/link/{id}', 'linkController@destroy');
 
 Route::resource('anime', 'AnimeInput');
 

@@ -699,15 +699,19 @@ var vue = new Vue({
 
                 if( r.data.multiple == 0) {
 
+                    /*
                     // 初始化
-                    this.basicData    = JSON.parse(JSON.stringify(basicDataTmp));
-                    this.staffMembers = JSON.parse(JSON.stringify(staffMembersTmp));
-                    this.castMembers  = JSON.parse(JSON.stringify(castMembersTmp));
+                    const bD = JSON.parse(JSON.stringify(basicDataTmp));
+                    const sM = JSON.parse(JSON.stringify(staffMembersTmp));
+                    const cM = JSON.parse(JSON.stringify(castMembersTmp));
 
                     this.basicData    = r.data.basicData;
                     this.staffMembers = r.data.staffMembers;
                     this.castMembers  = r.data.castMembers;
                     this.onair        = r.data.onairs;
+                    */
+                    const id = r.data.basicData.id.value;
+                    this.showAnime(id);
                 } else {
                     var animeNames;
 
@@ -734,9 +738,21 @@ var vue = new Vue({
 
         showAnime: function(id) {
             this.$http.get('anime/' + id).then(function(r){
-                this.$set('basicData', r.data.basicData);
-                this.$set('staffMembers', r.data.staffMembers);
-                this.$set('castMembers', r.data.castMembers);
+
+                const bD = r.data.basicData;
+                const sM = r.data.staffMembers;
+                const cM = r.data.castMembers;
+                const oa = r.data.onairs;
+
+                const basicData    = bD.id.value != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
+                const staffMembers = sM.length   != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
+                const castMembers  = cM.length   != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
+                const onairs       = oa.length   != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+
+                this.$set('basicData', basicData);
+                this.$set('staffMembers', staffMembers);
+                this.$set('castMembers', castMembers);
+                this.$set('onair', onairs)
             });
         },
         /**

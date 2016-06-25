@@ -339,8 +339,8 @@ var onairFormatedTextToArray = function (str, animeID) {
 
         arr.push({
             'animeID':      animeID,
-            'oaID':         '',
-            //'tvID':         '',
+            'id':         0,
+            'tvID':         '',
             'tvName':       tvName,
             'startDate':    startDate,
             'endDate':      endDate,
@@ -349,6 +349,7 @@ var onairFormatedTextToArray = function (str, animeID) {
             'weekday':      weekday,
             'tvColumn':     '',
             'isProduction': false,
+            'orderIndex':   0,
             'description':  ''
         });
     }

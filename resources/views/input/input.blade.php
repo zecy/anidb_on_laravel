@@ -543,6 +543,7 @@
                                 <option value="5">五</option>
                                 <option value="6">六</option>
                                 <option value="0">日</option>
+                                <option value="7">工作日</option>
                             </select>
                         </div>
                     </td>

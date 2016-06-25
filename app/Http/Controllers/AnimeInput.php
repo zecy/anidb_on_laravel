@@ -275,16 +275,17 @@ class AnimeInput extends Controller
 
         foreach ( $onairData as $onair ) {
             $onairs[] = [
-                'id' =>            $onair['oa_id'],
-                'tvName' =>        $onair['tv_name'],
-                'startDate' =>     $onair['oa_start_date'],
-                'endDate' =>       $onair['oa_end_date'],
-                'startTime' =>     $onair['oa_start_time'],
-                'endTime' =>       $onair['oa_end_time'],
-                'weekday' =>       $onair['oa_weekday'],
-                'tvColumn' =>      $onair['oa_tv_column'],
-                'description' =>   $onair['oa_description'],
-                'isProduction' =>  $onair['is_production']
+                'id'           => $onair['oa_id'],
+                'animeID'      => $onair['anime_id'],
+                'tvName'       => $onair['tv_name'],
+                'startDate'    => $onair['oa_start_date'],
+                'endDate'      => $onair['oa_end_date'],
+                'startTime'    => $onair['oa_start_time'],
+                'endTime'      => $onair['oa_end_time'],
+                'weekday'      => $onair['oa_weekday'],
+                'tvColumn'     => $onair['oa_tv_column'],
+                'description'  => $onair['oa_description'],
+                'isProduction' => $onair['is_production']
             ];
         }
 

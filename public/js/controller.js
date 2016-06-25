@@ -538,6 +538,7 @@ var castMembersTmp = [{
 
 var onairTmp = [{
     'id':           0,
+    'animeID':      0,
     'tvID':         '',
     'tvName':       '',
     'startDate':    '',

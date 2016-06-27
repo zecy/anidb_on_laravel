@@ -768,7 +768,7 @@ var vue = new Vue({
          */
         toArray:         function (data, pos) {
 
-            let item, items;
+            let item, items, oldArr;
             let res = [];
 
             //TODO: 已有内容的, 在后面添加
@@ -826,7 +826,16 @@ var vue = new Vue({
                     break;
                 case 'onair':
                     items = data.replace(/\t/g, '\,');
-                    vue.onair = onairFormatedTextToArray(items, vue.basicData.id.value);
+
+                    res = onairFormatedTextToArray(items, vue.basicData.id.value);
+
+                    if (vue.onair[0].id == 0) {
+                        vue.onair = res;
+                    } else {
+                        oldArr = vue.onair;
+                        res = oldArr.concat(res);
+                        vue.onair = item;
+                    }
                     break;
             }
         },

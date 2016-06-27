@@ -56,7 +56,9 @@ class AnimeInput extends Controller
     {
         $data = $request->all()['data'];
 
-        \DB::transaction(function () use ($data) {
+        $ID = 0;
+
+        \DB::transaction(function () use ($data, &$ID) {
             //基本信息
             $basicData = AnimeBasicData::create([
                 'anime_series_id'       => $data['seriesID']['value'],
@@ -70,8 +72,6 @@ class AnimeInput extends Controller
                 //TODO: 查清 cereate 无法插入 description 的原因
                 'anime_counted'         => $data['isCounted']['value']
             ]);
-
-            $res['basicData'] = $basicData;
 
             $basicData->anime_description = $data['description']['value'];
 
@@ -128,7 +128,7 @@ class AnimeInput extends Controller
 
         \DB::commit();
 
-        return \Response::json();
+        return \Response::json(['id' => $ID]);
     }
 
     /**

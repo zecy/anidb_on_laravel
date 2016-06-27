@@ -463,8 +463,6 @@ Vue.component('textformat', {
                     vue.castSource = res;
                     break;
             }
-
-            vue.formatedReady = true
         }
     }
 });
@@ -494,14 +492,14 @@ var basicDataTmp = {
         {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': '', 'orderIndex': 0}
     ],
     'abbr':          {'label': '简称', 'value': ''},
-    'kur':           {'label': '长度', 'value': ''},
+    'kur':           {'label': '长度', 'value': 1},
     'eps':           {'label': '集数', 'value': ''},
     'duration':      {'label': '时间规格', 'value': 'general'},
     'oriWorks':      [
-        [{'id': '', 'haschild': false, 'multiple': false}],
-        [{'id': '', 'haschild': false, 'multiple': false}],
-        [{'id': '', 'haschild': false, 'multiple': false}],
-        [{'id': '', 'haschild': false, 'multiple': false}]
+        [{'id': 0, 'haschild': false, 'multiple': false}],
+        [{'id': 0, 'haschild': false, 'multiple': false}],
+        [{'id': 0, 'haschild': false, 'multiple': false}],
+        [{'id': 0, 'haschild': false, 'multiple': false}]
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
     'links':         [
@@ -567,20 +565,20 @@ var vue = new Vue({
     },
     watch:   {
         'basicData.oriWorks[0][0]': function (newVal, oldVal) {
-            if (oldVal.id != '' && newVal != oldVal) {
-                var item = this.basicData.oriWorks[1];
+            if (newVal.id != oldVal.id && oldVal.id != 0) {
+                let item = this.basicData.oriWorks[1];
                 // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
-                var items = [{'id': '', 'haschild': false, 'multiple': false, 'pid': 0}];
+                let items = [{'id': 0, 'haschild': false, 'multiple': false, 'pid': 0}];
                 if (newVal.haschild) {
                     items = [];
-                    for (var i = 0; i < item.length; i++) {
+                    for (let i = 0; i < item.length; i++) {
                         if (item[i].pid == newVal.id) {
                             items.push(item[i])
                         }
                     }
                 }
                 this.basicData.oriWorks = [
-                    newVal,
+                    [newVal],
                     items,
                     [{'id': '', 'haschild': false, 'multiple': false}],
                     [{'id': '', 'haschild': false, 'multiple': false}]
@@ -600,22 +598,25 @@ var vue = new Vue({
                 case 'basicData':
                     this.$http.post('anime', {data: this.basicData}).then(function (r) {
                         if (r.status == 200) alert('录入成功!!');
-                        this.showAnime(r.data.basicData.anime_id);
+                        this.showAnime(r.data.id);
                     });
                     break;
                 case 'staff':
                     this.$http.post('anime/staff', {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) alert('录入成功!!');
+                        this.showAnime(this.basicData.id.value);
                     });
                     break;
                 case 'cast':
                     this.$http.post('anime/cast', {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) alert('录入成功!!');
+                        this.showAnime(this.basicData.id.value);
                     });
                     break;
                 case 'onair':
                     this.$http.post('anime/onair', {data: this.onair}).then(function (r) {
                         if (r.status == 200) alert('录入成功!!');
+                        this.showAnime(this.basicData.id.value);
                     });
                     break;
             }
@@ -746,10 +747,15 @@ var vue = new Vue({
                 const cM = r.data.castMembers;
                 const oa = r.data.onairs;
 
-                const basicData    = bD.id.value != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
-                const staffMembers = sM.length   != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
-                const castMembers  = cM.length   != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
-                const onairs       = oa.length   != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+                let basicData    = bD.id.value != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
+                let staffMembers = sM.length   != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
+                let castMembers  = cM.length   != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
+                let onairs       = oa.length   != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+
+                //当 oriWorks 未有数据时, 重置 oriWorks.
+                if (basicData.oriWorks.length == 0) {
+                    basicData.oriWorks = JSON.parse(JSON.stringify(basicDataTmp.oriWorks));
+                }
 
                 this.$set('basicData', basicData);
                 this.$set('staffMembers', staffMembers);
@@ -762,7 +768,8 @@ var vue = new Vue({
          */
         toArray:         function (data, pos) {
 
-            var item, items; //res;
+            let item, items;
+            let res = [];
 
             //TODO: 已有内容的, 在后面添加
 
@@ -772,9 +779,7 @@ var vue = new Vue({
 
                     items = formatedTextToArray(data);
 
-                    vue.staffMembers = vue.staffMembers[0].id == 0 ? [] : vue.staffMembers;
-
-                    for (var i = 0; i < items.length; i++) {
+                    for (let i = 0; i < items.length; i++) {
                         item = {
                             'id':                   0,
                             'animeID':              vue.basicData.id.value,
@@ -786,7 +791,13 @@ var vue = new Vue({
                             'orderIndex':           i
                         };
 
-                        vue.staffMembers.push(item);
+                        res.push(item);
+                    }
+
+                    if(vue.staffMembers[0].id == 0) {
+                        vue.staffMembers = res;
+                    } else {
+                        vue.staffMembers.concat(res);
                     }
 
                     break;
@@ -794,19 +805,23 @@ var vue = new Vue({
 
                     items = formatedTextToArray(data);
 
-                    vue.castMembers = vue.castMembers[0].id == 0 ? [] : vue.castMembers;
-
-                    for (var j = 0; j < items.length; j++) {
+                    for (let j = 0; j < items.length; j++) {
                         item = {
                             'id'            : 0,
                             'animeID'       : vue.basicData.id.value,
                             'charaNameOri'  : items[j][0],
                             'cvNameOri'     : items[j][1],
                             'isImportant'   : false,
-                            'orderIndex'    : i
+                            'orderIndex'    : j
                         };
 
-                        vue.castMembers.push(item);
+                        res.push(item);
+                    }
+
+                    if(vue.castMembers[0].id == 0) {
+                        vue.castMembers = res;
+                    } else {
+                        vue.castMembers.concat(res);
                     }
                     break;
                 case 'onair':

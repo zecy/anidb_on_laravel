@@ -141,3 +141,15 @@
     border-top: 1px solid #bbb;
     border-bottom: 1px solid #ccc;
 }
+
+.staff-child {
+    box-shadow: inset 3px 0 1px rgba(0,0,0, 0.4) ;
+    outline: azure;
+}
+
+.staff-info div {
+    float: left;
+    padding:0 3px;
+    display: table-cell;
+    vertical-align: middle;
+}

@@ -377,6 +377,11 @@ Vue.component('originalwork', {
     //}
 });
 
+Vue.component('staffrow', {
+    template: '#staff-row',
+    props:    ['staffitem','controlledarr', 'lv', 'index' ] // props 必须全部字母使用小写
+});
+
 Vue.component('rowcontrol', {
     template: '#row-control',
     props:    ['style', 'arr', 'index', 'pos'],
@@ -419,10 +424,17 @@ Vue.component('rowcontrol', {
             }
         },
         /* Add A Row */
-        addRow:    function (arr, index) {
+        addRow:    function (arr, index, pos) {
             var obj = JSON.parse(JSON.stringify(arr[index]));
             obj.id = 0;
-            arr.splice(Number(index), 0, obj);
+            console.log(pos);
+            if(pos == 'staff') {
+                console.log('obj.old: ' + obj);
+                obj.haschild = false;
+                obj.child    = [];
+                console.log('obj.new: ' + obj);
+            }
+            arr.splice(Number(index) + 1, 0, obj);
         }
     }
 });
@@ -515,13 +527,17 @@ var basicDataTmp = {
 
 var staffMembersTmp = [{
     'id':                 0,
+    'pid':                0,
+    'haschild':           false,
+    'lv':                 0,
     'animeID':            0,
     'staffPostOri':       '',
     'staffPostZhCN':      '',
     'staffMemberName':    '',
     'staffBelongsToName': '',
     'isImportant':        false,
-    'orderIndex':         0
+    'orderIndex':         0,
+    'child':              []
 }];
 
 var castMembersTmp = [{
@@ -781,14 +797,18 @@ var vue = new Vue({
 
                     for (let i = 0; i < items.length; i++) {
                         item = {
-                            'id':                   0,
-                            'animeID':              vue.basicData.id.value,
-                            'staffPostOri':         items[i][0],
-                            'staffPostZhCN':        '',
-                            'staffMemberName':      items[i][1],
-                            'staffBelongsToName':   '',
-                            'isImportant':          false,
-                            'orderIndex':           i
+                            'id':                 0,
+                            'animeID':            vue.basicData.id.value,
+                            'staffPostOri':       items[i][0],
+                            'staffPostZhCN':      '',
+                            'staffMemberName':    items[i][1],
+                            'staffBelongsToName': '',
+                            'isImportant':        false,
+                            'orderIndex':         i,
+                            'lv':                 0,
+                            'haschild':           false,
+                            'pid':                0,
+                            'child':              []
                         };
 
                         res.push(item);
@@ -838,6 +858,34 @@ var vue = new Vue({
                     }
                     break;
             }
+        },
+
+        addChild: function(arr, index){
+            const oldItem = arr[index];
+
+            const animeID  = oldItem.animeID;
+            const lv       = Number(oldItem.lv);
+            const pid      = oldItem.id;
+            const hasChild = oldItem.haschild;
+
+            const child = {
+                'id':                   0,
+                'animeID':              animeID,
+                'staffPostOri':         '',
+                'staffPostZhCN':        '',
+                'staffMemberName':      '',
+                'staffBelongsToName':   '',
+                'isImportant':          false,
+                'orderIndex':           0,
+                'lv':                   lv + 1,
+                'haschild':             false,
+                'pid':                  pid
+            };
+
+            if (!hasChild) {
+                oldItem.haschild = true;
+            }
+            oldItem.child.push(child);
         },
 
         /**

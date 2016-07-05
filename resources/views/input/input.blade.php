@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div id="animedata" class="container">
+    <div id="animedata" class="container" xmlns="http://www.w3.org/1999/html">
 
         <div class="form-group" style="width: 75%;margin:50px auto">
             <h2>查找</h2>
@@ -268,7 +268,8 @@
             </button>
         </div>
 
-        <div v-if="basicData.id.value != 0">
+        {{--<div v-if="basicData.id.value != 0">--}}
+            <div>
                                                                 {{-- STAFF BIGIN --}}
 
         <h2>Staff信息</h2>
@@ -294,85 +295,101 @@
 
         <form id="staff" class="form">
             <table class="sco">
-                <thead style="text-align: center;background-color: #EEEEEE;border-bottom:1px solid #ccc">
-                <tr>
-                    <td style="width:10%">ID</td>
-                    {{--<td style="width:10%">
-                        <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
-                    </td>--}}
-                    <td style="width:30%">岗位名称</td>
-                    <td style="width:20%">人员名称</td>
-                    <td style="width:20%">所属公司名称</td>
-                    <td>
-                        <span class="glyphicon glyphicon-star"></span>
-                    </td>
-                    <td>条目操作</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr style="display:none">
-                    <td>
-                        防止 Lastpass 注入输入框
-                        <input type="text">
-                        <input type="text">
-                    </td>
-                </tr>
-                <tr v-for="staffMember in staffMembers"
-                    track-by="$index"
-                    v-bind:class="{ zebrarow:$index % 2 }"
+                    <tr style="display:none">
+                        <td>
+                            防止 Lastpass 注入输入框
+                            <input type="text">
+                            <input type="text">
+                        </td>
+                    </tr>
+                </tbody>
+                {{-- 一个完整的 STAFF 条目 --}}
+                <tbody v-for="staffMember in staffMembers"
+                       track-by="$index"
+                       v-bind:class="{ zebrarow:$index % 2 }"
                 >
-                    <td style="width:10%">
-                        <input v-model="staffMember.id" type="text" disabled="disabled" placeholder="ID">
-                    </td>
-                    {{--<td style="width:10%">
-                        <input v-model="staffMember.staffPostID" type="text" disabled="disabled" placeholder="岗位ID">
-                    </td>--}}
-                    <td style="width:30%">
-                        <input type="text"
-                               id="staffPostOri-@{{ $index }}"
-                               v-model="staffMember.staffPostOri"
-                               v-on:keyup="focusMove('staffPostOri-', $index, $event)"
-                               placeholder="岗位名称（原）"
-                        >
-                        <input type="text"
-                               id="staffPostZhCN-@{{ $index }}"
-                               v-model="staffMember.staffPostZhCN"
-                               v-on:keyup="focusMove('staffPostZhCN-', $index, $event)"
-                               placeholder="岗位名称（中）"
-                        >
-                    </td>
-                    <td style="width:20%">
-                        {{--<input style="width:50%" v-model="staffMember.staffMemberID" type="text" disabled="disabled" placeholder="人员ID">--}}
-                        <input v-model="staffMember.staffMemberName"
-                               id="staffMemberName-@{{ $index }}"
-                               type="text"
-                               v-on:keyup="focusMove('staffMemberName-', $index, $event)"
-                               placeholder="人员名称"
-                        >
-                    </td>
-                    <td style="width:20%">
-                        {{--<input style="width:50%" v-model="staffMember.staffBelongsToID" type="text" disabled="disabled" placeholder="所属公司ID">--}}
-                        <input type="text"
-                               id="staffBelongsToName-@{{ $index }}"
-                               v-model="staffMember.staffBelongsToName"
-                               v-on:keyup="focusMove('staffBelongsToName-', $index, $event)"
-                               placeholder="所属公司名称"
-                        >
-                    </td>
-                    <td>
-                        <togglebutton :toggle.sync="staffMember.isImportant"
-                                      :style="'glyphicon glyphicon-star'"
-                                      :content=""
-                        ></togglebutton>
-                    </td>
-                    <td>
-                        <rowcontrol :style="'snc-row-control'"
-                                    :arr.sync="staffMembers"
+                {{-- STAFF 父项目 --}}
+                    <tr>
+                        <td colspan="4"
+                        style="width: 80%">
+                            <staffrow
+                                :controlledarr.sync="staffMembers"
+                                :staffitem.sync="staffMember"
+                                :lv="staffMember.lv"
+                                :index.sync="$index"
+                            ></staffrow>
+                        </td>
+                        <td style="width:3%">
+                            <togglebutton :toggle.sync="staffMember.isImportant"
+                                          :style="'glyphicon glyphicon-star'"
+                                          :content=""
+                            ></togglebutton>
+                        </td>
+                        <td style="width:3%">
+                            <button type="button"
+                                    v-if="staffMember.lv == 0"
+                                    class="btn btn-xs btn-default"
+                                    v-on:click="addChild(staffMembers, $index)"
+                            >
+                                <span class="glyphicon glyphicon-th-list"></span>
+                            </button>
+                        </td>
+                        <td style="width:14%">
+                            <rowcontrol :style="'snc-row-control'"
+                                        :arr.sync="staffMembers"
+                                        :index.sync="$index"
+                                        :pos="'staff'"
+                            ></rowcontrol>
+                        </td>
+                    </tr>
+                {{-- STAFF 子项目 --}}
+                    <tr v-if="staffMember.haschild">
+                        <td colspan="7">子项目</td>
+                    </tr>
+                    <tr v-if="staffMember.haschild"
+                        v-for="staffChild in staffMember.child"
+                        track-by="$index"
+                        class="staff-child"
+                    >
+                        <td style="width:3%"></td>
+                        <td colspan="4"
+                            style="width:80%">
+                            <staffrow
+                                    :controlledarr.sync="staffMember.child"
+                                    :staffitem.sync="staffChild"
+                                    :lv="staffChild.lv"
                                     :index.sync="$index"
-                                    :pos="'staff'"
-                        ></rowcontrol>
-                    </td>
-                </tr>
+                            ></staffrow>
+                        </td>
+                        <td style="width:3%">
+                            <togglebutton :toggle.sync="staffChild.isImportant"
+                                          :style="'glyphicon glyphicon-star'"
+                                          :content=""
+                            ></togglebutton>
+                        </td>
+                        <td style="width:12%">
+                            <rowcontrol :style="'snc-row-control'"
+                                        :arr.sync="staffMember.child"
+                                        :index.sync="$index"
+                                        :pos="'staff'"
+                            ></rowcontrol>
+                        </td>
+                    </tr>
+                    <tr v-if="staffMember.haschild">
+                                                       <td colspan="7">子项目</td>
+                                                       </tr>
                 </tbody>
             </table>
         </form>
@@ -682,6 +699,45 @@
             </div>
         </template>
 
+        {{-- STAFF INFO --}}
+        <template id="staff-row">
+            <div class="staff-info">
+                <div style="width:15%">
+                    <input v-model="staffitem.id" type="text" disabled="disabled" placeholder="ID">
+                </div>
+                <div style="width:40%">
+                    <input type="text"
+                           id="staffPostOri-@{{ lv + '-' + index }}"
+                           v-model="staffitem.staffPostOri"
+                           v-on:keyup="focusMove('staffPostOri-' + lv + '-', $index, $event)"
+                           placeholder="岗位名称（原）"
+                    >
+                    <input type="text"
+                           id="staffPostZhCN-@{{ lv + '-' + index }}"
+                           v-model="staffitem.staffPostZhCN"
+                           v-on:keyup="focusMove('staffPostZhCN-' + lv + '-', $index, $event)"
+                           placeholder="岗位名称（中）"
+                    >
+                </div>
+                <div style="width:25%">
+                    <input v-model="staffitem.staffMemberName"
+                           id="staffMemberName-@{{ lv + '-' + index }}"
+                           type="text"
+                           v-on:keyup="focusMove('staffMemberName-' + lv + '-', $index, $event)"
+                           placeholder="人员名称"
+                    >
+                </div>
+                <div style="width:20%">
+                    <input type="text"
+                           id="staffBelongsToName-@{{ lv + '-' + index }}"
+                           v-model="staffitem.staffBelongsToName"
+                           v-on:keyup="focusMove('staffBelongsToName-' + lv + '-', $index, $event)"
+                           placeholder="所属公司名称"
+                    >
+                </div>
+            </div>
+        </template>
+
         {{-- 信息栏内容格式化按钮 --}}
         <template id="text-format">
             <button class="btn btn-primary"
@@ -737,7 +793,7 @@
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button v-on:click="addRow(arr,index)" type="button" class="btn btn-success btn-xs" tabindex="-1">
+                    <button v-on:click="addRow(arr,index, pos)" type="button" class="btn btn-success btn-xs" tabindex="-1">
                     <span class="glyphicon glyphicon-plus"></span>
                     </button>
                 </div>

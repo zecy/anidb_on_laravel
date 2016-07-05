@@ -10,13 +10,14 @@ use App\AnimeOriginalWorkSupport;
 use App\ClassSupport;
 use App\AnimeStaff;
 use App\AnimeCast;
+use App\Http\Controllers\staffController;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\Cast\Array_;
 
-class AnimeInput extends Controller
+class AnimeInput extends staffController
 {
     /**
      * Display a listing of the resource.
@@ -30,7 +31,6 @@ class AnimeInput extends Controller
         $premiereMedia = ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
         $animeDurationFormat = ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
         $oriWorks = AnimeOriginalWorkSupport::all()->toJson();
-
 
         return view('input.input', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
@@ -206,32 +206,82 @@ class AnimeInput extends Controller
 
         //TODO: 置空处理
 
-        $staffs = AnimeStaff::where('staff_anime_id', $id)
-            ->orderBy('order_index', 'asc')
-            ->get(array(
-                'staff_id',
-                'staff_important',
-                'staff_post_zh',
-                'staff_post_ori',
-                'staff_belong',
-                'staff_member',
-                'order_index'
-            ))->toArray();
+        /** STAFF START **/
+
+        /**
+         * STAFF 清单: array
+         *
+         * staffsP = [
+         *     0 => [
+         *           'staff_id'          => int,
+         *           'staff_important'   => bool,
+         *           'staff_post_zh'     => str,
+         *           'staff_post_ori'    => str,
+         *           'staff_belong'      => str,
+         *           'staff_member'      => str,
+         *           'order_index'       => int,
+         *           'lv'                => int,
+         *           'pid'               => int,
+         *           'haschild'          => bool,
+         *           'child'             => []
+         *          ],
+         *     1 => ...
+         * ]
+         * */
+        $staffsP = $this->getStaffDB($id, 0);
 
         $staffMembers = [];
 
-        foreach ( $staffs as $staff ) {
-            $staffMembers[] = [
-                'animeID'            => $id,
-                'id'                 => $staff['staff_id'],
-                'staffPostOri'       => $staff['staff_post_ori'],
-                'staffPostZhCN'      => $staff['staff_post_zh'],
-                'staffMemberName'    => $staff['staff_member'],
-                'staffBelongsToName' => $staff['staff_belong'],
-                'isImportant'        => $staff['staff_important'],
-                'orderIndex'         => $staff['order_index']
-            ];
+        // 取得 staffsP 中的一个 item
+        // staffsP[0] ~ staffsP[n]
+        foreach ($staffsP as $staffP) {
+            // 如果 haschild 为真, 说明存在子项目
+            if($staffP['haschild']){
+                /**
+                 * 先把父项目格式化为需要的形式
+                 * $staffItem = [
+                 *     'animeID'            => $animeID,
+                 *     'id'                 => $staff['staff_id'],
+                 *     'staffPostOri'       => $staff['staff_post_ori'],
+                 *     'staffPostZhCN'      => $staff['staff_post_zh'],
+                 *     'staffMemberName'    => $staff['staff_member'],
+                 *     'staffBelongsToName' => $staff['staff_belong'],
+                 *     'isImportant'        => $staff['staff_important'],
+                 *     'orderIndex'         => $staff['order_index'],
+                 *     'haschild'           => $staff['haschild'],
+                 *     'pid'                => $staff['pid'],
+                 *     'lv'                 => $staff['lv'],
+                 *     'child'              => []
+                 * ];
+                 **/
+                $staffPItem  = $this->staffItem($staffP, $id);
+                // 根据父项目的 id 取出子项目清单 staffsC
+                $staffsC     = $this->getStaffDB($id, $staffP['staff_id']);
+
+                // 创建一个容器来装载格式化后的子项目
+                $staffChildren = [];
+
+                // 取出每一个子项目
+                foreach ($staffsC as $staffC) {
+                    // 把取出来的子项目格式化, 然后放到容器中
+                    $staffChildren[] = $this->staffItem($staffC, $id);
+                }
+
+                // 格式化完毕的子项目放到同样格式化完毕的父项目的 child 项里面
+                $staffPItem['child'] = $staffChildren;
+
+                // 组装好的父项目放到容器中, 准备输出
+                $staffMembers[]      = $staffPItem;
+
+                // 如果没有子项目的, 直接格式化然后放到容器中去
+            } else {
+                $staffMembers[] = $this->staffItem($staffP, $id);
+            }
         }
+
+        /** STAFF END **/
+
+        /** CAST START **/
 
         $casts = AnimeCast::where('cast_anime_id', $id)
             ->orderBy('order_index', 'asc')
@@ -255,6 +305,8 @@ class AnimeInput extends Controller
                 'isImportant'  => $cast['cast_important']
             ];
         }
+
+        /** CAST END **/
 
         $onairData = \App\AnimeOnair::where('anime_id', $id)
             ->get(array(

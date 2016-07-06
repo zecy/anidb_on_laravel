@@ -268,8 +268,7 @@
             </button>
         </div>
 
-        {{--<div v-if="basicData.id.value != 0">--}}
-            <div>
+        <div v-if="basicData.id.value != 0">
                                                                 {{-- STAFF BIGIN --}}
 
         <h2>Staff信息</h2>

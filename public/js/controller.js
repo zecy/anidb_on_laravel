@@ -817,7 +817,7 @@ var vue = new Vue({
                     if(vue.staffMembers[0].id == 0) {
                         vue.staffMembers = res;
                     } else {
-                        vue.staffMembers.concat(res);
+                        vue.staffMembers = vue.staffMembers.concat(res);
                     }
 
                     break;
@@ -841,7 +841,7 @@ var vue = new Vue({
                     if(vue.castMembers[0].id == 0) {
                         vue.castMembers = res;
                     } else {
-                        vue.castMembers.concat(res);
+                        vue.castMembers = vue.castMembers.concat(res);
                     }
                     break;
                 case 'onair':
@@ -852,9 +852,7 @@ var vue = new Vue({
                     if (vue.onair[0].id == 0) {
                         vue.onair = res;
                     } else {
-                        oldArr = vue.onair;
-                        res = oldArr.concat(res);
-                        vue.onair = item;
+                        vue.onair = vue.onair.concat(res);
                     }
                     break;
             }

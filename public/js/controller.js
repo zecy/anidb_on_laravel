@@ -787,8 +787,6 @@ var vue = new Vue({
             let item, items, oldArr;
             let res = [];
 
-            //TODO: 已有内容的, 在后面添加
-
             switch (pos) {
 
                 case 'staff':

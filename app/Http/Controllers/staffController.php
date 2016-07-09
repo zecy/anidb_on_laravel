@@ -12,23 +12,24 @@ use App\Http\Requests;
 class staffController extends Controller
 {
 
-    private function createStaff($staffMember, $pid)
+    private function createStaff($arr, $pid)
     {
-        $staff = AnimeStaff::create(
+        $res = AnimeStaff::create(
             [
-                'staff_anime_id'  => $staffMember['animeID'],
-                'staff_important' => $staffMember['isImportant'],
-                'staff_post_zh'   => $staffMember['staffPostZhCN'],
-                'staff_post_ori'  => $staffMember['staffPostOri'],
-                'staff_member'    => $staffMember['staffMemberName'],
-                'staff_belong'    => $staffMember['staffBelongsToName'],
-                'order_index'     => $staffMember['orderIndex'],
+                'staff_anime_id'  => $arr['animeID'],
+                'staff_important' => $arr['isImportant'],
+                'staff_post_zh'   => $arr['staffPostZhCN'],
+                'staff_post_ori'  => $arr['staffPostOri'],
+                'staff_member'    => $arr['staffMemberName'],
+                'staff_belong'    => $arr['staffBelongsToName'],
+                'order_index'     => $arr['orderIndex'],
                 'staff_main'      => true,
-                'haschild'        => $staffMember['haschild'],
+                'haschild'        => $arr['haschild'],
                 'pid'             => $pid,
-                'lv'              => $staffMember['lv'],
+                'lv'              => $arr['lv'],
             ]
         );
+        return $res;
     }
 
     private function updateStaff($staffs) {
@@ -48,11 +49,18 @@ class staffController extends Controller
                 $theStaff->haschild        = $staff['haschild'];
 
                 $theStaff->save();
+
+                if ( $staff['haschild'] && !empty($staff['child']) ) {
+                    $this->updateStaff($staff['child']);
+                }
             } else {
-                $this->createStaff($staff, $staff['pid']);
-            }
-            if ( $staff['haschild'] && !empty($staff['child']) ) {
-                $this->updateStaff($staff['child']);
+                $theStaff = $this->createStaff($staff, $staff['pid']);
+                if ( $staff['haschild'] && !empty($staff['child']) ) {
+                    $ID = $theStaff->staff_id;
+                    foreach ($staff['child'] as $staffChild ) {
+                        $this->createStaff($staffChild, $ID);
+                    }
+                }
             }
         }
     }
@@ -104,6 +112,7 @@ class staffController extends Controller
 
         \DB::transaction(function () use ($staffMembers) {
             foreach ($staffMembers as $staffMember) {
+
                 $theStaff = $this->createStaff($staffMember, 0);
 
                 $staffID = $theStaff->staff_id;

@@ -708,13 +708,13 @@
                     <input type="text"
                            id="staffPostOri-@{{ lv + '-' + index }}"
                            v-model="staffitem.staffPostOri"
-                           v-on:keyup="focusMove('staffPostOri-' + lv + '-', $index, $event)"
+                           v-on:keyup="focusMove('staffPostOri-' + lv + '-', index, $event)"
                            placeholder="岗位名称（原）"
                     >
                     <input type="text"
                            id="staffPostZhCN-@{{ lv + '-' + index }}"
                            v-model="staffitem.staffPostZhCN"
-                           v-on:keyup="focusMove('staffPostZhCN-' + lv + '-', $index, $event)"
+                           v-on:keyup="focusMove('staffPostZhCN-' + lv + '-', index, $event)"
                            placeholder="岗位名称（中）"
                     >
                 </div>
@@ -722,7 +722,7 @@
                     <input v-model="staffitem.staffMemberName"
                            id="staffMemberName-@{{ lv + '-' + index }}"
                            type="text"
-                           v-on:keyup="focusMove('staffMemberName-' + lv + '-', $index, $event)"
+                           v-on:keyup="focusMove('staffMemberName-' + lv + '-', index, $event)"
                            placeholder="人员名称"
                     >
                 </div>
@@ -730,7 +730,7 @@
                     <input type="text"
                            id="staffBelongsToName-@{{ lv + '-' + index }}"
                            v-model="staffitem.staffBelongsToName"
-                           v-on:keyup="focusMove('staffBelongsToName-' + lv + '-', $index, $event)"
+                           v-on:keyup="focusMove('staffBelongsToName-' + lv + '-', index, $event)"
                            placeholder="所属公司名称"
                     >
                 </div>

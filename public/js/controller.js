@@ -379,7 +379,12 @@ Vue.component('originalwork', {
 
 Vue.component('staffrow', {
     template: '#staff-row',
-    props:    ['staffitem','controlledarr', 'lv', 'index' ] // props 必须全部字母使用小写
+    props:    ['staffitem','controlledarr', 'lv', 'index' ], // props 必须全部字母使用小写
+    methods: {
+        focusMove: function (id,index,e) {
+            vue.focusMove(id, index, e)
+        }
+    }
 });
 
 Vue.component('rowcontrol', {
@@ -665,7 +670,16 @@ var vue = new Vue({
                     for ( let i = 0; i < this.staffMembers.length; i++) {
                         let staff = this.staffMembers[i];
                         staff.orderIndex = i;
+                        if ( staff.haschild && staff.child.length > 0 ) {
+                            for ( let j = 0; j < staff.child.length; j++ ) {
+                                let staffChild = staff.child[j];
+                                staffChild.orderIndex = j;
+                            }
+                        } else if ( staff.haschild == true && staff.child.length == 0) {
+                            staff.haschild = false;
+                        }
                     }
+
                     this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
                             alert('更新成功!!');
@@ -859,19 +873,21 @@ var vue = new Vue({
         addChild: function(arr, index){
             const oldItem = arr[index];
 
-            const animeID  = oldItem.animeID;
-            const lv       = Number(oldItem.lv);
-            const pid      = oldItem.id;
-            const hasChild = oldItem.haschild;
+            const animeID      = oldItem.animeID;
+            const lv           = Number(oldItem.lv);
+            const pid          = oldItem.id;
+            const hasChild     = oldItem.haschild;
+            const staffPostOri = oldItem.staffMemberName;
+            const isImportant  = oldItem.isImportant;
 
             const child = {
                 'id':                   0,
                 'animeID':              animeID,
-                'staffPostOri':         '',
+                'staffPostOri':         staffPostOri,
                 'staffPostZhCN':        '',
                 'staffMemberName':      '',
                 'staffBelongsToName':   '',
-                'isImportant':          false,
+                'isImportant':          isImportant,
                 'orderIndex':           0,
                 'lv':                   lv + 1,
                 'haschild':             false,
@@ -891,6 +907,8 @@ var vue = new Vue({
 
             var key = e.keyCode;
 
+            console.log(index);
+
             var preIndex = Number(index) - 1;
 
             var nextIndex = Number(index) + 1;
@@ -899,6 +917,7 @@ var vue = new Vue({
                 // Down
                 case 40:
                     var item = document.getElementById(id + nextIndex.toString());
+                    console.log(id + nextIndex.toString());
                     if ( item ) item.focus();
                     break;
                 // Up

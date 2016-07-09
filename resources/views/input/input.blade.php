@@ -253,20 +253,14 @@
             </tr>
         </table>
         </form>
-        <div v-if="basicData.id.value == 0">
-            <button class="btn btn-success"
-                    v-on:click="createData('basicData')"
-            >
-                创建数据
-            </button>
-        </div>
-        <div v-if="basicData.id.value != 0">
-            <button class="btn btn-success"
-                    v-on:click="editData('basicData', basicData.id.value)"
-            >
-                更新数据（动画ID：@{{ basicData.id.value }}）
-            </button>
-        </div>
+
+        <createeditbutton
+                :create_condition="basicData.id.value == 0"
+                :edit_condition="basicData.id.value != 0"
+                :pos="'basicData'"
+                :anime_id="basicData.id.value"
+                :is_complete.sync="basicData"
+        ></createeditbutton>
 
         <div v-if="basicData.id.value != 0">
                                                                 {{-- STAFF BIGIN --}}
@@ -393,20 +387,13 @@
             </table>
         </form>
 
-            <div v-if="staffMembers[0].id == 0">
-                <button class="btn btn-success"
-                        v-on:click="createData('staff')"
-                >
-                    创建STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
-                </button>
-            </div>
-            <div v-if="staffMembers[0].id != 0">
-                <button class="btn btn-success"
-                        v-on:click="editData('staff', basicData.id.value)"
-                >
-                    更新STAFF@{{ "（动画ID：" + basicData.id.value + "）" }}
-                </button>
-            </div>
+        <createeditbutton
+                :create_condition="staffMembers[0].id == 0"
+                :edit_condition="staffMembers[0].id != 0"
+                :pos="'staff'"
+                :anime_id="basicData.id.value"
+                :is_complete.sync="staffMembers"
+        ></createeditbutton>
 
                                                                 {{-- STAFF END --}}
 
@@ -485,20 +472,13 @@
 
         <br>
 
-            <div v-if="castMembers[0].id == 0">
-                <button class="btn btn-success"
-                        v-on:click="createData('cast')"
-                >
-                    创建CAST@{{ "（动画ID：" + basicData.id.value + "）" }}
-                </button>
-            </div>
-            <div v-if="castMembers[0].id != 0">
-                <button class="btn btn-success"
-                        v-on:click="editData('cast', basicData.id.value)"
-                >
-                    更新CAST@{{ "（动画ID：" + basicData.id.value + "）" }}
-                </button>
-            </div>
+            <createeditbutton
+                    :create_condition="castMembers[0].id == 0"
+                    :edit_condition="castMembers[0].id != 0"
+                    :pos="'cast'"
+                    :anime_id="basicData.id.value"
+                    :is_complete.sync="castMembers"
+            ></createeditbutton>
 
                                                                 {{-- CAST END --}}
 
@@ -590,20 +570,13 @@
             </table>
         </form>
 
-            <div v-if="onair[0].id == 0">
-                <button class="btn btn-success"
-                        v-on:click="createData('onair')"
-                >
-                    创建播出信息@{{ "（动画ID：" + basicData.id.value + "）" }}
-                </button>
-            </div>
-            <div v-if="onair[0].id != 0">
-                <button class="btn btn-success"
-                        v-on:click="editData('onair', basicData.id.value)"
-                >
-                    更新播出信息@{{ "（动画ID：" + basicData.id.value + "）" }}
-                </button>
-            </div>
+            <createeditbutton
+                    :create_condition="onair[0].id == 0"
+                    :edit_condition="onair[0].id != 0"
+                    :pos="'onair'"
+                    :anime_id="basicData.id.value"
+                    :is_complete.sync="onair"
+            ></createeditbutton>
 
                                                                 {{-- ONAIR END --}}
 </div>
@@ -733,6 +706,35 @@
                            v-on:keyup="focusMove('staffBelongsToName-' + lv + '-', index, $event)"
                            placeholder="所属公司名称"
                     >
+                </div>
+            </div>
+        </template>
+
+        {{-- 创建 / 更新按钮 --}}
+        <template id="create-edit-btn">
+            <div>
+                <div v-if="!btnProcessing">
+                    <div v-if="create_condition">
+                        <button class="btn btn-success"
+                                v-on:click="createData(pos)"
+                        >
+                            创建数据（动画ID：@{{ anime_id }}）
+                        </button>
+                    </div>
+                    <div v-if="edit_condition">
+                        <button class="btn btn-success"
+                                v-on:click="editData(pos, anime_id)"
+                        >
+                            更新数据（动画ID：@{{ anime_id }}）
+                        </button>
+                    </div>
+                </div>
+                <div v-else>
+                    <button class="btn btn-success btn-processing"
+                            disabled
+                    >
+                        @{{ msg }}<span>...</span>
+                    </button>
                 </div>
             </div>
         </template>

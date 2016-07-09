@@ -66,7 +66,7 @@
 .is-official .btn-xs {
     font-size: 12px!important;
     padding: 1px 4px!important;
-    margin: 0px 0 2px 0px;
+    margin: 0 0 2px 0;
 }
 
 .ori-item {
@@ -152,4 +152,25 @@
     padding:0 3px;
     display: table-cell;
     vertical-align: middle;
+}
+
+/* 创建 / 更新按钮 */
+
+@supports (display: none) {
+    .btn-processing > span {
+        display: inline-block;
+        width: 3ch;
+        text-indent: -1ch;
+        text-align: left;
+        vertical-align: bottom;
+        overflow: hidden;
+        animation: dot 3s infinite step-start both;
+        /* 关键: 设置等宽字体 */
+        font-family: Consolas, Monaco, monospace;
+    }
+}
+
+@keyframes dot {
+    33% { text-indent: 0; }
+    66% { text-indent: -2ch; }
 }

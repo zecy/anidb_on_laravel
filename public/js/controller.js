@@ -387,6 +387,56 @@ Vue.component('staffrow', {
     }
 });
 
+Vue.component('createeditbutton', {
+    template: '#create-edit-btn',
+    props:    ['create_condition', 'edit_condition', 'pos', 'anime_id', 'is_complete' ], // props 不能有连接线 -
+    data: function () {
+        return {
+            btnProcessing: false,
+            msg: '进行中'
+        }
+    },
+    watch: {
+        'is_complete': function(newVal) {
+            if (this.pos != 'basicData') {
+                if(newVal[newVal.length - 1].id != 0) {
+                    this.$set('btnProcessing' , false);
+                }
+            } else {
+                if(newVal.id.value != 0) {
+                    this.$set('btnProcessing' , false);
+                }
+            }
+        }
+    },
+    methods: {
+        createData: function (pos) {
+            this.btnProcessing = true;
+            this.$nextTick(function () {
+                const r = confirm('是否确定？');
+                if(r) {
+                    vue.createData(pos);
+                    this.msg = '正在显示';
+                } else {
+                    this.btnProcessing = false;
+                }
+            });
+        },
+        editData: function(pos, anime_id) {
+            this.btnProcessing = true;
+            this.$nextTick(function(){
+                const r = confirm('是否确定？');
+                if(r) {
+                    vue.editData(pos, anime_id);
+                    this.msg = '正在显示';
+                } else {
+                    this.btnProcessing = false;
+                }
+            });
+        }
+    }
+});
+
 Vue.component('rowcontrol', {
     template: '#row-control',
     props:    ['style', 'arr', 'index', 'pos'],
@@ -727,6 +777,7 @@ var vue = new Vue({
                     }
                 });
         },
+
         searchAnime: function() {
             this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
 

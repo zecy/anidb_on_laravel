@@ -718,14 +718,14 @@
                         <button class="btn btn-success"
                                 v-on:click="createData(pos)"
                         >
-                            创建数据（动画ID：@{{ anime_id }}）
+                            创建@{{ msg }}信息（动画ID：@{{ anime_id }}）
                         </button>
                     </div>
                     <div v-if="edit_condition">
                         <button class="btn btn-success"
                                 v-on:click="editData(pos, anime_id)"
                         >
-                            更新数据（动画ID：@{{ anime_id }}）
+                            更新@{{ msg }}信息（动画ID：@{{ anime_id }}）
                         </button>
                     </div>
                 </div>
@@ -733,7 +733,7 @@
                     <button class="btn btn-success btn-processing"
                             disabled
                     >
-                        @{{ msg }}<span>...</span>
+                        @{{ processing_msg }}<span>...</span>
                     </button>
                 </div>
             </div>

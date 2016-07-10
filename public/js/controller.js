@@ -389,22 +389,46 @@ Vue.component('staffrow', {
 
 Vue.component('createeditbutton', {
     template: '#create-edit-btn',
-    props:    ['create_condition', 'edit_condition', 'pos', 'anime_id', 'is_complete' ], // props 不能有连接线 -
+    props:    ['create_condition', 'edit_condition', 'pos', 'anime_id', 'is_complete'], // props 不能有连接线 -
     data: function () {
         return {
             btnProcessing: false,
-            msg: '进行中'
+            processing_msg: '准备写入数据库',
+            msg: ''
+        }
+    },
+    computed: {
+        msg: function () {
+            const pos = this.pos;
+            switch(pos) {
+                case 'basicData':
+                    return '动画';
+                case 'staff':
+                    return ' STAFF ';
+                case 'cast':
+                    return ' CAST ';
+                case 'onair':
+                    return '播放'
+            }
         }
     },
     watch: {
         'is_complete': function(newVal) {
+            const len = newVal.length;
+
             if (this.pos != 'basicData') {
-                if(newVal[newVal.length - 1].id != 0) {
-                    this.$set('btnProcessing' , false);
+                if(newVal[len - 1].id != 0) {
+                    this.processing_msg = '成功录入 ' + len + ' 条数据！正在返回';
+                    setTimeout(function () {
+                        this.btnProcessing = false
+                    }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
                 }
             } else {
                 if(newVal.id.value != 0) {
-                    this.$set('btnProcessing' , false);
+                    this.processing_msg = '录入成功！正在返回';
+                    setTimeout(function () {
+                        this.btnProcessing = false
+                    }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
                 }
             }
         }
@@ -415,8 +439,9 @@ Vue.component('createeditbutton', {
             this.$nextTick(function () {
                 const r = confirm('是否确定？');
                 if(r) {
-                    vue.createData(pos);
-                    this.msg = '正在显示';
+                    this.processing_msg = '正在写入数据库';
+                    const res = vue.createData(pos);
+                    if(res){this.processing_msg = '已写入数据库，正在返回数据'}
                 } else {
                     this.btnProcessing = false;
                 }
@@ -427,8 +452,9 @@ Vue.component('createeditbutton', {
             this.$nextTick(function(){
                 const r = confirm('是否确定？');
                 if(r) {
-                    vue.editData(pos, anime_id);
-                    this.msg = '正在显示';
+                    this.processing_msg = '正在写入数据库';
+                    const res = vue.editData(pos, anime_id);
+                    if(res){this.processing_msg = '已写入数据库，正在返回数据'}
                 } else {
                     this.btnProcessing = false;
                 }
@@ -668,26 +694,38 @@ var vue = new Vue({
             switch(pos) {
                 case 'basicData':
                     this.$http.post('anime', {data: this.basicData}).then(function (r) {
-                        if (r.status == 200) alert('录入成功!!');
-                        this.showAnime(r.data.id);
+                        //if (r.status == 200) alert('录入成功!!');
+                        if ( r.status == 200 ) {
+                            this.showAnime(r.data.id);
+                            return true;
+                        }
                     });
                     break;
                 case 'staff':
                     this.$http.post('anime/staff', {data: this.staffMembers}).then(function (r) {
-                        if (r.status == 200) alert('录入成功!!');
-                        this.showAnime(this.basicData.id.value);
+                        //if (r.status == 200) alert('录入成功!!');
+                        if (r.status == 200) {
+                            this.showAnime(this.basicData.id.value);
+                            return true;
+                        }
                     });
                     break;
                 case 'cast':
                     this.$http.post('anime/cast', {data: this.castMembers}).then(function (r) {
-                        if (r.status == 200) alert('录入成功!!');
-                        this.showAnime(this.basicData.id.value);
+                        //if (r.status == 200) alert('录入成功!!');
+                        if (r.status == 200) {
+                            this.showAnime(this.basicData.id.value);
+                            return true;
+                        }
                     });
                     break;
                 case 'onair':
                     this.$http.post('anime/onair', {data: this.onair}).then(function (r) {
-                        if (r.status == 200) alert('录入成功!!');
-                        this.showAnime(this.basicData.id.value);
+                        //if (r.status == 200) alert('录入成功!!');
+                        if (r.status == 200) {
+                            this.showAnime(this.basicData.id.value);
+                            return true;
+                        }
                     });
                     break;
             }
@@ -711,8 +749,9 @@ var vue = new Vue({
 
                     this.$http.put('anime/' + animeID, {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
-                            alert('更新成功!!');
+                            //alert('更新成功!!');
                             this.showAnime(animeID);
+                            return true;
                         }
                     });
                     break;
@@ -732,8 +771,9 @@ var vue = new Vue({
 
                     this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
-                            alert('更新成功!!');
+                            //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
+                            return true;
                         }
                     });
                     break;
@@ -744,8 +784,9 @@ var vue = new Vue({
                     }
                     this.$http.put('anime/cast/' + animeID, {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) {
-                            alert('更新成功!!');
+                            //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
+                            return true;
                         }
                     });
                     break;
@@ -756,8 +797,9 @@ var vue = new Vue({
                     }
                     this.$http.put('anime/onair/' + animeID, {data: this.onair}).then(function (r) {
                         if (r.status == 200) {
-                            alert('更新成功!!');
+                            //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
+                            return true;
                         }
                     });
                     break;
@@ -958,8 +1000,6 @@ var vue = new Vue({
 
             var key = e.keyCode;
 
-            console.log(index);
-
             var preIndex = Number(index) - 1;
 
             var nextIndex = Number(index) + 1;
@@ -968,7 +1008,6 @@ var vue = new Vue({
                 // Down
                 case 40:
                     var item = document.getElementById(id + nextIndex.toString());
-                    console.log(id + nextIndex.toString());
                     if ( item ) item.focus();
                     break;
                 // Up

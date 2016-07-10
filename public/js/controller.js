@@ -428,7 +428,7 @@ Vue.component('createeditbutton', {
                     this.processing_msg = '录入成功！正在返回';
                     setTimeout(function () {
                         this.btnProcessing = false
-                    }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
+                    }.bind(this), 1000);// 不使用 bind 的话 this 会被识别为 window
                 }
             }
         }

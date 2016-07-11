@@ -479,7 +479,7 @@ class AnimeInput extends staffController
 
     public function searchAnime(Request $request, $animeName)
     {
-        $animeIDs = \App\AnimeTitles::where('title', 'like', '%'.$animeName.'%')
+        $animeIDs = \App\AnimeTitles::where('title', 'ilike', '%'.$animeName.'%') // 据说 ilike 只支持 postgresql, 未证实
             ->get(array('anime_id'))
             ->toArray();
 

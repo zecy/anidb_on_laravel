@@ -431,7 +431,7 @@ Vue.component('createeditbutton', {
                             case 'cast':
                                 vue.castSource = "";
                                 break;
-                            case 'onar':
+                            case 'onair':
                                 vue.onairSource = "";
                         }
                     }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
@@ -521,12 +521,9 @@ Vue.component('rowcontrol', {
         addRow:    function (arr, index, pos) {
             var obj = JSON.parse(JSON.stringify(arr[index]));
             obj.id = 0;
-            console.log(pos);
             if(pos == 'staff') {
-                console.log('obj.old: ' + obj);
                 obj.haschild = false;
                 obj.child    = [];
-                console.log('obj.new: ' + obj);
             }
             arr.splice(Number(index) + 1, 0, obj);
         }
@@ -877,7 +874,6 @@ var vue = new Vue({
                         arr.splice(index, 1);
                     } else {
                         alert('删除失败！！');
-                        console.log('删除失败:\n' + r);
                     }
                 });
         },

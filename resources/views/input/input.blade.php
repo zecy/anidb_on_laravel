@@ -243,7 +243,8 @@
         ></createeditbutton>
 
         <div v-if="basicData.id.value != 0">
-                                                                {{-- STAFF BIGIN --}}
+
+            {{-- STAFF BIGIN --}}
 
         <h2>Staff信息</h2>
 
@@ -375,11 +376,11 @@
                 :is_complete.sync="staffMembers"
         ></createeditbutton>
 
-                                                                {{-- STAFF END --}}
+            {{-- STAFF END --}}
 
         <br>
 
-                                                                {{-- CAST BEGIN --}}
+            {{-- CAST BEGIN --}}
         <h2>Cast信息</h2>
 
         <textformat :text.sync="castSource" :pos="'cast'"></textformat>
@@ -460,9 +461,9 @@
                     :is_complete.sync="castMembers"
             ></createeditbutton>
 
-                                                                {{-- CAST END --}}
+            {{-- CAST END --}}
 
-                                                                {{-- ONAIR BEGIN --}}
+            {{-- ONAIR BEGIN --}}
 
         <h2>播放信息</h2>
 

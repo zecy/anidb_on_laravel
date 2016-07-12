@@ -362,7 +362,9 @@ var onairFormatedTextToArray = function (str, animeID) {
 // 打开 debug 模式
 Vue.config.debug = true;
 
-/** 组件 **/
+/**
+ *  组件 Components
+ */
 
 Vue.component('basicinput', {
     template: '#basic-input',
@@ -415,12 +417,23 @@ Vue.component('createeditbutton', {
     watch: {
         'is_complete': function(newVal) {
             const len = newVal.length;
+            const pos = this.pos;
 
-            if (this.pos != 'basicData') {
+            if (pos != 'basicData') {
                 if(newVal[len - 1].id != 0) {
                     this.processing_msg = '成功录入 ' + len + ' 条数据！正在返回';
                     setTimeout(function () {
-                        this.btnProcessing = false
+                        this.btnProcessing = false;
+                        switch (pos) {
+                            case 'staff':
+                                vue.staffSource = "";
+                                break;
+                            case 'cast':
+                                vue.castSource = "";
+                                break;
+                            case 'onar':
+                                vue.onairSource = "";
+                        }
                     }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
                 }
             } else {
@@ -523,6 +536,57 @@ Vue.component('rowcontrol', {
 Vue.component('togglebutton', {
     template: '#toggle-button',
     props:    ['toggle', 'style', 'content']
+});
+
+Vue.component('searchanime', {
+    template: '#search-anime',
+    props:    ['is_complete'],
+    data: function(){
+        return {
+            'title': '',
+            'searchProcessing': false,
+            'searching_msg': '正在搜索',
+            'animeNameList': []
+        }
+    },
+    watch: {
+        'is_complete': function(newVal, oldVal) {
+            if(oldVal != newVal) {
+                this.searchProcessing = false;
+                this.title = "";
+            }
+        }
+    },
+    methods: {
+        searchAnime: function() {
+            this.searchProcessing = true;
+            this.$http.get('anime/search/' + this.title).then(function (r) {
+                if( r.data.multiple == 0) {
+                    const id = r.data.basicData.id.value;
+                    vue.showAnime(id);
+                } else {
+                    let animeNames;
+
+                    animeNames = r.data.animes;
+
+                    for(var i = 0; i < animeNames.length; i++) {
+
+                        let anime = {};
+
+                        let animeName = animeNames[i];
+
+                        anime.id = animeName[0].trans_name_id;
+
+                        anime.ori = animeName[0].trans_name;
+
+                        anime.zh_CN = (animeName[1].trans_language == 'zh-cn') ? animeName[1].trans_name : '';
+
+                        this.animeNameList.push(anime);
+                    }
+                }
+            });
+        }
+    }
 });
 
 Vue.component('textformat', {
@@ -650,15 +714,13 @@ var onairTmp = [{
 var vue = new Vue({
     el:      '#animedata',
     data: {
-        'basicData':            JSON.parse(JSON.stringify(basicDataTmp)),
-        'staffMembers':         JSON.parse(JSON.stringify(staffMembersTmp)),
-        'castMembers':          JSON.parse(JSON.stringify(castMembersTmp)),
-        'onair':                JSON.parse(JSON.stringify(onairTmp)),
-        'staffSource':          '',
-        'castSource':           '',
-        'onairDataInput':       '',
-        'animeNameSearchInput': '',
-        'animeNameList':        []
+        'basicData':    JSON.parse(JSON.stringify(basicDataTmp)),
+        'staffMembers': JSON.parse(JSON.stringify(staffMembersTmp)),
+        'castMembers':  JSON.parse(JSON.stringify(castMembersTmp)),
+        'onair':        JSON.parse(JSON.stringify(onairTmp)),
+        'staffSource':  '',
+        'castSource':   '',
+        'onairSource':  ''
     },
     watch:   {
         'basicData.oriWorks[0][0]': function (newVal, oldVal) {
@@ -818,48 +880,6 @@ var vue = new Vue({
                         console.log('删除失败:\n' + r);
                     }
                 });
-        },
-
-        searchAnime: function() {
-            this.$http.get('anime/search/' + vue.animeNameSearchInput).then(function (r) {
-
-                if( r.data.multiple == 0) {
-
-                    /*
-                    // 初始化
-                    const bD = JSON.parse(JSON.stringify(basicDataTmp));
-                    const sM = JSON.parse(JSON.stringify(staffMembersTmp));
-                    const cM = JSON.parse(JSON.stringify(castMembersTmp));
-
-                    this.basicData    = r.data.basicData;
-                    this.staffMembers = r.data.staffMembers;
-                    this.castMembers  = r.data.castMembers;
-                    this.onair        = r.data.onairs;
-                    */
-                    const id = r.data.basicData.id.value;
-                    this.showAnime(id);
-                } else {
-                    var animeNames;
-
-                    animeNames = r.data.animes;
-
-                    for(var i = 0; i < animeNames.length; i++) {
-
-                        var anime = {};
-
-                        var animeName = animeNames[i];
-
-                        anime.id = animeName[0].trans_name_id;
-
-                        anime.ori = animeName[0].trans_name;
-
-                        anime.zh_CN = (animeName[1].trans_language == 'zh-cn') ? animeName[1].trans_name : '';
-
-                        this.animeNameList.push(anime);
-                    }
-                }
-
-            });
         },
 
         showAnime: function(id) {

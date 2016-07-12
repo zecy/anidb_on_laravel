@@ -8,31 +8,11 @@
 
     <div id="animedata" class="container" xmlns="http://www.w3.org/1999/html">
 
-        <div class="form-group" style="width: 75%;margin:50px auto">
-            <h2>查找</h2>
-            <div class="row">
-                <div class="col-xs-10">
-                    <input class="form-control" type="text"
-                           v-model="animeNameSearchInput"
-                    >
-                </div>
-                <button class="btn btn-primary col-xs-2"
-                        v-on:click="searchAnime"
-                >
-                    <span class="glyphicon glyphicon-search"></span>
-                </button>
-            </div>
-            <div>
-                <button class="btn btn-block"
-                        v-for="animeName in animeNameList"
-                        v-on:click="showAnime(animeName.id)"
-                >
-                    @{{ animeName.ori + ' | ' + animeName.zh_CN }}
-                </button>
-            </div>
-        </div>
 
         <h2>主要信息</h2>
+
+        <searchanime :is_complete="basicData.id.value"
+        ></searchanime>
 
         <form id="maininfo" class="form form-horizontal">
         <table class="table">
@@ -487,14 +467,14 @@
         <h2>播放信息</h2>
 
         <textarea class="form-control" id="" cols="30" rows="10"
-                  v-model="onairDataInput"
+                  v-model="onairSource"
         ></textarea>
 
         <br>
 
-        <button class="btn btn-primary" v-on:click="toArray(onairDataInput, 'onair')">格式化日期</button>
+        <button class="btn btn-primary" v-on:click="toArray(onairSource, 'onair')">格式化日期</button>
 
-        <button class="btn btn-primary" v-on:click="onairDataInput = ''">清除数据</button>
+        <button class="btn btn-primary" v-on:click="onairSource = ''">清除数据</button>
 
         <br>
         <br>
@@ -582,6 +562,43 @@
 </div>
 
         {{-- TEMPLATE --}}
+
+        {{-- 搜索动画 --}}
+
+        <template id="search-anime">
+            <div class="form-group" style="width: 75%;margin:50px auto">
+                <h2>查找</h2>
+
+                <div class="row">
+                    <div class="col-xs-10">
+                        <input class="form-control" type="text"
+                               v-model="title"
+                               v-on:keyup.enter="searchAnime"
+                        >
+                    </div>
+                    <button class="btn btn-primary col-xs-2"
+                            v-on:click="searchAnime"
+                            v-if="!searchProcessing"
+                    >
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button class="btn btn-primary col-xs-2 btn-processing"
+                            v-else
+                            disabled
+                    >
+                        @{{ searching_msg }}<span>...</span>
+                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-block"
+                            v-for="animeName in animeNameList"
+                            v-on:click="showAnime(animeName.id)"
+                    >
+                        @{{ animeName.ori + ' | ' + animeName.zh_CN }}
+                    </button>
+                </div>
+            </div>
+        </template>
 
         {{-- 原作类型 --}}
         <template id="ori-work">

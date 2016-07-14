@@ -227,8 +227,12 @@
             </tr>
             <tr>
                 <td>
-                    <label class="control-label">@{{ basicData.description.label }}</label>
-                    <textarea v-model="basicData.description.value" cols="30" rows="10" class="form-control"></textarea>
+                    <describox
+                            :descri_label="basicData.description.label"
+                            :descri_value.sync="basicData.description.value"
+                            :anime_id="basicData.id.value"
+                            :processing="processing"
+                    ></describox>
                 </td>
             </tr>
         </table>
@@ -362,8 +366,8 @@
                         </td>
                     </tr>
                     <tr v-if="staffMember.haschild">
-                                                       <td colspan="7">子项目</td>
-                                                       </tr>
+                        <td colspan="7">子项目</td>
+                    </tr>
                 </tbody>
             </table>
         </form>
@@ -565,7 +569,6 @@
         {{-- TEMPLATE --}}
 
         {{-- 搜索动画 --}}
-
         <template id="search-anime">
             <div class="form-group" style="width: 75%;margin:50px auto">
                 <h2>查找</h2>
@@ -686,6 +689,28 @@
                               :index="$index"
                     ></originalwork>
                 </div>
+            </div>
+        </template>
+
+        {{-- 介绍框 --}}
+        <template id="descri-box">
+            <div style="width:100%">
+                <label class="control-label"
+                       v-if="!processing"
+                >
+                    @{{ descri_label }}
+                </label>
+                <label class="control-label btn-processing"
+                       v-else
+                >
+                    介绍更新中<span>...</span>
+                </label>
+                    <textarea cols="30" rows="10"
+                              class="form-control"
+                              v-model="descri_value"
+                              v-on:keyup="shortCut(anime_id, $event)"
+                              disabled="@{{ processing }}"
+                    ></textarea>
             </div>
         </template>
 

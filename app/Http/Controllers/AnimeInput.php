@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AnimeBasicData;
 use App\AnimeLinks;
+use App\AnimeOnair;
 use App\AnimeTitles;
 use App\AnimeOriginalWork;
 use App\AnimeOriginalWorkSupport;
@@ -42,7 +43,6 @@ class AnimeInput extends staffController
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -477,44 +477,44 @@ class AnimeInput extends staffController
      *
      */
 
-    public function searchAnime(Request $request, $animeName)
-    {
-        $animeIDs = \App\AnimeTitles::where('title', 'ilike', '%'.$animeName.'%') // 据说 ilike 只支持 postgresql, 未证实
-            ->get(array('anime_id'))
-            ->toArray();
+   public function searchAnime(Request $request, $animeName)
+   {
+       $animeIDs = \App\AnimeTitles::where('title', 'ilike', '%'.$animeName.'%') // 据说 ilike 只支持 postgresql, 未证实
+           ->get(array('anime_id'))
+           ->toArray();
 
-        $res = [];
+       $res = [];
 
-        foreach ( $animeIDs as $animeID ) {
-            $res[$animeID['anime_id']] = $animeID['anime_id'];
-        }
+       foreach ( $animeIDs as $animeID ) {
+           $res[$animeID['anime_id']] = $animeID['anime_id'];
+       }
 
-        $animeIDs = $res;
+       $animeIDs = $res;
 
-        if ( count($animeIDs) == 1 ) {
-            return $this->show(current($animeIDs));
-        } else {
-            $animes = [];
+       if ( count($animeIDs) == 1 ) {
+           return $this->show(current($animeIDs));
+       } else {
+           $animes = [];
 
-            foreach ( $animeIDs as $animeID ) {
-                $anime_db = \App\AnimeTitles::where('is_official', true)
-                    ->where('anime_id', $animeID )
-                    ->get(array(
-                        'anime_id',
-                        'title',
-                        'lang'
-                    ))
-                    ->toArray();
+           foreach ( $animeIDs as $animeID ) {
+               $anime_db = \App\AnimeTitles::where('is_official', true)
+                   ->where('anime_id', $animeID )
+                   ->get(array(
+                       'anime_id',
+                       'title',
+                       'lang'
+                   ))
+                   ->toArray();
 
-                $animes[] = $anime_db;
-            }
+               $animes[] = $anime_db;
+           }
 
-           return \Response::json([
-               'multiple' => 1,
-               'animes'   => $animes
-           ]);
-        }
-    }
+          return \Response::json([
+              'multiple' => 1,
+              'animes'   => $animes
+          ]);
+       }
+   }
 
     /**
      * Remove the specified resource from storage.

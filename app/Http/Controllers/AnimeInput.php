@@ -68,6 +68,10 @@ class AnimeInput extends staffController
                 'anime_sequel'          => $data['isSequel']['value'],
                 'anime_duration_format' => $data['duration']['value'],
                 'anime_end'             => $data['isEnd']['value'],
+                'anime_oa_year'         => $data['oa_year']['value'],
+                'anime_oa_season'       => $data['oa_season']['value'],
+                'anime_eps_oa'          => $data['eps_oa']['value'],
+                'anime_eps_soft'        => $data['eps_soft']['value'],
                 //'anime_description'     => $data['description']['value'],
                 //TODO: 查清 cereate 无法插入 description 的原因
                 'anime_counted'         => $data['isCounted']['value']
@@ -166,6 +170,10 @@ class AnimeInput extends staffController
             'sequelComment' => ['label' => '备注', 'value' => $animeBasicData['anime_sequel_comment']],
             'isEnd'         => ['label' => '是否完结', 'value' => $animeBasicData['anime_end']],
             'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['anime_counted']],
+            'oa_year'       => ['value' => $animeBasicData['anime_oa_year']],
+            'oa_season'     => ['value' => $animeBasicData['anime_oa_season']],
+            'eps_oa'        => ['value' => $animeBasicData['anime_eps_oa']],
+            'eps_soft'      => ['value' => $animeBasicData['anime_eps_soft']],
             'story'         => ['label' => '故事', 'value' => ''],
             'description'   => ['label' => '介绍', 'value' => $animeBasicData['anime_description']],
             'title'         => [],
@@ -378,6 +386,10 @@ class AnimeInput extends staffController
                 $basicData->anime_end                = $data['isEnd']['value'];
                 $basicData->anime_description        = $data['description']['value'];
                 $basicData->anime_counted            = $data['isCounted']['value'];
+                $basicData->anime_oa_year            = $data['oa_year']['value'];
+                $basicData->anime_oa_season          = $data['oa_season']['value'];
+                $basicData->anime_eps_oa             = $data['eps_oa']['value'];
+                $basicData->anime_eps_soft           = $data['eps_soft']['value'];
 
                 $basicData->save();
 

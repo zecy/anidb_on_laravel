@@ -18,7 +18,11 @@ class AnimeBasicData extends Model
         'anime_duration_format',
         'anime_end',
         'anime_descritption',
-        'anime_counted'
+        'anime_counted',
+        'anime_oa_year',
+        'anime_oa_season',
+        'anime_eps_oa',
+        'anime_eps_soft'
     ];
     protected $visible = array(
         'anime_id',
@@ -33,7 +37,11 @@ class AnimeBasicData extends Model
         'anime_story',
         'anime_description',
         'anime_counted',
-        'anime_attribute'
+        'anime_attribute',
+        'anime_oa_year',
+        'anime_oa_season',
+        'anime_eps_oa',
+        'anime_eps_soft'
     );
 
     public function onair()

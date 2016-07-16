@@ -661,7 +661,8 @@ var basicDataTmp = {
     ],
     'abbr':          {'label': '简称', 'value': ''},
     'kur':           {'label': '长度', 'value': 1},
-    'eps':           {'label': '集数', 'value': ''},
+    'eps_oa':        {'label': '集数', 'value': 0},
+    'eps_soft':      {'label': '集数', 'value': 0},
     'duration':      {'label': '时间规格', 'value': 'general'},
     'oriWorks':      [
         [{'id': 0, 'haschild': false, 'multiple': false}],
@@ -678,7 +679,9 @@ var basicDataTmp = {
     'isEnd':         {'label': '是否完结', 'value': true},
     'isCounted':     {'label': '是否纳入统计', 'value': true},
     'story':         {'label': '故事', 'value': ''},
-    'description':   {'label': '介绍', 'value': ''}
+    'description':   {'label': '介绍', 'value': ''},
+    'oa_year': {'value': 2016},
+    'oa_season': {'value': 7}
 };
 
 var staffMembersTmp = [{
@@ -762,8 +765,6 @@ var vue = new Vue({
          * Display the Anime Basic Data
          * */
         createData: function (pos) {
-
-            //e.preventDefault();
 
             this.processing = true;
 

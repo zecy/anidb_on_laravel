@@ -35,4 +35,10 @@ class AnimeBasicData extends Model
         'anime_counted',
         'anime_attribute'
     );
+
+    public function onair()
+    {
+        // 连接到 AnimeOnair, 第一个 anime_id 是 AnimeOnair 的 anime_id, 第二个 anime_id 是 AnimeBasicData 的主键.
+        return $this->hasMany('App\AnimeOnair', 'anime_id', 'anime_id');
+    }
 }

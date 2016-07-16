@@ -398,7 +398,6 @@ Vue.component('describox', {
             const ctrl = e.ctrlKey;
 
             if (key === 83 && ctrl) { // ctrl + s
-                this.processing = true;
                 if (anime_id === 0) {
                     vue.createData('basicData');
                 } else if (anime_id != 0) {
@@ -473,8 +472,8 @@ Vue.component('createeditbutton', {
                 const r = confirm('是否确定？');
                 if(r) {
                     this.processing_msg = '正在写入数据库';
-                    const res = vue.createData(pos);
-                    if(res){this.processing_msg = '已写入数据库，正在返回数据'}
+                    vue.createData(pos);
+                    if(vue.processing) this.processing_msg = '已写入数据库，正在返回数据'
                 } else {
                     this.btnProcessing = false;
                 }
@@ -484,8 +483,8 @@ Vue.component('createeditbutton', {
             this.btnProcessing = true;
             this.$nextTick(function(){
                 this.processing_msg = '正在写入数据库';
-                const res = vue.editData(pos, anime_id);
-                if(res){this.processing_msg = '已写入数据库，正在返回数据'}
+                vue.editData(pos, anime_id);
+                if(vue.processing) this.processing_msg = '已写入数据库，正在返回数据'
             });
         }
     }
@@ -572,10 +571,10 @@ Vue.component('searchanime', {
     methods: {
         searchAnime: function() {
             this.searchProcessing = true;
-            this.$http.get('anime/search/' + this.title).then(function (r) {
+            this.$http.get('input/search/' + this.title).then(function (r) {
                 if( r.data.multiple == 0) {
                     const id = r.data.basicData.id.value;
-                    vue.showAnime(id);
+                    vue.showAnime(id, r);
                 } else {
                     let animeNames;
 
@@ -770,7 +769,7 @@ var vue = new Vue({
 
             switch(pos) {
                 case 'basicData':
-                    this.$http.post('anime', {data: this.basicData}).then(function (r) {
+                    this.$http.post('input', {data: this.basicData}).then(function (r) {
                         if ( r.status == 200 ) {
                             this.showAnime(r.data.id);
                             this.processing = false;
@@ -778,7 +777,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'staff':
-                    this.$http.post('anime/staff', {data: this.staffMembers}).then(function (r) {
+                    this.$http.post('input/staff', {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;
@@ -786,7 +785,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'cast':
-                    this.$http.post('anime/cast', {data: this.castMembers}).then(function (r) {
+                    this.$http.post('input/cast', {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;
@@ -794,7 +793,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'onair':
-                    this.$http.post('anime/onair', {data: this.onair}).then(function (r) {
+                    this.$http.post('input/onair', {data: this.onair}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;
@@ -822,7 +821,7 @@ var vue = new Vue({
                         link.orderIndex = j;
                     }
 
-                    this.$http.put('anime/' + animeID, {data: this.basicData}).then(function (r) {
+                    this.$http.put('input/' + animeID, {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(animeID);
                             this.processing = false;
@@ -843,7 +842,7 @@ var vue = new Vue({
                         }
                     }
 
-                    this.$http.put('anime/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
+                    this.$http.put('input/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(r.data.animeID);
                             this.processing = false;
@@ -855,7 +854,7 @@ var vue = new Vue({
                         let cast = this.castMembers[i];
                         cast.orderIndex = i;
                     }
-                    this.$http.put('anime/cast/' + animeID, {data: this.castMembers}).then(function (r) {
+                    this.$http.put('input/cast/' + animeID, {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) {
                             //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
@@ -868,7 +867,7 @@ var vue = new Vue({
                         let oa = this.onair[i];
                         oa.orderIndex = i;
                     }
-                    this.$http.put('anime/onair/' + animeID, {data: this.onair}).then(function (r) {
+                    this.$http.put('input/onair/' + animeID, {data: this.onair}).then(function (r) {
                         if (r.status == 200) {
                             //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
@@ -881,7 +880,7 @@ var vue = new Vue({
 
         removeData: function (pos, id, arr, index) {
             let res = 0;
-            this.$http.delete('anime/' + pos + '/' + id)
+            this.$http.delete('input/' + pos + '/' + id)
                 .then(function (r) {
                     if (r.status == 200) {
                         alert('删除成功！！');
@@ -892,9 +891,9 @@ var vue = new Vue({
                 });
         },
 
-        showAnime: function(id) {
-            this.$http.get('anime/' + id).then(function(r){
+        showAnime: function(id, data) {
 
+            let inject = function(r, self){
                 const bD = r.data.basicData;
                 const sM = r.data.staffMembers;
                 const cM = r.data.castMembers;
@@ -910,11 +909,19 @@ var vue = new Vue({
                     basicData.oriWorks = JSON.parse(JSON.stringify(basicDataTmp.oriWorks));
                 }
 
-                this.$set('basicData', basicData);
-                this.$set('staffMembers', staffMembers);
-                this.$set('castMembers', castMembers);
-                this.$set('onair', onairs)
-            });
+                self.$set('basicData', basicData);
+                self.$set('staffMembers', staffMembers);
+                self.$set('castMembers', castMembers);
+                self.$set('onair', onairs)
+            };
+
+            if( data != undefined ) {
+                inject(data, this);
+            } else {
+                this.$http.get('input/' + id).then(function(res){
+                    inject(res, this);
+                });
+            }
         },
         /**
          * Get the Formated Text from sourceBox

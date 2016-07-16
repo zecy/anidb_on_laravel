@@ -33,7 +33,7 @@ class AnimeInput extends staffController
         $animeDurationFormat = ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
         $oriWorks = AnimeOriginalWorkSupport::all()->toJson();
 
-        return view('input.input', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
+        return view('input.index', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
 
     /**

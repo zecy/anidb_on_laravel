@@ -11,21 +11,22 @@
 |
 */
 
-Route::get('/','AnimeInput@index');
+// 数据录入
 
-Route::get('anime/search/{animeName}', 'AnimeInput@searchAnime');
+Route::resource('input', 'AnimeInput');
 
-Route::DELETE('anime/title/{id}', 'titleController@destroy');
+Route::get('input/search/{animeName}', 'AnimeInput@searchAnime');
 
-Route::DELETE('anime/link/{id}', 'linkController@destroy');
+Route::DELETE('input/title/{id}', 'titleController@destroy');
 
-Route::resource('anime', 'AnimeInput');
+Route::DELETE('input/link/{id}', 'linkController@destroy');
 
-Route::resource('anime/staff', 'staffController');
+Route::resource('input/staff', 'staffController');
 
-Route::resource('anime/cast', 'castController');
+Route::resource('input/cast', 'castController');
 
-Route::resource('anime/onair', 'onairController');
+Route::resource('onair/input', 'onairController');
+
 
 /*
 $api = app('Dingo\Api\Routing\Router');

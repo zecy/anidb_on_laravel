@@ -1,5 +1,5 @@
 {{-- 搜索动画 --}}
-<template id="search-anime">
+<template id="search-anime" xmlns="http://www.w3.org/1999/html">
     <div class="form-group" style="width: 75%;margin:50px auto">
         <h2>查找</h2>
 
@@ -45,81 +45,88 @@
             lv       : 当前层数, ori_level
             index    : 用于结合 v-for 插入数组, $index
     --}}
-
-    {{-- 第一级父项目 --}}
-    <div v-if="pid==0" class="">
-        <select v-model="data[0]">
-            <option v-for="item in orilist | filtByValue 0 'ori_pid'"
-                    :value="[{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': 0}]">
-                @{{ item.ori_catalog }}
-            </option>
-        </select>
-        <div v-if="data[0][0].haschild">
-            <originalwork
-                    :pid="data[0][0].id"
-                    :data.sync="data"
-                    :orilist="orilist"
-                    :multiple="data[0][0].multiple"
-                    :haschild="data[0][0].haschild"
-                    :lv="1"
-                    :index="0"
-            >
-            </originalwork>
-        </div>
-    </div>
-
-    {{-- 子项目 --}}
-    <div v-if="pid>0">
-        {{-- 子项目单选 --}}
-        <div v-if="!multiple">
-            <select v-model="data[lv][index]">
-                <option v-for="item in orilist | filtByValue pid 'ori_pid'"
-                        :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}"
+        {{-- 第一级父项目 --}}
+        <div v-if="pid==0" class="ori-lv0">
+            <select v-model="data[0]">
+                <option disabled selected hidden>选择原作类型</option>
+                <option v-for="item in orilist | filtByValue 0 'ori_pid'"
+                        :value="[{
+                              'id'        : item.ori_id,
+                              'haschild'  : item.haschild,
+                              'multiple'  : item.multiple,
+                              'pid'       : 0
+                              }]"
                 >
                     @{{ item.ori_catalog }}
                 </option>
             </select>
 
-            {{-- 模板递归 --}}
-            {{-- 生成单选第二项及第四项等 --}}
-            <div v-if="data[lv][index] ? data[lv][index].haschild : false">
+            <div v-if="data[0][0].haschild">
                 <originalwork
-                        :pid="data[lv][index].id"
+                        :pid="data[0][0].id"
                         :data.sync="data"
                         :orilist="orilist"
-                        :multiple="data[lv][index].multiple"
-                        :haschild="data[lv][index].haschild"
-                        :lv="lv+1"
+                        :multiple="data[0][0].multiple"
+                        :haschild="data[0][0].haschild"
+                        :lv="1"
                         :index="0"
+                >
+                </originalwork>
+            </div>
+        </div>
+        {{-- 子项目 --}}
+        <div v-if="pid>0" class="ori-lv@{{ lv }}">
+            {{-- 子项目单选 --}}
+            <div v-if="!multiple">
+                <select v-model="data[lv][index]">
+                    <option v-for="item in orilist | filtByValue pid 'ori_pid'"
+                            :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}"
+                    >
+                        @{{ item.ori_catalog }}
+                    </option>
+                </select>
+
+                {{-- 模板递归 --}}
+                {{-- 生成单选第二项及第四项等 --}}
+                <div v-if="data[lv][index] ? data[lv][index].haschild : false">
+                    <originalwork
+                            :pid="data[lv][index].id"
+                            :data.sync="data"
+                            :orilist="orilist"
+                            :multiple="data[lv][index].multiple"
+                            :haschild="data[lv][index].haschild"
+                            :lv="lv+1"
+                            :index="0"
+                    ></originalwork>
+                </div>
+            </div>
+
+            {{-- 子项目多选 --}}
+            <div class="clearfix"
+                 v-if="multiple"
+                 v-for="item in orilist | filtByValue pid 'ori_pid'"
+            >
+                {{-- 多选第二项 --}}
+                <label>@{{ item.ori_catalog }}</label>
+                <select class="hidden" type="text" v-model="data[lv][$index]">
+                    <option selected
+                            :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}">
+                    </option>
+                </select>
+
+                {{-- 第三项 --}}
+                {{-- 模板递归 --}}
+                <originalwork
+                        :pid="item.ori_id"
+                        :data.sync="data"
+                        :orilist="orilist"
+                        :multiple="item.multiple"
+                        :haschild="item.haschild"
+                        :lv="lv+1"
+                        :index="$index"
                 ></originalwork>
             </div>
         </div>
-
-        {{-- 子项目多选 --}}
-        <div v-if="multiple"
-             v-for="item in orilist | filtByValue pid 'ori_pid'"
-        >
-            {{-- 多选第二项 --}}
-            <label>@{{ item.ori_catalog }}</label>
-            <select class="hidden" type="text" v-model="data[lv][$index]">
-                <option selected
-                        :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}">
-                </option>
-            </select>
-
-            {{-- 第三项 --}}
-            {{-- 模板递归 --}}
-            <originalwork
-                    :pid="item.ori_id"
-                    :data.sync="data"
-                    :orilist="orilist"
-                    :multiple="item.multiple"
-                    :haschild="item.haschild"
-                    :lv="lv+1"
-                    :index="$index"
-            ></originalwork>
-        </div>
-    </div>
 </template>
 
 {{-- 介绍框 --}}
@@ -250,7 +257,7 @@
 
 {{-- 行上下增删操作 --}}
 <template id="row-control">
-    <div class="@{{ style }}">
+    <div>
         <div class="col-xs-3">
             <button v-on:click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-arrow-up"></span>

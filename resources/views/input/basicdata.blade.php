@@ -79,6 +79,7 @@
                         <rowcontrol :arr.sync="basicData.title"
                                     :index.sync="$index"
                                     :pos="'title'"
+                                    class="title-rowcontrol"
                         ></rowcontrol>
                     </div>
                 </td>
@@ -225,10 +226,11 @@
                     </div>
                 </td>
             </tr>
+            {{-- LINK --}}
             <tr v-for="link in basicData.links" track-by="$index">
                 <td>
                     <div style="width: 18%">
-                        <select class="col-xs-1 form-control" v-model="link.class">
+                        <select v-model="link.class">
                             @foreach( $links as $link )
                                 <option value="{{ $link->content }}">{{ $link->comment }}</option>
                             @endforeach

@@ -6,27 +6,21 @@
 
 @section('content')
 
-    <div id="animedata" class="container" xmlns="http://www.w3.org/1999/html">
+    <div id="animedata" class="container">
 
+        {{-- BasicData --}}
         @include('input.basicdata')
 
         <div v-if="basicData.id.value != 0">
 
-            {{-- STAFF BIGIN --}}
-
+            {{-- STAFF --}}
             @include('input.staff')
 
-            {{-- STAFF END --}}
-
-            <br>
-
-            {{-- CAST BEGIN --}}
+            {{-- CAST --}}
             @include('input.cast')
-            {{-- CAST END --}}
 
-            {{-- ONAIR BEGIN --}}
+            {{-- ONAIR --}}
             @include('input.onair')
-            {{-- ONAIR END --}}
         </div>
 
     </div>

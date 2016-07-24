@@ -383,6 +383,35 @@ Vue.component('staffrow', {
     template: '#staff-row',
     props:    ['staffitem','controlledarr', 'lv', 'index' ], // props 必须全部字母使用小写
     methods: {
+        addChild: function(arr, index){
+            const oldItem = arr[index];
+
+            const animeID      = oldItem.animeID;
+            const lv           = Number(oldItem.lv);
+            const pid          = oldItem.id;
+            const hasChild     = oldItem.haschild;
+            const staffPostOri = oldItem.staffMemberName;
+            const isImportant  = oldItem.isImportant;
+
+            const child = {
+                'id':                   0,
+                'animeID':              animeID,
+                'staffPostOri':         staffPostOri,
+                'staffPostZhCN':        '',
+                'staffMemberName':      '',
+                'staffBelongsToName':   '',
+                'isImportant':          isImportant,
+                'orderIndex':           0,
+                'lv':                   lv + 1,
+                'haschild':             false,
+                'pid':                  pid
+            };
+
+            if (!hasChild) {
+                oldItem.haschild = true;
+            }
+            oldItem.child.push(child);
+        },
         focusMove: function (id,index,e) {
             vue.focusMove(id, index, e)
         }
@@ -681,7 +710,8 @@ var basicDataTmp = {
     'story':         {'label': '故事', 'value': ''},
     'description':   {'label': '介绍', 'value': ''},
     'oa_year': {'value': 2016},
-    'oa_season': {'value': 7}
+    'oa_season': {'value': 7},
+    'oa_time':{'label': '播放时段', 'value': 'morning'}
 };
 
 var staffMembersTmp = [{
@@ -1001,34 +1031,19 @@ var vue = new Vue({
             }
         },
 
-        addChild: function(arr, index){
-            const oldItem = arr[index];
 
-            const animeID      = oldItem.animeID;
-            const lv           = Number(oldItem.lv);
-            const pid          = oldItem.id;
-            const hasChild     = oldItem.haschild;
-            const staffPostOri = oldItem.staffMemberName;
-            const isImportant  = oldItem.isImportant;
-
-            const child = {
-                'id':                   0,
-                'animeID':              animeID,
-                'staffPostOri':         staffPostOri,
-                'staffPostZhCN':        '',
-                'staffMemberName':      '',
-                'staffBelongsToName':   '',
-                'isImportant':          isImportant,
-                'orderIndex':           0,
-                'lv':                   lv + 1,
-                'haschild':             false,
-                'pid':                  pid
-            };
-
-            if (!hasChild) {
-                oldItem.haschild = true;
+        resetData: function(pos){
+            switch (pos) {
+                case 'staff':
+                    this.staffMembers = JSON.parse(JSON.stringify(staffMembersTmp));
+                    break;
+                case 'cast':
+                    this.staffMembers = JSON.parse(JSON.stringify(castMembersTmp));
+                    break;
+                case 'onair':
+                    this.staffMembers = JSON.parse(JSON.stringify(onairTmp));
+                    break;
             }
-            oldItem.child.push(child);
         },
 
         /**

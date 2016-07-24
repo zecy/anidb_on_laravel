@@ -154,9 +154,8 @@
 {{-- STAFF INFO --}}
 <template id="staff-row">
     <tr class="staff-info">
-        <slot name="zero"></slot>
         <td>
-            <input v-model="staffitem.id" type="text" disabled="disabled" placeholder="ID">
+            <input v-model="staffitem.id" type="text" placeholder="ID">
         </td>
         <td>
             <input type="text"
@@ -188,9 +187,27 @@
                    placeholder="所属公司名称"
             >
         </td>
-            <slot name="one"></slot>
-            <slot name="two"></slot>
-            <slot name="three"></slot>
+        <td>
+            <togglebutton :toggle.sync="staffitem.isImportant"
+                          :style="'glyphicon glyphicon-star'"
+                          :content=""
+            ></togglebutton>
+        </td>
+        <td v-if="lv === 0">
+            <button type="button"
+                    class="btn btn-xs btn-default"
+                    v-on:click="addChild(controlledarr, index)"
+            >
+                <span class="glyphicon glyphicon-th-list"></span>
+            </button>
+        </td>
+        <td>
+            <rowcontrol style="snc-row-control"
+                        :arr.sync="controlledarr"
+                        :index.sync="index"
+                        pos="staff"
+            ></rowcontrol>
+        </td>
     </tr>
 </template>
 
@@ -276,18 +293,18 @@
             <button v-on:click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-arrow-up"></span>
             </button>
-        </div>
-        <div>
+        </div><!--
+        --><div>
             <button v-on:click="rowDown(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-arrow-down"></span>
             </button>
-        </div>
-        <div>
+        </div><!--
+        --><div>
             <button v-on:click="removeRow(pos, arr, index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
-        </div>
-        <div>
+        </div><!--
+        --><div>
             <button v-on:click="addRow(arr,index, pos)" type="button" class="btn btn-success btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>

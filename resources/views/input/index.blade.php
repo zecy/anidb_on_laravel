@@ -11,7 +11,8 @@
         {{-- BasicData --}}
         @include('input.basicdata')
 
-        <div v-if="basicData.id.value != 0">
+        {{--<div v-if="basicData.id.value != 0">--}}
+        <div>
 
             {{-- STAFF --}}
             @include('input.staff')

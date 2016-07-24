@@ -32,6 +32,10 @@ select {
     background-repeat: no-repeat;
 }
 
+table {
+    border-collapse: separate
+}
+
 button.btn, textarea.form-control {
     border-radius:2px;
 }
@@ -58,7 +62,7 @@ textarea, textarea:active, textarea:focus
 
 .row-control div {
     display: inline-block;
-    width:23%;
+    width:25%;
 }
 
 /* 创建编辑按钮 */
@@ -134,34 +138,100 @@ textarea, textarea:active, textarea:focus
 
 /* Staff, Cast, Onair 列表 */
 
-.sco input {
-    font-size:14px;
+.sco {
+    width:740px;
+    margin:0 auto 10px auto;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    text-align: center;
 }
 
+.sco tr:first-child th:first-child {
+    border-top-left-radius: 2px;
+}
+
+.sco tr:first-child th:last-child {
+    border-top-right-radius: 2px;
+}
+
+.sco tr:last-child td:first-child {
+    border-bottom-left-radius: 2px;
+}
+
+.sco tr:last-child td:last-child {
+    border-bottom-right-radius: 2px;
+}
+
+.sco thead {
+    background-color:#eee;
+}
+
+.sco thead th {
+    border-bottom: 1px solid #ccc
+}
+
+.sco tbody {
+    background: #fff;
+}
+
+.sco th {
+    font-size:1.4em;
+    text-align: center;
+    height: 40px;
+}
+
+.sco th, .sco td {
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+.sco th:last-child, .sco td:last-child {
+    border-right: none;
+}
+
+.sco tbody:last-child tr:last-child th, .sco tbody:last-child tr:last-child td {
+    border-bottom: none
+}
+
+.sco input {
+    font-size:14px;
+    border: 0;
+    width: 100%;
+    text-align: center;
+    background-color: transparent;
+}
+
+.sco input:focus, .sco input:hover {
+    -webkit-appearance: none;
+    border:none;
+    outline: none;
+}
+
+.sco .zebrarow {
+    background-color: #f7f7f7;
+}
 
 /* ============================= *
  *           表格主体            *
  * ============================= */
 
 .container {
-    border: 1px solid #ccc;
     width: 760px;
     margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /* ============================= *
  *           主要信息            *
  * ============================= */
 
-.container {
-    padding-left: 0;
-    padding-right: 0;
-}
-
 #maininfo {
     padding: 10px 0;
     width: 760px;
-    border-top: 1px solid #ccc;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    margin-bottom: 10px;
 }
 
 #maininfo .hr > td {
@@ -243,10 +313,6 @@ textarea, textarea:active, textarea:focus
 #maininfo .row-control {
     position: relative;
     top:1px;
-}
-
-#maininfo .row-control div {
-    margin:0 1px;
 }
 
 .is-official {
@@ -359,77 +425,116 @@ textarea, textarea:active, textarea:focus
  *          Staff信息            *
  * ============================= */
 
-#staff .row {
-    margin: 0 0 0 -1px;
-}
-
-.sco, .sco input {
-    width: 100%;
-    outline: none;
-}
-
-.sco tr {
-    padding: 0 5px
-}
-
-.sco td {
-    padding: 10px 3px;
-}
-
-.sco .btn-xs {
-    padding: 2px 3px;
-    font-size: 15px;
-    line-height: 15px;
-}
-
-.sco .btn-xs .glyphicon-star {
-    margin-left: 1px;
-    margin-right: -1px;
-}
-
-.snc-row-control {
-    width: 100%;
-}
-
-.snc-row-control .col-xs-3 {
-    padding: 0;
-}
-
-.sco input {
-    text-align: center;
-    border: none;
-    border-bottom: 1px solid #333;
-    background: transparent;
-    padding-top: 10px;
-    outline: none;
-}
-
-.sco select {
-    width: 100%;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    border-radius:0;
-}
-
-/* zebra row */
-.zebrarow {
-    background-color: rgb(245, 245, 245);
-    border-top: 1px solid #bbb;
-    border-bottom: 1px solid #ccc;
-}
-
 .staff-child {
     box-shadow: inset 3px 0 1px rgba(0,0,0, 0.4) ;
     outline: azure;
 }
 
-.staff-info div {
-    float: left;
-    padding:0 3px;
-    display: table-cell;
-    vertical-align: middle;
+.staff-child {
+    border-top: 1px solid #bbb;
 }
 
-/* 创建 / 更新按钮 */
+.staff-child > td {
+    padding:5px;
+}
 
+.staff-child table {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.staff-child table tr:first-child th:first-child {
+    border-top-left-radius: 5px;
+}
+
+.staff-child table tr:first-child th:last-child {
+    border-top-right-radius: 5px;
+}
+
+.staff-child table tr:last-child td:first-child {
+    border-bottom-left-radius: 5px;
+}
+
+.staff-child table tr:last-child td:last-child {
+    border-bottom-right-radius: 5px;
+}
+
+.staff-child table thead {
+    background-color: #eee;
+}
+
+#staff .staff-child table th {
+    border-bottom: 1px solid #ccc;
+}
+
+#staff .staff-child table td {
+    border-bottom: 1px solid #ccc;
+}
+
+#staff .staff-child tr:last-child td {
+    border-bottom: none;
+}
+
+#staff input {
+    padding:5px 0;
+}
+
+.staff-info td:nth-child(1),
+.staff-info td:nth-child(2),
+.staff-info td:nth-child(3),
+.staff-info td:nth-child(4)
+{
+    padding:0 5px;
+}
+
+.staff-info td:nth-child(2) input:first-child {
+    border-bottom: 1px dotted #bbb;
+}
+
+/* ============================= *
+ *          CAST 信息            *
+ * ============================= */
+
+#cast input {
+    padding:10px 0;
+}
+
+/* ============================= *
+ *          ONAIR信息            *
+ * ============================= */
+
+#onair input {
+    padding: 2px;
+}
+
+#onair td:nth-child(3) input:first-child,
+#onair td:nth-child(5) input:first-child
+{
+    padding-bottom: 0;
+}
+
+#onair td:nth-child(3) input:last-child,
+#onair td:nth-child(5) input:last-child
+{
+    padding-top: 0;
+}
+
+#onair td:nth-child(6) {
+    padding: 0 5px;
+}
+
+#onair td:nth-child(6) input:first-child {
+    border-bottom: 1px dotted #bbb;
+}
+
+#onair select {
+    width:90%;
+    height:30px;
+    padding:0 15px 0 3px;
+    border: 1px solid #ccc;
+    text-align: center;
+    text-align-last: center;
+}
+
+#onair select option {
+}

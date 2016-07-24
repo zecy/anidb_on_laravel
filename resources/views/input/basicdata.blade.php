@@ -1,11 +1,11 @@
-<h2>主要信息</h2>
 
 <searchanime :is_complete="basicData.id.value"
 ></searchanime>
 
+<h2>基本信息</h2>
 <form id="maininfo" class="form form-horizontal">
     <fieldset disabled="@{{ processing }}">
-        <table class="table">
+        <table>
             <tr style="display: none">
                 <td>
                     禁止 Lastpass 注入
@@ -13,69 +13,98 @@
                     <input type="text">
                 </td>
             </tr>
-            {{-- 动画ID --}}
+            {{-- 系列ID, 系列标题, 系列属性 --}}
             <tr>
                 <td>
-                    <label style="width: 7%">系列ID</label>
+                    <label>系列&ensp;ID</label>
 
-                    <div style="width: 10%">
-                        <input type="text" v-model="basicData.seriesID.value">
+                    <div class="input-id">
+                        <input type="text" v-model="basicData.seriesID.value" disabled>
                     </div>
 
-                    <label style="width: 9%">系列标题</label>
+                    <label>系列标题</label>
 
-                    <div style="width: 20%">
+                    <div class="input-text">
                         <input type="text" v-model="basicData.seriesTitle.value">
                     </div>
 
-                    <label style="width: 7%">动画ID</label>
+                    <label>系列属性</label>
 
-                    <div style="width: 10%">
-                        <input type="text" v-model="basicData.id.value">
+                    <div class="input-text">
+                        <input type="text" disabled>
                     </div>
 
-                    <label style="width: 5%">简称</label>
+                </td>
+            </tr>
 
-                    <div style="width: 15%">
+            {{-- 动画ID, 简称, 动画情况 --}}
+            <tr>
+                <td>
+                    <label>动画&ensp;ID</label>
+
+                    <div class="input-id">
+                        <input type="text" v-model="basicData.id.value" disabled>
+                    </div>
+
+                    <label>简&#x3000;&#x3000;称</label>
+
+                    <div class="input-text">
                         <input type="text" v-model="basicData.abbr.value">
                     </div>
 
-                    <label style="width: 13%">是否纳入统计</label>
+                    <label>动画情况</label>
 
-                    <div id="is-counted" style="width: 4%">
-                        <togglebutton :toggle.sync="basicData.isCounted"
-                                      :style="'glyphicon glyphicon-ok'"
-                                      :content=""
+                    <div class="toggle-button">
+                        <togglebutton :toggle.sync="basicData.isSequel.value"
+                                      content="续作"
+                        ></togglebutton>
+                    </div>
+
+                    <div class="toggle-button">
+                        <togglebutton :toggle.sync="basicData.isEnd.value"
+                                      content="完结"
+                        ></togglebutton>
+                    </div>
+
+                    <div class="toggle-button">
+                        <togglebutton :toggle.sync="basicData.isCounted.value"
+                                      content="纳入统计"
                         ></togglebutton>
                     </div>
                 </td>
             </tr>
-            {{-- 标题 --}}
-            <tr v-for="title in basicData.title" track-by="$index">
+
+            <tr class="hr">
+                <td></td>
+            </tr>
+
+            {{-- 动画标题 --}}
+            <tr class="anime-title"
+                v-for="title in basicData.title" track-by="$index">
                 <td>
-                    <div style="width: 35%">
+                    <div style="width: 300px">
                         <input type="text"
                                v-model="title.value"
                                placeholder="@{{ title.label }}"
                         >
                     </div>
-                    <div style="width: 17%">
+                    <div style="width: 100px">
                         <select v-model="title.lang">
                             @foreach( $transLangs as $lang )
                                 <option value="{{ $lang->content }}">{{ $lang->comment }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="is-official" style="width: 4%">
+                    <div class="is-official" style="width: 24px">
                         <togglebutton :toggle.sync="title.isOfficial"
                                       :style="'glyphicon glyphicon-ok'"
                                       :content=""
                         ></togglebutton>
                     </div>
-                    <div style="width: 26%">
+                    <div style="width: 170px">
                         <input v-model="title.comment" type="text" placeholder="备注">
                     </div>
-                    <div style="width: 18%">
+                    <div style="width: 124px;margin:0">
                         <rowcontrol :arr.sync="basicData.title"
                                     :index.sync="$index"
                                     :pos="'title'"
@@ -83,6 +112,10 @@
                         ></rowcontrol>
                     </div>
                 </td>
+            </tr>
+
+            <tr class="hr">
+                <td></td>
             </tr>
             {{-- 原作类型 --}}
             <tr>
@@ -97,13 +130,38 @@
                     ></originalwork>
                 </td>
             </tr>
-            {{-- 首播媒体 --}}
+
+            <tr class="hr">
+                <td></td>
+            </tr>
+
+            {{-- 首播季度, 首播媒体, 系列长度, 集数 --}}
             <tr>
                 <td>
-                    <div style="width:10%">
-                        <label>首播媒体</label>
+                    {{-- 播放季度 --}}
+                    <div id="oa-season">
+                        <label>
+                            首播季度
+                        </label>
+
+                        <div class="input" >
+                            <input type="text" v-model="basicData.oa_year.value">
+                            <span>年</span>
+                        </div>
+
+                        <div>
+                            <select v-model="basicData.oa_season.value">
+                                <option value="1">1月</option>
+                                <option value="4">4月</option>
+                                <option value="7">7月</option>
+                                <option value="10">10月</option>
+                            </select>
+                        </div>
                     </div>
-                    <div style="width: 15%">
+
+                    {{-- 首播媒体 --}}
+                    <label>首播媒体</label>
+                    <div class="input-id">
                         <select v-model="basicData.premiereMedia.value">
                             @foreach($premiereMedia as $pm)
                                 <option value="{{ $pm->content }}">{{ $pm->comment }}</option>
@@ -111,21 +169,10 @@
                         </select>
                     </div>
 
-                    <div style="width:10%">
-                        <label>时间规格</label>
-                    </div>
-                    <div style="width: 20%">
-                        <select v-model="basicData.duration.value">
-                            @foreach($animeDurationFormat as $adf)
-                                <option value="{{ $adf->content }}">{{ $adf->comment }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    {{-- 系列长度 --}}
+                    <label>系列长度</label>
 
-                    <div style="width: 10%">
-                        <label>系列长度</label>
-                    </div>
-                    <div style="width: 12%">
+                    <div class="input-id">
                         <select v-model="basicData.kur.value">
                             <option value="0">特别篇</option>
                             <option value="1">一季度</option>
@@ -137,99 +184,58 @@
                         </select>
                     </div>
 
-                    <div style="width: 6%">
-                        <label>集数</label>
+                    {{-- 播出集数 --}}
+                    <label>集&#x3000;&#x3000;数</label>
+                    
+                    <div style="width:88px">
+                        <input type="text">
                     </div>
-                    <div style="width: 8%">
-                        <input type="text" v-model="basicData.eps_oa.value" placeholder="电视">
+                </td>
+            </tr>
+            {{-- 时间规格, 首播时段, 总集数 --}}
+            <tr>
+                <td>
+
+                    <label>时间规格</label>
+                    <div style="width: 170px">
+                        <select v-model="basicData.duration.value">
+                            @foreach($animeDurationFormat as $adf)
+                                <option value="{{ $adf->content }}">{{ $adf->comment }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div style="width: 8%">
+
+                    <label>首播时段</label>
+
+                    <div style="width: 270px">
+                        <div class="toggle-button"
+                             v-for="time in [{'label':'晨间档', 'value':'morning'},{'label':'日间档', 'value':'daytime'},{'label':'黄金档', 'value':'prime'},{'label':'深夜档', 'value':'midnight'}]">
+                            <button class="btn btn-xs"
+                                    type="button"
+                                    v-on:click="basicData.oa_time.value = time.value"
+                                    v-bind:class="basicData.oa_time.value === time.value ? 'btn-primary' : 'btn-default'"
+                            >
+                                <span>@{{ time.label }}</span>
+                                <input type="radio" value="@{{ time.value }}" v-model="basicData.oa_time.value" class="hidden">
+                            </button>
+                        </div>
+                    </div>
+
+                    <label>总&nbsp;&nbsp;集&nbsp;&nbsp;数</label>
+                    <div style="width: 88px;">
                         <input type="text" v-model="basicData.eps_soft.value" placeholder="圆盘">
                     </div>
                 </td>
             </tr>
-            {{-- 续作 --}}
-            <tr>
-                <td>
-                    <div style="width:10%">
-                        <label>
-                            播放季度
-                        </label>
-                    </div>
 
-                    <div style="width: 11%">
-                        <div class="input-group">
-                            <input type="text"
-                                   style="border-top-right-radius: 0;
-                                                  border-bottom-right-radius:0;
-                                                  border-right: 0;
-                                                  text-align: right;
-                                                  padding-right: 0;
-                                                  "
-                                   v-model="basicData.oa_year.value"
-                            >
-                            <div class="input-group-addon"
-                                 style="background-color: transparent;
-                                                border-left: 0 solid transparent;
-                                                padding-left: 0.25em
-                                               "
-                                 disabled
-                            >
-                                年
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="width: 10%">
-                        <select v-model="basicData.oa_season.value">
-                            <option value="1">1月</option>
-                            <option value="4">4月</option>
-                            <option value="7">7月</option>
-                            <option value="10">10月</option>
-                        </select>
-                    </div>
-
-                    <div style="width:10%">
-                        <label>
-                            @{{ basicData.isSequel.label }}
-                        </label>
-                    </div>
-
-                    <div style="width: 5%" id="is-sequel">
-                        <togglebutton :toggle.sync="basicData.isSequel.value"
-                                      :style="'glyphicon glyphicon-ok'"
-                                      :content=""
-                        ></togglebutton>
-                    </div>
-
-                    <div style="width: 6%">
-                        <label>
-                            @{{ basicData.sequelComment.label }}
-                        </label>
-                    </div>
-
-                    <div style="width: 20%">
-                        <input type="text" v-model="basicData.sequelComment.value">
-                    </div>
-
-                    <div style="width:10%">
-                        <label>
-                            @{{ basicData.isEnd.label }}
-                        </label>
-                    </div>
-
-                    <div style="width: 5%" id="is-end">
-                        <togglebutton :toggle.sync="basicData.isEnd.value"
-                                      :style="'glyphicon glyphicon-ok'"
-                                      :content=""
-                        ></togglebutton>
-                    </div>
-                </td>
+            <tr class="hr">
+                <td></td>
             </tr>
+
             {{-- LINK --}}
-            <tr v-for="link in basicData.links" track-by="$index">
+            <tr class="anime-link" v-for="link in basicData.links" track-by="$index">
                 <td>
-                    <div style="width: 18%">
+                    <div style="width: 100px">
                         <select v-model="link.class">
                             @foreach( $links as $link )
                                 <option value="{{ $link->content }}">{{ $link->comment }}</option>
@@ -237,25 +243,25 @@
                         </select>
                     </div>
 
-                    <div style="width: 40%">
+                    <div style="width: 300px">
                         <input type="text"
                                v-model="link.value"
                                placeholder="网站地址"
                         >
                     </div>
 
-                    <div class="is-official" style="width: 4%">
+                    <div class="is-official" style="width: 24px">
                         <togglebutton :toggle.sync="link.isOfficial"
                                       :style="'glyphicon glyphicon-ok'"
                                       :content=""
                         ></togglebutton>
                     </div>
 
-                    <div style="width: 21%">
+                    <div style="width: 170px">
                         <input type="text" v-model="link.comment" placeholder="备注">
                     </div>
 
-                    <div style="width: 17%">
+                    <div style="width: 124px;margin: 0;">
                         <rowcontrol :arr.sync="basicData.links"
                                     :index.sync="$index"
                                     :pos="'link'"
@@ -263,6 +269,12 @@
                     </div>
                 </td>
             </tr>
+
+            <tr class="hr">
+                <td></td>
+            </tr>
+
+            {{-- 介绍 --}}
             <tr>
                 <td>
                     <describox
@@ -284,4 +296,3 @@
         :anime_id="basicData.id.value"
         :is_complete.sync="basicData"
 ></createeditbutton>
-

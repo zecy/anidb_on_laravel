@@ -45,88 +45,88 @@
             lv       : 当前层数, ori_level
             index    : 用于结合 v-for 插入数组, $index
     --}}
-        {{-- 第一级父项目 --}}
-        <div v-if="pid==0" class="ori-lv0">
-            <select v-model="data[0]">
-                <option disabled selected hidden>选择原作类型</option>
-                <option v-for="item in orilist | filtByValue 0 'ori_pid'"
-                        :value="[{
+    {{-- 第一级父项目 --}}
+    <div v-if="pid==0" class="ori-lv0">
+        <select v-model="data[0]">
+            <option disabled selected hidden>原作类型</option>
+            <option v-for="item in orilist | filtByValue 0 'ori_pid'"
+                    :value="[{
                               'id'        : item.ori_id,
                               'haschild'  : item.haschild,
                               'multiple'  : item.multiple,
                               'pid'       : 0
                               }]"
+            >
+                @{{ item.ori_catalog }}
+            </option>
+        </select>
+
+        <div v-if="data[0][0].haschild">
+            <originalwork
+                    :pid="data[0][0].id"
+                    :data.sync="data"
+                    :orilist="orilist"
+                    :multiple="data[0][0].multiple"
+                    :haschild="data[0][0].haschild"
+                    :lv="1"
+                    :index="0"
+            >
+            </originalwork>
+        </div>
+    </div>
+    {{-- 子项目 --}}
+    <div v-if="pid>0" class="ori-lv@{{ lv }}">
+        {{-- 子项目单选 --}}
+        <div v-if="!multiple">
+            <select v-model="data[lv][index]">
+                <option v-for="item in orilist | filtByValue pid 'ori_pid'"
+                        :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}"
                 >
                     @{{ item.ori_catalog }}
                 </option>
             </select>
 
-            <div v-if="data[0][0].haschild">
+            {{-- 模板递归 --}}
+            {{-- 生成单选第二项及第四项等 --}}
+            <div v-if="data[lv][index] ? data[lv][index].haschild : false">
                 <originalwork
-                        :pid="data[0][0].id"
+                        :pid="data[lv][index].id"
                         :data.sync="data"
                         :orilist="orilist"
-                        :multiple="data[0][0].multiple"
-                        :haschild="data[0][0].haschild"
-                        :lv="1"
-                        :index="0"
-                >
-                </originalwork>
-            </div>
-        </div>
-        {{-- 子项目 --}}
-        <div v-if="pid>0" class="ori-lv@{{ lv }}">
-            {{-- 子项目单选 --}}
-            <div v-if="!multiple">
-                <select v-model="data[lv][index]">
-                    <option v-for="item in orilist | filtByValue pid 'ori_pid'"
-                            :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}"
-                    >
-                        @{{ item.ori_catalog }}
-                    </option>
-                </select>
-
-                {{-- 模板递归 --}}
-                {{-- 生成单选第二项及第四项等 --}}
-                <div v-if="data[lv][index] ? data[lv][index].haschild : false">
-                    <originalwork
-                            :pid="data[lv][index].id"
-                            :data.sync="data"
-                            :orilist="orilist"
-                            :multiple="data[lv][index].multiple"
-                            :haschild="data[lv][index].haschild"
-                            :lv="lv+1"
-                            :index="0"
-                    ></originalwork>
-                </div>
-            </div>
-
-            {{-- 子项目多选 --}}
-            <div class="clearfix"
-                 v-if="multiple"
-                 v-for="item in orilist | filtByValue pid 'ori_pid'"
-            >
-                {{-- 多选第二项 --}}
-                <label>@{{ item.ori_catalog }}</label>
-                <select class="hidden" type="text" v-model="data[lv][$index]">
-                    <option selected
-                            :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}">
-                    </option>
-                </select>
-
-                {{-- 第三项 --}}
-                {{-- 模板递归 --}}
-                <originalwork
-                        :pid="item.ori_id"
-                        :data.sync="data"
-                        :orilist="orilist"
-                        :multiple="item.multiple"
-                        :haschild="item.haschild"
+                        :multiple="data[lv][index].multiple"
+                        :haschild="data[lv][index].haschild"
                         :lv="lv+1"
-                        :index="$index"
+                        :index="0"
                 ></originalwork>
             </div>
         </div>
+
+        {{-- 子项目多选 --}}
+        <div class="clearfix"
+             v-if="multiple"
+             v-for="item in orilist | filtByValue pid 'ori_pid'"
+        >
+            {{-- 多选第二项 --}}
+            <label>@{{ item.ori_catalog }}</label>
+            <select class="hidden" type="text" v-model="data[lv][$index]">
+                <option selected
+                        :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}">
+                </option>
+            </select>
+
+            {{-- 第三项 --}}
+            {{-- 模板递归 --}}
+            <originalwork
+                    :pid="item.ori_id"
+                    :data.sync="data"
+                    :orilist="orilist"
+                    :multiple="item.multiple"
+                    :haschild="item.haschild"
+                    :lv="lv+1"
+                    :index="$index"
+            ></originalwork>
+        </div>
+    </div>
 </template>
 
 {{-- 介绍框 --}}
@@ -153,11 +153,12 @@
 
 {{-- STAFF INFO --}}
 <template id="staff-row">
-    <div class="staff-info">
-        <div style="width:15%">
+    <tr class="staff-info">
+        <slot name="zero"></slot>
+        <td>
             <input v-model="staffitem.id" type="text" disabled="disabled" placeholder="ID">
-        </div>
-        <div style="width:40%">
+        </td>
+        <td>
             <input type="text"
                    id="staffPostOri-@{{ lv + '-' + index }}"
                    v-model="staffitem.staffPostOri"
@@ -170,29 +171,32 @@
                    v-on:keyup="focusMove('staffPostZhCN-' + lv + '-', index, $event)"
                    placeholder="岗位名称（中）"
             >
-        </div>
-        <div style="width:25%">
+        </td>
+        <td>
             <input v-model="staffitem.staffMemberName"
                    id="staffMemberName-@{{ lv + '-' + index }}"
                    type="text"
                    v-on:keyup="focusMove('staffMemberName-' + lv + '-', index, $event)"
                    placeholder="人员名称"
             >
-        </div>
-        <div style="width:20%">
+        </td>
+        <td>
             <input type="text"
                    id="staffBelongsToName-@{{ lv + '-' + index }}"
                    v-model="staffitem.staffBelongsToName"
                    v-on:keyup="focusMove('staffBelongsToName-' + lv + '-', index, $event)"
                    placeholder="所属公司名称"
             >
-        </div>
-    </div>
+        </td>
+            <slot name="one"></slot>
+            <slot name="two"></slot>
+            <slot name="three"></slot>
+    </tr>
 </template>
 
 {{-- 创建 / 更新按钮 --}}
 <template id="create-edit-btn">
-    <div>
+    <div class="cae-btn">
         <div v-if="!btnProcessing">
             <div v-if="create_condition">
                 <button class="btn btn-success"
@@ -221,27 +225,37 @@
 
 {{-- 信息栏内容格式化按钮 --}}
 <template id="text-format">
-    <button class="btn btn-primary"
-            v-on:click="format(text, pos, 'separator')"
-    >
-        转换分隔符
-    </button>
-    <button class="btn btn-primary"
-            v-on:click="format(text, pos, 'cleanHTML')"
-    >
-        清除HTML标签
-    </button>
-    <button class="btn btn-primary"
-            v-on:click="format(text, pos, 'oddEven')"
-    >
-        奇偶行合并
-    </button>
-    <button class="btn btn-primary"
-            v-on:click="format(text, pos, 'wikiCV')"
-            v-if="pos == 'cast'"
-    >
-        维基百科声优
-    </button>
+    <div class="textformat-btn clearfix">
+        <div>
+            <button class="btn"
+                    v-on:click="format(text, pos, 'separator')"
+            >
+                转换分隔符
+            </button>
+        </div>
+        <div>
+            <button class="btn"
+                    v-on:click="format(text, pos, 'cleanHTML')"
+            >
+                清除HTML标签
+            </button>
+        </div>
+        <div>
+            <button class="btn"
+                    v-on:click="format(text, pos, 'oddEven')"
+            >
+                奇偶行合并
+            </button>
+        </div>
+        <div>
+            <button class="btn"
+                    v-on:click="format(text, pos, 'wikiCV')"
+                    v-if="pos == 'cast'"
+            >
+                维基百科声优
+            </button>
+        </div>
+    </div>
 </template>
 
 {{-- 重要按钮 --}}
@@ -257,23 +271,23 @@
 
 {{-- 行上下增删操作 --}}
 <template id="row-control">
-    <div>
-        <div class="col-xs-3">
+    <div class="row-control">
+        <div>
             <button v-on:click="rowUp(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-arrow-up"></span>
             </button>
         </div>
-        <div class="col-xs-3">
+        <div>
             <button v-on:click="rowDown(arr,index)" type="button" class="btn btn-default btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-arrow-down"></span>
             </button>
         </div>
-        <div class="col-xs-3">
+        <div>
             <button v-on:click="removeRow(pos, arr, index)" type="button" class="btn btn-danger btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </div>
-        <div class="col-xs-3">
+        <div>
             <button v-on:click="addRow(arr,index, pos)" type="button" class="btn btn-success btn-xs" tabindex="-1">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>

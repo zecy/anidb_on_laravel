@@ -1,10 +1,12 @@
-/*  */
+/* ============================= *
+ *          基本元素重置         *
+ * ============================= */
 
 body {
     font-size: 10.5px;
 }
 
-input, select {
+input, label, select, div {
     box-sizing: border-box;
     margin:0;
     padding:0;
@@ -12,10 +14,6 @@ input, select {
 
 input {
     padding: 0 10px;
-}
-
-.input-group-addon {
-    border-radius:0; /* 重置 bootstrap 中 input-group-addon 的圆角 */
 }
 
 select {
@@ -34,24 +32,148 @@ select {
     background-repeat: no-repeat;
 }
 
-/* Staff Input Padding */
+button.btn, textarea.form-control {
+    border-radius:2px;
+}
+
+textarea.form-control:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075)
+}
+
+button:active, button:focus,
+select:focus,
+textarea, textarea:active, textarea:focus
+{
+    outline: none !important; /* 去除 Chrome 默认的蓝色描边 */
+}
+
+/* ============================= *
+ *           组    件            *
+ * ============================= */
+
+/* 行控制按钮 */
+.row-control {
+    width:100%;
+}
+
+.row-control div {
+    display: inline-block;
+    width:23%;
+}
+
+/* 创建编辑按钮 */
+.cae-btn {
+    margin: 0 auto 10px 10px;
+}
+
+@supports (display: none) {
+    .btn-processing > span {
+        display: inline-block;
+        width: 3ch;
+        text-indent: -1ch;
+        text-align: left;
+        vertical-align: bottom;
+        overflow: hidden;
+        animation: dot 3s infinite step-start both;
+        /* 关键: 设置等宽字体 */
+        font-family: Consolas, Monaco, monospace;
+    }
+}
+
+@keyframes dot {
+    33% {
+        text-indent: 0;
+    }
+    66% {
+        text-indent: -2ch;
+    }
+}
+
+/* 格式化框 */
+
+.textformatbox {
+    padding:10px;
+}
+
+.textformat-btn {
+    border: 1px solid #ccc;
+    border-bottom:0;
+    background-color: #eee;
+    padding: 5px;
+    font-size:1.2em;
+    border-radius: 3px 3px 0 0;
+}
+
+.textformat-btn > div {
+    float: left;
+    border-right:1px solid #aaa;
+}
+
+.textformat-btn button {
+    width: 100%;
+    background-color: transparent;
+    padding:2px 5px;
+}
+
+.textformat-btn button:hover {
+    opacity: 0.7;
+}
+
+.textformatbox textarea {
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-top:0;
+    border-radius: 0 0 3px 3px;
+    box-shadow:inset 0 1px 1px 0px rgba(0,0,0,0.2);
+}
+
+.textformatbox textarea:focus {
+    border-color: #ccc;
+    box-shadow:inset 0 1px 1px 0px rgba(0,0,0,0.2);
+}
+
+/* Staff, Cast, Onair 列表 */
+
+.sco input {
+    font-size:14px;
+}
+
+
+/* ============================= *
+ *           表格主体            *
+ * ============================= */
+
+.container {
+    border: 1px solid #ccc;
+    width: 760px;
+    margin: 0 auto;
+}
+
+/* ============================= *
+ *           主要信息            *
+ * ============================= */
 
 .container {
     padding-left: 0;
     padding-right: 0;
 }
 
-.form .col-xs-1,
-.form .col-xs-2,
-.form .col-xs-3,
-.form .col-xs-4,
-.form .col-xs-5,
-.form .col-xs-6,
-.form .col-xs-7,
-.form .col-xs-8,
-.form .col-xs-9,
-.form .col-xs-10 {
-    padding: 2px 3px
+#maininfo {
+    padding: 10px 0;
+    width: 760px;
+    border-top: 1px solid #ccc;
+}
+
+#maininfo .hr > td {
+    border-top:1px solid #ccc;
+}
+
+#maininfo tr > td {
+    padding:0 10px 10px 10px;
+}
+
+#maininfo label, #maininfo div {
+    float: left;
 }
 
 #maininfo input {
@@ -66,22 +188,38 @@ select {
     border: 1px solid dodgerblue;
 }
 
+#maininfo input:hover, #maininfo select:hover {
+    border:1px solid deepskyblue;
+}
+
 #maininfo label {
-    color: #333;
-    font-size: 1.2em;
+    width         : 70px;
+    color         : #333;
+    font-size     : 1.2em;
+    text-align    : center;
+    line-height   : 30px;
 }
 
-#maininfo td > div, #maininfo td > label {
-    float: left;
-    padding: 0 5px;
+#maininfo .input-id {
+    width: 100px;
 }
 
-#maininfo td label {
-    display: inline-block;
-    line-height: 32px;
-    text-align: center;
-    padding: 0;
-    margin: 0;
+#maininfo .input-text {
+    width: 200px;
+}
+
+#maininfo .toggle-button {
+    line-height:30px;
+    margin-right:10px;
+}
+
+#maininfo .toggle-button button {
+    position: relative;
+    bottom: 1px;
+}
+
+#maininfo .toggle-button span {
+    font-size: 1.2rem;
 }
 
 #maininfo select {
@@ -96,23 +234,37 @@ select {
     line-height: 18px;
 }
 
-#is-counted, #is-sequel, #is-end, .is-official {
+#maininfo .anime-title > td > div,
+#maininfo .anime-link > td > div
+{
+    margin-right:5px;
+}
+
+#maininfo .row-control {
+    position: relative;
+    top:1px;
+}
+
+#maininfo .row-control div {
+    margin:0 1px;
+}
+
+.is-official {
     line-height: 30px;
 }
 
-#is-counted .btn-xs,
-#is-sequel .btn-xs,
-#is-end .btn-xs,
 .is-official .btn-xs {
     font-size: 12px!important;
     padding: 1px 4px!important;
     margin: 0 0 2px 0;
     border-radius:2px;
+    position: relative;
+    bottom:1px;
+    left:1px;
 }
 
 #maininfo .title-rowcontrol .btn-xs {
     line-height: 17px;
-    border-radius: 2px;
 }
 
 #maininfo .title-rowcontrol .btn-xs .glyphicon-arrow-up,
@@ -126,21 +278,20 @@ select {
     top:0;
 }
 
-
 /* Ori Works */
 
 /* 不同层级版块横徘 */
 
-.ori-lv0 {
+#maininfo .ori-lv0 {
     width: 10em;
 }
 
-.ori-lv1 {
+#maininfo .ori-lv1 {
     margin-bottom: -2.5em; /* 后续版块右移, 整体高度下降一个选项框的高度 */
     width: 200%
 }
 
-.ori-lv1, .ori-lv3 {
+#maininfo .ori-lv1, #maininfo .ori-lv3 {
     position: relative;
     left: 100%;
     margin-left: 10px;
@@ -148,28 +299,65 @@ select {
 }
 
 /* 同一层级中标签与多选框横排 */
-.ori-lv1 label, .ori-lv2 {
-    float: left
+
+#maininfo .ori-lv1 > div,
+#maininfo .ori-lv2 div {
+    width: 100%;
 }
 
-.ori-lv1 label {
+#maininfo .ori-lv1 label {
     text-align: right;
+    padding-right: 2em;
     width: 40%;
 }
 
-.ori-lv2 {
+#maininfo .ori-lv1 > div {
+    margin-bottom: 5px;
+}
+
+#maininfo .ori-lv2 {
     width: 60%
 }
 
-.ori-lv3 {
+#maininfo div.ori-lv3 {
     margin-bottom: -2.5em; /* 后续版块右移, 整体高度下降一个选项框的高度 */
 }
 
-/* 介绍输入框 */
-
-#maininfo textarea {
-    border-radius: 0;
+/* 首播季度 */
+#oa-season {
+    width: 240px;
 }
+
+#oa-season > div.input {
+    width: 100px;
+    position: relative;
+}
+
+#oa-season > div.input > span {
+    position: absolute;
+    line-height:30px;
+    right: 1em;
+    top:0;
+    user-select: none;
+}
+
+#oa-season input {
+    text-align: right;
+    width: 100px;
+    padding-right:2.5em;
+}
+
+#oa-season > div > select {
+    margin-left:10px;
+    line-height: 1em;
+    width: 60px;
+    padding-left: 1.2em;
+}
+
+
+/* ============================= *
+ *          Staff信息            *
+ * ============================= */
 
 #staff .row {
     margin: 0 0 0 -1px;
@@ -224,12 +412,6 @@ select {
     border-radius:0;
 }
 
-.form {
-    border: 1px solid #ccc;
-    overflow: hidden;
-    border-radius: 5px;
-}
-
 /* zebra row */
 .zebrarow {
     background-color: rgb(245, 245, 245);
@@ -251,21 +433,3 @@ select {
 
 /* 创建 / 更新按钮 */
 
-@supports (display: none) {
-    .btn-processing > span {
-        display: inline-block;
-        width: 3ch;
-        text-indent: -1ch;
-        text-align: left;
-        vertical-align: bottom;
-        overflow: hidden;
-        animation: dot 3s infinite step-start both;
-        /* 关键: 设置等宽字体 */
-        font-family: Consolas, Monaco, monospace;
-    }
-}
-
-@keyframes dot {
-    33% { text-indent: 0; }
-    66% { text-indent: -2ch; }
-}

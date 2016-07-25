@@ -14,7 +14,7 @@
             <button class="btn btn-danger" v-on:click="resetData('staff')">清空当前Staff列表</button>
         </div>
 
-        <form class="form">
+        <form id="staff-form" class="form">
             <table class="sco">
                 <thead>
                     <tr>
@@ -82,14 +82,17 @@
                     </td>
                 </tbody>
             </table>
+            <formtotop form_id="staff-form"
+                       :view_top.sync="scrolled"
+            ></formtotop>
         </form>
-
-        <createeditbutton
-                :create_condition="staffMembers[0].id == 0"
-                :edit_condition="staffMembers[0].id != 0"
-                :pos="'staff'"
-                :anime_id="basicData.id.value"
-                :is_complete.sync="staffMembers"
-        ></createeditbutton>
     </fieldset>
 </div>
+
+<createeditbutton
+        :create_condition="staffMembers[0].id == 0"
+        :edit_condition="staffMembers[0].id != 0"
+        :pos="'staff'"
+        :anime_id="basicData.id.value"
+        :is_complete.sync="staffMembers"
+></createeditbutton>

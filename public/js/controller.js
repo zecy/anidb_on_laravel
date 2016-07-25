@@ -339,7 +339,7 @@ var onairFormatedTextToArray = function (str, animeID) {
 
         arr.push({
             'animeID':      animeID,
-            'id':         0,
+            'id':           0,
             'tvID':         '',
             'tvName':       tvName,
             'startDate':    startDate,
@@ -359,6 +359,10 @@ var onairFormatedTextToArray = function (str, animeID) {
 
 /** VUE.jS **/
 
+window.addEventListener('scroll', function(e){
+    vue.scrolled = document.body.scrollTop;
+});
+
 // 打开 debug 模式
 Vue.config.debug = true;
 
@@ -374,16 +378,13 @@ Vue.component('basicinput', {
 Vue.component('originalwork', {
     template: '#ori-work',
     props:    ['pid', 'data', 'orilist', 'multiple', 'haschild', 'lv', 'index']
-    //created:  function () {
-    //    this.orilist = JSON.parse(this.orilist);
-    //}
 });
 
 Vue.component('staffrow', {
     template: '#staff-row',
-    props:    ['staffitem','controlledarr', 'lv', 'index' ], // props 必须全部字母使用小写
-    methods: {
-        addChild: function(arr, index){
+    props:    ['staffitem', 'controlledarr', 'lv', 'index'], // props 必须全部字母使用小写
+    methods:  {
+        addChild:  function (arr, index) {
             const oldItem = arr[index];
 
             const animeID      = oldItem.animeID;
@@ -394,17 +395,17 @@ Vue.component('staffrow', {
             const isImportant  = oldItem.isImportant;
 
             const child = {
-                'id':                   0,
-                'animeID':              animeID,
-                'staffPostOri':         staffPostOri,
-                'staffPostZhCN':        '',
-                'staffMemberName':      '',
-                'staffBelongsToName':   '',
-                'isImportant':          isImportant,
-                'orderIndex':           0,
-                'lv':                   lv + 1,
-                'haschild':             false,
-                'pid':                  pid
+                'id':                 0,
+                'animeID':            animeID,
+                'staffPostOri':       staffPostOri,
+                'staffPostZhCN':      '',
+                'staffMemberName':    '',
+                'staffBelongsToName': '',
+                'isImportant':        isImportant,
+                'orderIndex':         0,
+                'lv':                 lv + 1,
+                'haschild':           false,
+                'pid':                pid
             };
 
             if (!hasChild) {
@@ -412,7 +413,7 @@ Vue.component('staffrow', {
             }
             oldItem.child.push(child);
         },
-        focusMove: function (id,index,e) {
+        focusMove: function (id, index, e) {
             vue.focusMove(id, index, e)
         }
     }
@@ -420,9 +421,9 @@ Vue.component('staffrow', {
 
 Vue.component('describox', {
     template: '#descri-box',
-    props:['processing', 'descri_label', 'descri_value', 'anime_id'],
-    methods: {
-        shortCut: function(anime_id, e) {
+    props:    ['processing', 'descri_label', 'descri_value', 'anime_id'],
+    methods:  {
+        shortCut: function (anime_id, e) {
             const key  = e.keyCode;
             const ctrl = e.ctrlKey;
 
@@ -440,17 +441,17 @@ Vue.component('describox', {
 Vue.component('createeditbutton', {
     template: '#create-edit-btn',
     props:    ['create_condition', 'edit_condition', 'pos', 'anime_id', 'is_complete'], // props 不能有连接线 -
-    data: function () {
+    data:     function () {
         return {
-            btnProcessing: false,
+            btnProcessing:  false,
             processing_msg: '准备写入数据库',
-            msg: ''
+            msg:            ''
         }
     },
     computed: {
         msg: function () {
             const pos = this.pos;
-            switch(pos) {
+            switch (pos) {
                 case 'basicData':
                     return '动画';
                 case 'staff':
@@ -462,13 +463,13 @@ Vue.component('createeditbutton', {
             }
         }
     },
-    watch: {
-        'is_complete': function(newVal) {
+    watch:    {
+        'is_complete': function (newVal) {
             const len = newVal.length;
             const pos = this.pos;
 
             if (pos != 'basicData') {
-                if(newVal[len - 1].id != 0) {
+                if (newVal[len - 1].id != 0) {
                     this.processing_msg = '成功录入 ' + len + ' 条数据！正在返回';
                     setTimeout(function () {
                         this.btnProcessing = false;
@@ -485,7 +486,7 @@ Vue.component('createeditbutton', {
                     }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
                 }
             } else {
-                if(newVal.id.value != 0) {
+                if (newVal.id.value != 0) {
                     this.processing_msg = '录入成功！正在返回';
                     setTimeout(function () {
                         this.btnProcessing = false
@@ -494,26 +495,26 @@ Vue.component('createeditbutton', {
             }
         }
     },
-    methods: {
+    methods:  {
         createData: function (pos) {
             this.btnProcessing = true;
             this.$nextTick(function () {
                 const r = confirm('是否确定？');
-                if(r) {
+                if (r) {
                     this.processing_msg = '正在写入数据库';
                     vue.createData(pos);
-                    if(vue.processing) this.processing_msg = '已写入数据库，正在返回数据'
+                    if (vue.processing) this.processing_msg = '已写入数据库，正在返回数据'
                 } else {
                     this.btnProcessing = false;
                 }
             });
         },
-        editData: function(pos, anime_id) {
+        editData:   function (pos, anime_id) {
             this.btnProcessing = true;
-            this.$nextTick(function(){
+            this.$nextTick(function () {
                 this.processing_msg = '正在写入数据库';
                 vue.editData(pos, anime_id);
-                if(vue.processing) this.processing_msg = '已写入数据库，正在返回数据'
+                if (vue.processing) this.processing_msg = '已写入数据库，正在返回数据'
             });
         }
     }
@@ -521,10 +522,10 @@ Vue.component('createeditbutton', {
 
 Vue.component('rowcontrol', {
     template: '#row-control',
-    props:    ['style', 'arr', 'index', 'pos'],
+    props:    ['arr', 'index', 'pos'],
     methods:  {
         /* Row Up */
-        rowUp: function (arr, index) {
+        rowUp:     function (arr, index) {
             var i = Number(index);
             if (i == 0) {
                 alert('这已经是首行，添加行请用「 + 」按钮')
@@ -555,7 +556,7 @@ Vue.component('rowcontrol', {
                 arr.splice(i, 1);
             } else {
                 const r = confirm("该记录存在于数据库中\n本操作将删除从数据库删除该记录！\n是否确认删除？");
-                if(r) {
+                if (r) {
                     vue.removeData(p, id, arr, i);
                 }
             }
@@ -563,8 +564,8 @@ Vue.component('rowcontrol', {
         /* Add A Row */
         addRow:    function (arr, index, pos) {
             var obj = JSON.parse(JSON.stringify(arr[index]));
-            obj.id = 0;
-            if(pos == 'staff') {
+            obj.id  = 0;
+            if (pos == 'staff') {
                 obj.haschild = false;
                 obj.child    = [];
             }
@@ -581,27 +582,27 @@ Vue.component('togglebutton', {
 Vue.component('searchanime', {
     template: '#search-anime',
     props:    ['is_complete'],
-    data: function(){
+    data:     function () {
         return {
-            'title': '',
+            'title':            '',
             'searchProcessing': false,
-            'searching_msg': '正在搜索',
-            'animeNameList': []
+            'searching_msg':    '正在搜索',
+            'animeNameList':    []
         }
     },
-    watch: {
-        'is_complete': function(newVal, oldVal) {
-            if(oldVal != newVal) {
+    watch:    {
+        'is_complete': function (newVal, oldVal) {
+            if (oldVal != newVal) {
                 this.searchProcessing = false;
-                this.title = "";
+                this.title            = "";
             }
         }
     },
-    methods: {
-        searchAnime: function() {
+    methods:  {
+        searchAnime: function () {
             this.searchProcessing = true;
             this.$http.get('input/search/' + this.title).then(function (r) {
-                if( r.data.multiple == 0) {
+                if (r.data.multiple == 0) {
                     const id = r.data.basicData.id.value;
                     vue.showAnime(id, r);
                 } else {
@@ -609,7 +610,7 @@ Vue.component('searchanime', {
 
                     animeNames = r.data.animes;
 
-                    for(var i = 0; i < animeNames.length; i++) {
+                    for (var i = 0; i < animeNames.length; i++) {
 
                         let anime = {};
 
@@ -664,6 +665,68 @@ Vue.component('textformat', {
     }
 });
 
+Vue.component('formtotop', {
+    template: '#form-to-top',
+    props:    ['form_id', 'view_top'],
+    data:  function () {
+        return {
+            'formTop':       0,
+            'viewHeight':    0,
+            'arrivedTop':    false,
+            'arrivedBottom': false
+        }
+    },
+    computed: {
+        'formTop':    function () {
+            return document.getElementById(this.form_id).offsetTop;
+        },
+        'viewHeight': function () {
+            return window.innerHeight;
+        }
+    },
+    watch: {
+        'view_top': function (newVal) {
+            const viewTop       = newVal;                                                // 滚动条滚过的距离
+            const viewHeight    = this.viewHeight;                                       // 窗口的高度
+            const formHeight    = document.getElementById(this.form_id).offsetHeight;    // 表格的高度
+            const formTop       = this.formTop;                                          // 表格上边到顶的距离
+            const formBottom    = formHeight + formTop;                                  // 表格下边到顶的距离
+            const toTop         = (viewTop - formTop) >= 0;                              // 表格上边到顶
+            const toBottom      = (viewTop - formBottom) >= -viewHeight;                 // 表格下边到窗口底边
+
+            if (formHeight > viewHeight) {              // 表格高度大于窗口高度才运作
+                if (toTop && !toBottom) {               // 表格顶到顶, 未看到表格底
+                    this.arrivedTop    = true;
+                    this.arrivedBottom = false
+                } else if ( toTop && toBottom ) {       // 表格顶过顶, 表格底到底
+                    this.arrivedTop    = false;
+                    this.arrivedBottom = true
+                } else {                                // 表格顶未到顶
+                    this.arrivedTop    = false;
+                    this.arrivedBottom = false
+                }
+            }
+        }
+    },
+    methods: {
+        'goto': function (id, pos) {
+            const formTop    = this.formTop;
+            const formHeight = document.getElementById(id).offsetHeight;
+            const formBottom = formHeight + formTop;
+            const viewHeight = this.viewHeight;
+
+            switch(pos) {
+                case 'top':
+                    document.body.scrollTop = formTop - 50;
+                    break;
+                case 'bottom':
+                    document.body.scrollTop = formBottom - viewHeight + 50;
+                    break;
+            }
+        }
+    }
+});
+
 /** 过滤器 **/
 
 Vue.filter('filtByValue', function (arr, search, key) {
@@ -709,9 +772,9 @@ var basicDataTmp = {
     'isCounted':     {'label': '是否纳入统计', 'value': true},
     'story':         {'label': '故事', 'value': ''},
     'description':   {'label': '介绍', 'value': ''},
-    'oa_year': {'value': 2016},
-    'oa_season': {'value': 7},
-    'oa_time':{'label': '播放时段', 'value': 'morning'}
+    'oa_year':       {'value': 2016},
+    'oa_season':     {'value': 7},
+    'oa_time':       {'label': '播放时段', 'value': 'morning'}
 };
 
 var staffMembersTmp = [{
@@ -757,8 +820,9 @@ var onairTmp = [{
 
 var vue = new Vue({
     el:      '#animedata',
-    data: {
-        'processing':   false,
+    data:    {
+        'processing': false,
+        'scrolled':     0,
         'basicData':    JSON.parse(JSON.stringify(basicDataTmp)),
         'staffMembers': JSON.parse(JSON.stringify(staffMembersTmp)),
         'castMembers':  JSON.parse(JSON.stringify(castMembersTmp)),
@@ -798,10 +862,10 @@ var vue = new Vue({
 
             this.processing = true;
 
-            switch(pos) {
+            switch (pos) {
                 case 'basicData':
                     this.$http.post('input', {data: this.basicData}).then(function (r) {
-                        if ( r.status == 200 ) {
+                        if (r.status == 200) {
                             this.showAnime(r.data.id);
                             this.processing = false;
                         }
@@ -842,13 +906,13 @@ var vue = new Vue({
 
             switch (pos) {
                 case 'basicData':
-                    for(let i = 0; i < this.basicData.title.length; i++) {
-                        let title = this.basicData.title[i];
+                    for (let i = 0; i < this.basicData.title.length; i++) {
+                        let title        = this.basicData.title[i];
                         title.orderIndex = i;
                     }
 
-                    for(let j = 0; j < this.basicData.links.length; j++) {
-                        let link = this.basicData.links[j];
+                    for (let j = 0; j < this.basicData.links.length; j++) {
+                        let link        = this.basicData.links[j];
                         link.orderIndex = j;
                     }
 
@@ -860,15 +924,15 @@ var vue = new Vue({
                     });
                     break;
                 case 'staff':
-                    for ( let i = 0; i < this.staffMembers.length; i++) {
-                        let staff = this.staffMembers[i];
+                    for (let i = 0; i < this.staffMembers.length; i++) {
+                        let staff        = this.staffMembers[i];
                         staff.orderIndex = i;
-                        if ( staff.haschild && staff.child.length > 0 ) {
-                            for ( let j = 0; j < staff.child.length; j++ ) {
-                                let staffChild = staff.child[j];
+                        if (staff.haschild && staff.child.length > 0) {
+                            for (let j = 0; j < staff.child.length; j++) {
+                                let staffChild        = staff.child[j];
                                 staffChild.orderIndex = j;
                             }
-                        } else if ( staff.haschild == true && staff.child.length == 0) {
+                        } else if (staff.haschild == true && staff.child.length == 0) {
                             staff.haschild = false;
                         }
                     }
@@ -881,8 +945,8 @@ var vue = new Vue({
                     });
                     break;
                 case 'cast':
-                    for ( let i = 0; i < this.castMembers.length; i++) {
-                        let cast = this.castMembers[i];
+                    for (let i = 0; i < this.castMembers.length; i++) {
+                        let cast        = this.castMembers[i];
                         cast.orderIndex = i;
                     }
                     this.$http.put('input/cast/' + animeID, {data: this.castMembers}).then(function (r) {
@@ -895,7 +959,7 @@ var vue = new Vue({
                     break;
                 case 'onair':
                     for (let i = 0; i < this.onair.length; i++) {
-                        let oa = this.onair[i];
+                        let oa        = this.onair[i];
                         oa.orderIndex = i;
                     }
                     this.$http.put('input/onair/' + animeID, {data: this.onair}).then(function (r) {
@@ -922,18 +986,18 @@ var vue = new Vue({
                 });
         },
 
-        showAnime: function(id, data) {
+        showAnime: function (id, data) {
 
-            let inject = function(r, self){
+            let inject = function (r, self) {
                 const bD = r.data.basicData;
                 const sM = r.data.staffMembers;
                 const cM = r.data.castMembers;
                 const oa = r.data.onairs;
 
                 let basicData    = bD.id.value != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
-                let staffMembers = sM.length   != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
-                let castMembers  = cM.length   != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
-                let onairs       = oa.length   != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+                let staffMembers = sM.length != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
+                let castMembers  = cM.length != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
+                let onairs       = oa.length != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
 
                 //当 oriWorks 未有数据时, 重置 oriWorks.
                 if (basicData.oriWorks.length == 0) {
@@ -946,10 +1010,10 @@ var vue = new Vue({
                 self.$set('onair', onairs)
             };
 
-            if( data != undefined ) {
+            if (data != undefined) {
                 inject(data, this);
             } else {
-                this.$http.get('input/' + id).then(function(res){
+                this.$http.get('input/' + id).then(function (res) {
                     inject(res, this);
                 });
             }
@@ -957,7 +1021,7 @@ var vue = new Vue({
         /**
          * Get the Formated Text from sourceBox
          */
-        toArray:         function (data, pos) {
+        toArray:   function (data, pos) {
 
             let item, items, oldArr;
             let res = [];
@@ -987,7 +1051,7 @@ var vue = new Vue({
                         res.push(item);
                     }
 
-                    if(vue.staffMembers[0].id == 0) {
+                    if (vue.staffMembers[0].id == 0) {
                         vue.staffMembers = res;
                     } else {
                         vue.staffMembers = vue.staffMembers.concat(res);
@@ -1000,18 +1064,18 @@ var vue = new Vue({
 
                     for (let j = 0; j < items.length; j++) {
                         item = {
-                            'id'            : 0,
-                            'animeID'       : vue.basicData.id.value,
-                            'charaNameOri'  : items[j][0],
-                            'cvNameOri'     : items[j][1],
-                            'isImportant'   : false,
-                            'orderIndex'    : j
+                            'id':           0,
+                            'animeID':      vue.basicData.id.value,
+                            'charaNameOri': items[j][0],
+                            'cvNameOri':    items[j][1],
+                            'isImportant':  false,
+                            'orderIndex':   j
                         };
 
                         res.push(item);
                     }
 
-                    if(vue.castMembers[0].id == 0) {
+                    if (vue.castMembers[0].id == 0) {
                         vue.castMembers = res;
                     } else {
                         vue.castMembers = vue.castMembers.concat(res);
@@ -1032,7 +1096,7 @@ var vue = new Vue({
         },
 
 
-        resetData: function(pos){
+        resetData: function (pos) {
             switch (pos) {
                 case 'staff':
                     this.staffMembers = JSON.parse(JSON.stringify(staffMembersTmp));
@@ -1049,7 +1113,7 @@ var vue = new Vue({
         /**
          * Input Focus Move
          */
-        focusMove: function (id,index,e) {
+        focusMove: function (id, index, e) {
 
             var key = e.keyCode;
 
@@ -1057,16 +1121,16 @@ var vue = new Vue({
 
             var nextIndex = Number(index) + 1;
 
-            switch(key){
+            switch (key) {
                 // Down
                 case 40:
                     var item = document.getElementById(id + nextIndex.toString());
-                    if ( item ) item.focus();
+                    if (item) item.focus();
                     break;
                 // Up
                 case 38:
                     var item = document.getElementById(id + preIndex.toString());
-                    if ( item ) item.focus();
+                    if (item) item.focus();
                     break;
             }
         },
@@ -1074,11 +1138,11 @@ var vue = new Vue({
         /**
          * Clean the sourceBox
          */
-        cleanSource:     function () {
+        cleanSource: function () {
             vue.sourceBox     = "";
             vue.formatedReady = false
         },
-        outputData:      function () {
+        outputData:  function () {
             vue.member = JSON.stringify(vue.staffMembers)
         }
     }

@@ -51,6 +51,10 @@ textarea, textarea:active, textarea:focus
     outline: none !important; /* 去除 Chrome 默认的蓝色描边 */
 }
 
+form {
+    position: relative;
+}
+
 /* ============================= *
  *           组    件            *
  * ============================= */
@@ -209,6 +213,42 @@ textarea, textarea:active, textarea:focus
 
 .sco .zebrarow {
     background-color: #f7f7f7;
+}
+
+/* 顶部按钮 */
+
+.goto {
+    position: absolute;
+    left: 50%;
+    margin-left: 370px
+}
+
+.goto.top {
+    top: 20%;
+}
+
+.goto.bottom {
+    bottom:10%;
+}
+
+.goto.fixed {
+    position: fixed;
+    top: 50%;
+}
+
+.goto button {
+    display: block;
+}
+
+.goto button:first-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom:none;
+}
+
+.goto button:last-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 /* ============================= *
@@ -534,7 +574,4 @@ textarea, textarea:active, textarea:focus
     border: 1px solid #ccc;
     text-align: center;
     text-align-last: center;
-}
-
-#onair select option {
 }

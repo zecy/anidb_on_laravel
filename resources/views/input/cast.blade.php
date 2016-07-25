@@ -2,7 +2,6 @@
 
 <div id="cast">
     <fieldset>
-
         <div class="textformatbox">
             <textformat :text.sync="castSource" :pos="'cast'"></textformat>
 
@@ -13,7 +12,7 @@
             <button class="btn btn-danger" v-on:click="resetData('cast')">清空当前Cast列表</button>
         </div>
 
-        <form class="form">
+        <form id="cast-form" class="form">
             <table class="sco">
                 <thead>
                 <tr>
@@ -71,6 +70,9 @@
                 </tr>
                 </tbody>
             </table>
+            <formtotop form_id="cast-form"
+                       :view_top.sync="scrolled"
+            ></formtotop>
         </form>
     </fieldset>
 </div>

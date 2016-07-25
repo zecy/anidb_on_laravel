@@ -159,13 +159,13 @@
         </td>
         <td>
             <input type="text"
-                   id="staffPostOri-@{{ lv + '-' + index }}"
+                   :id="'staffPostOri-' + lv + '-' + index"
                    v-model="staffitem.staffPostOri"
                    v-on:keyup="focusMove('staffPostOri-' + lv + '-', index, $event)"
                    placeholder="岗位名称（原）"
             >
             <input type="text"
-                   id="staffPostZhCN-@{{ lv + '-' + index }}"
+                   :id="'staffPostZhCN-' + lv + '-' + index"
                    v-model="staffitem.staffPostZhCN"
                    v-on:keyup="focusMove('staffPostZhCN-' + lv + '-', index, $event)"
                    placeholder="岗位名称（中）"
@@ -173,7 +173,7 @@
         </td>
         <td>
             <input v-model="staffitem.staffMemberName"
-                   id="staffMemberName-@{{ lv + '-' + index }}"
+                   :id="'staffMemberName-' + lv + '-' + index"
                    type="text"
                    v-on:keyup="focusMove('staffMemberName-' + lv + '-', index, $event)"
                    placeholder="人员名称"
@@ -181,7 +181,7 @@
         </td>
         <td>
             <input type="text"
-                   id="staffBelongsToName-@{{ lv + '-' + index }}"
+                   :id="'staffBelongsToName-' + lv + '-' + index"
                    v-model="staffitem.staffBelongsToName"
                    v-on:keyup="focusMove('staffBelongsToName-' + lv + '-', index, $event)"
                    placeholder="所属公司名称"
@@ -202,8 +202,7 @@
             </button>
         </td>
         <td>
-            <rowcontrol style="snc-row-control"
-                        :arr.sync="controlledarr"
+            <rowcontrol :arr.sync="controlledarr"
                         :index.sync="index"
                         pos="staff"
             ></rowcontrol>
@@ -309,5 +308,23 @@
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
+    </div>
+</template>
+
+{{-- 滚动到表格顶端 --}}
+<template id="form-to-top">
+    <div class="goto"
+         v-bind:class="{'fixed' : arrivedTop, 'top': !arrivedBottom, 'bottom' : arrivedBottom}"
+    >
+        <button type="button" class="btn btn-primary"
+                v-on:click="goto(form_id, 'top')"
+        >
+            <span style="text-align: center" class="glyphicon glyphicon-chevron-up"></span>
+        </button>
+        <button type="button" class="btn btn-primary"
+                v-on:click="goto(form_id, 'bottom')"
+        >
+            <span style="text-align: center" class="glyphicon glyphicon-chevron-down"></span>
+        </button>
     </div>
 </template>

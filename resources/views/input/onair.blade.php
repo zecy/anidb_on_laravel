@@ -12,7 +12,7 @@
             <button class="btn btn-danger" v-on:click="resetData('onair')">清空当前播放信息列表</button>
         </div>
 
-        <form class="form">
+        <form id="onair-form" class="form">
             <table class="sco">
                 <thead>
                 <tr>
@@ -39,7 +39,7 @@
                     v-bind:class="{ zebrarow:$index % 2 }"
                 >
                     <td>
-                        <input v-model="datetime.id" type="text" placeholder="ID"/>
+                        <input v-model="datetime.id" disabled type="text" placeholder="ID"/>
                     </td>
                     {{--
                     <td style="width:8%">
@@ -94,6 +94,9 @@
                 </tr>
                 </tbody>
             </table>
+            <formtotop form_id="onair-form"
+                       :view_top.sync="scrolled"
+            ></formtotop>
         </form>
     </fieldset>
 </div>

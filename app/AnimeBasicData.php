@@ -21,6 +21,7 @@ class AnimeBasicData extends Model
         'anime_counted',
         'anime_oa_year',
         'anime_oa_season',
+        'anime_oa_time',
         'anime_eps_oa',
         'anime_eps_soft'
     ];
@@ -40,6 +41,7 @@ class AnimeBasicData extends Model
         'anime_attribute',
         'anime_oa_year',
         'anime_oa_season',
+        'anime_oa_time',
         'anime_eps_oa',
         'anime_eps_soft'
     );

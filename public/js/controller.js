@@ -599,6 +599,7 @@ Vue.component('searchanime', {
             'title':            '',
             'searchProcessing': false,
             'searching_msg':    '正在搜索',
+            'res':              '',
             'animeNameList':    []
         }
     },
@@ -614,30 +615,34 @@ Vue.component('searchanime', {
         searchAnime: function () {
             this.searchProcessing = true;
             this.$http.get('input/search/' + this.title).then(function (r) {
-                if (r.data.multiple == 0) {
+                if (r.data.multiple === 0) {
                     const id = r.data.basicData.id.value;
                     vue.showAnime(id, r);
-                } else {
+                } else if(r.data.multiple === 1) {
                     let animeNames;
 
                     animeNames = r.data.animes;
 
                     for (var i = 0; i < animeNames.length; i++) {
 
-                        let anime = {};
-
                         let animeName = animeNames[i];
 
-                        anime.id = animeName[0].trans_name_id;
-
-                        anime.ori = animeName[0].trans_name;
-
-                        anime.zh_CN = (animeName[1].trans_language == 'zh-cn') ? animeName[1].trans_name : '';
-
+                        const anime = {
+                            'id':    animeName.anime_id,
+                            'ori':   animeName.ori,
+                            'zh_cn': animeName.zh_cn
+                        };
                         this.animeNameList.push(anime);
-                    }
+                    };
+                    this.searchProcessing = false;
+                    this.res = true
+                } else if (r.data.multiple === -1 && r.data.animes === '') {
+                    this.res =  false
                 }
             });
+        },
+        showAnime: function (id) {
+            vue.showAnime(id);
         }
     }
 });
@@ -795,7 +800,7 @@ var basicDataTmp = {
     'description':   {'label': '介绍', 'value': ''},
     'oa_year':       {'value': 2016},
     'oa_season':     {'value': 7},
-    'oa_time':       {'label': '播放时段', 'value': 'morning'}
+    'oa_time':       {'label': '播放时段', 'value': 'midnight'}
 };
 
 var staffMembersTmp = [{
@@ -842,15 +847,15 @@ var onairTmp = [{
 var vue = new Vue({
     el:      '#animedata',
     data:    {
-        'processing': false,
-        'scrolled':     0,
-        'basicData':    JSON.parse(JSON.stringify(basicDataTmp)),
-        'staffMembers': JSON.parse(JSON.stringify(staffMembersTmp)),
-        'castMembers':  JSON.parse(JSON.stringify(castMembersTmp)),
-        'onair':        JSON.parse(JSON.stringify(onairTmp)),
-        'staffSource':  '',
-        'castSource':   '',
-        'onairSource':  ''
+        'processing':    false,
+        'scrolled':      0,
+        'basicData':     JSON.parse(JSON.stringify(basicDataTmp)),
+        'staffMembers':  JSON.parse(JSON.stringify(staffMembersTmp)),
+        'castMembers':   JSON.parse(JSON.stringify(castMembersTmp)),
+        'onair':         JSON.parse(JSON.stringify(onairTmp)),
+        'staffSource':   '',
+        'castSource':    '',
+        'onairSource':   ''
     },
     watch:   {
         'basicData.oriWorks[0][0]': function (newVal, oldVal) {

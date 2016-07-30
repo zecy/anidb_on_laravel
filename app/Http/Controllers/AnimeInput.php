@@ -70,6 +70,7 @@ class AnimeInput extends staffController
                 'anime_end'             => $data['isEnd']['value'],
                 'anime_oa_year'         => $data['oa_year']['value'],
                 'anime_oa_season'       => $data['oa_season']['value'],
+                'anime_oa_time'         => $data['oa_time']['value'],
                 'anime_eps_oa'          => $data['eps_oa']['value'],
                 'anime_eps_soft'        => $data['eps_soft']['value'],
                 //'anime_description'     => $data['description']['value'],
@@ -172,6 +173,7 @@ class AnimeInput extends staffController
             'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['anime_counted']],
             'oa_year'       => ['value' => $animeBasicData['anime_oa_year']],
             'oa_season'     => ['value' => $animeBasicData['anime_oa_season']],
+            'oa_time'       => ['value' => $animeBasicData['anime_oa_time']],
             'eps_oa'        => ['value' => $animeBasicData['anime_eps_oa']],
             'eps_soft'      => ['value' => $animeBasicData['anime_eps_soft']],
             'story'         => ['label' => '故事', 'value' => ''],
@@ -497,34 +499,59 @@ class AnimeInput extends staffController
 
        $res = [];
 
+       // 如果日文标题和中文标题一致, 那么会导致查找出重复的 id, 需要去重
        foreach ( $animeIDs as $animeID ) {
            $res[$animeID['anime_id']] = $animeID['anime_id'];
        }
 
        $animeIDs = $res;
 
-       if ( count($animeIDs) == 1 ) {
+       $animes = count($animeIDs);
+
+       if ( $animes == 1 ) {
            return $this->show(current($animeIDs));
-       } else {
+       } else if ( $animes > 1 ) {
            $animes = [];
 
            foreach ( $animeIDs as $animeID ) {
-               $anime_db = \App\AnimeTitles::where('is_official', true)
-                   ->where('anime_id', $animeID )
+               $animeTitles = \App\AnimeTitles::where('anime_id', $animeID )
+                   ->orderBy('order_index', 'asc')
                    ->get(array(
                        'anime_id',
                        'title',
-                       'lang'
+                       'lang',
+                       'is_official'
                    ))
                    ->toArray();
+
+               $anime_db = [
+                   'anime_id' => 0,
+                   'ori'      => '',
+                   'zh_cn'    => ''
+               ];
+
+               $anime_db['anime_id'] = $animeID;
+
+               foreach( $animeTitles as $title ) {
+                   if($title['lang'] == 'jp' && $title['is_official'] == true){
+                       $anime_db['ori'] = $anime_db['ori'] == '' ? $title['title'] : $anime_db['ori'];
+                   } elseif( $title['lang'] == 'zh-cn') {
+                       $anime_db['zh_cn'] = $anime_db['zh_cn'] == '' ? $title['title'] : $anime_db['zh_cn'];
+                   }
+               }
 
                $animes[] = $anime_db;
            }
 
-          return \Response::json([
-              'multiple' => 1,
-              'animes'   => $animes
-          ]);
+           return \Response::json([
+               'multiple' => 1,
+               'animes'   => $animes
+           ]);
+       } else {
+           return \Response::json([
+               'multiple' => -1,
+               'animes'   => ''
+           ]);
        }
    }
 

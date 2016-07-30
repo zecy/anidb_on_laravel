@@ -95,7 +95,7 @@
                 </tr>
                 </tbody>
             </table>
-            <formtotop form_id="onair-form"
+            <formtotop pos="onair"
                        :view_top.sync="scrolled"
             ></formtotop>
         </form>

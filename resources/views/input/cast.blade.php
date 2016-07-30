@@ -4,8 +4,7 @@
 
     <fieldset>
         <div class="textformatbox">
-            <textformat :text.sync="castSource" :pos="'cast'"></textformat>
-
+            <textformat :text.sync="castSource" pos="cast"></textformat>
             <textarea class="form-control" rows="10" v-model="castSource" placeholder="请输入源数据"></textarea>
 
             <button class="btn btn-primary" v-on:click="toArray(castSource ,'cast')">获取Cast数据</button>
@@ -71,7 +70,7 @@
                 </tr>
                 </tbody>
             </table>
-            <formtotop form_id="cast-form"
+            <formtotop pos="cast"
                        :view_top.sync="scrolled"
             ></formtotop>
         </form>
@@ -81,7 +80,7 @@
 <createeditbutton
         :create_condition="castMembers[0].id == 0"
         :edit_condition="castMembers[0].id != 0"
-        :pos="'cast'"
+        pos="cast"
         :anime_id="basicData.id.value"
         :is_complete.sync="castMembers"
 ></createeditbutton>

@@ -357,11 +357,23 @@ var onairFormatedTextToArray = function (str, animeID) {
     return arr;
 };
 
-/** VUE.jS **/
+/** JQuery 动画效果 **/
+$(document).ready(function(){
+    $('a').smoothScroll({
+        offset: -10,
+        speed: 400
+    });
+
+    $('.goto .bottom').smoothScroll({
+        offset: -($(window).height() - 50)
+    });
+});
 
 window.addEventListener('scroll', function(e){
     vue.scrolled = document.body.scrollTop;
 });
+
+/** VUE.JS **/
 
 // 打开 debug 模式
 Vue.config.debug = true;
@@ -667,9 +679,10 @@ Vue.component('textformat', {
 
 Vue.component('formtotop', {
     template: '#form-to-top',
-    props:    ['form_id', 'view_top'],
+    props:    ['pos', 'view_top'],
     data:  function () {
         return {
+            'form_id': this.pos + '-form',
             'formTop':       0,
             'viewHeight':    0,
             'arrivedTop':    false,
@@ -717,7 +730,11 @@ Vue.component('formtotop', {
 
             switch(pos) {
                 case 'top':
-                    document.body.scrollTop = formTop - 50;
+                    let i = 0;
+                    while (i < formTop) {
+                        document.body.scrollTop = i - 50;
+                        i += 10
+                    }
                     break;
                 case 'bottom':
                     document.body.scrollTop = formBottom - viewHeight + 50;

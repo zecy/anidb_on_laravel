@@ -4,10 +4,7 @@
 
     <fieldset>
         <div class="textformatbox">
-
-            <textformat :text.sync="staffSource"
-                        :pos="'staff'"
-            ></textformat>
+            <textformat :text.sync="staffSource" pos="staff"></textformat>
             <textarea class="form-control" rows="10" v-model="staffSource" placeholder="请输入源数据"></textarea>
 
             <button class="btn btn-primary" v-on:click="toArray(staffSource ,'staff')">获取Staff数据</button>
@@ -83,7 +80,7 @@
                     </td>
                 </tbody>
             </table>
-            <formtotop form_id="staff-form"
+            <formtotop pos="staff"
                        :view_top.sync="scrolled"
             ></formtotop>
         </form>
@@ -93,7 +90,7 @@
 <createeditbutton
         :create_condition="staffMembers[0].id == 0"
         :edit_condition="staffMembers[0].id != 0"
-        :pos="'staff'"
+        pos="staff"
         :anime_id="basicData.id.value"
         :is_complete.sync="staffMembers"
 ></createeditbutton>

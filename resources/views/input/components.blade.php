@@ -212,7 +212,7 @@
 
 {{-- 创建 / 更新按钮 --}}
 <template id="create-edit-btn">
-    <div class="cae-btn">
+    <div :id="pos + '-cae-btn'" class="cae-btn">
         <div v-if="!btnProcessing">
             <div v-if="create_condition">
                 <button class="btn btn-success"
@@ -316,16 +316,16 @@
     <div class="goto"
          v-bind:class="{'fixed' : arrivedTop, 'top': !arrivedBottom, 'bottom' : arrivedBottom}"
     >
-        <button type="button" class="btn btn-primary"
-                v-on:click="goto(form_id, 'top')"
-        >
-            <span style="text-align: center" class="glyphicon glyphicon-chevron-up"></span>
-        </button>
-        <button type="button" class="btn btn-primary"
-                v-on:click="goto(form_id, 'bottom')"
-        >
-            <span style="text-align: center" class="glyphicon glyphicon-chevron-down"></span>
-        </button>
+        <a :href="'#' + pos + '-form'">
+            <button type="button" class="btn btn-primary">
+                <span style="text-align: center" class="glyphicon glyphicon-chevron-up"></span>
+            </button>
+        </a>
+        <a :href="'#' + pos + '-cae-btn'" class="bottom">
+            <button type="button" class="btn btn-primary">
+                <span style="text-align: center" class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+        </a>
     </div>
 </template>
 
@@ -333,7 +333,7 @@
 
 <template id="nav-btn">
    <div id="navbtn">
-       <a href="#top">
+       <a href="#animedata">
            <button type="button" class="btn btn-primary">
                <span class="glyphicon glyphicon-chevron-up"></span>
            </button>

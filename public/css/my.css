@@ -481,6 +481,10 @@ form {
     margin-bottom: 5px;
 }
 
+#maininfo .ori-lv1 > div > select {
+    margin-left: 25%;
+}
+
 #maininfo .ori-lv2 {
     width: 60%
 }

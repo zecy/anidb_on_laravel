@@ -1,6 +1,7 @@
-<h2>Staff信息</h2>
-
 <div id="staff">
+
+    <h2>Staff信息</h2>
+
     <fieldset>
         <div class="textformatbox">
 

@@ -1,6 +1,7 @@
-<h2>播放信息</h2>
-
 <div id="onair">
+
+    <h2>播放信息</h2>
+
     <fieldset>
         <div class="textformatbox">
             <textarea class="form-control" cols="30" rows="10" v-model="onairSource" placeholder="请输入源数据"></textarea>

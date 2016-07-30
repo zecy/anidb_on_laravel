@@ -1,6 +1,7 @@
-<h2>Cast信息</h2>
-
 <div id="cast">
+
+    <h2>Cast信息</h2>
+
     <fieldset>
         <div class="textformatbox">
             <textformat :text.sync="castSource" :pos="'cast'"></textformat>

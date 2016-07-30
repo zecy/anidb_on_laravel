@@ -24,6 +24,8 @@
             @include('input.onair')
         </div>
 
+        <navbtn></navbtn>
+
     </div>
 
     @include('input.components')

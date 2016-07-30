@@ -215,7 +215,7 @@ form {
     background-color: #f7f7f7;
 }
 
-/* 顶部按钮 */
+/* 表格按钮 */
 
 .goto {
     position: absolute;
@@ -249,6 +249,33 @@ form {
 .goto button:last-child {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+/* 导航按钮 */
+
+#navbtn {
+    position: fixed;
+    width: 40px;
+    right: 50%;
+    margin-right: 390px;
+    bottom: 10px;
+}
+
+#navbtn button {
+    border-radius: 0;
+    border-top: none;
+    width: 40px;
+    height: 40px;
+}
+
+#navbtn a:first-child button{
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+#navbtn a:last-child button {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 /* ============================= *

@@ -328,3 +328,30 @@
         </button>
     </div>
 </template>
+
+{{-- 导航按钮 --}}
+
+<template id="nav-btn">
+   <div id="navbtn">
+       <a href="#top">
+           <button type="button" class="btn btn-primary">
+               <span class="glyphicon glyphicon-chevron-up"></span>
+           </button>
+       </a>
+       <a href="#staff">
+           <button type="button" class="btn btn-primary">
+               S
+           </button>
+       </a>
+       <a href="#cast">
+           <button type="button" class="btn btn-primary">
+               C
+           </button>
+       </a>
+       <a href="#onair">
+           <button type="button" class="btn btn-primary">
+               O
+           </button>
+       </a>
+   </div>
+</template>

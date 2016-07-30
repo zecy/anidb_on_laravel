@@ -727,6 +727,10 @@ Vue.component('formtotop', {
     }
 });
 
+Vue.component('navbtn', {
+    template: "#nav-btn"
+});
+
 /** 过滤器 **/
 
 Vue.filter('filtByValue', function (arr, search, key) {

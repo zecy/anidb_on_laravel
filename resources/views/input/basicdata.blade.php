@@ -122,7 +122,7 @@
                 <td class="row">
                     <originalwork :orilist="{{ $oriWorks }}"
                                   :data.sync="basicData.oriWorks"
-                                  pid="0"
+                                  :pid=0
                                   multiple="false"
                                   haschild="true"
                                   :lv=0
@@ -188,7 +188,7 @@
                     <label>集&#x3000;&#x3000;数</label>
                     
                     <div style="width:88px">
-                        <input type="text">
+                        <input type="text" v-model="basicData.eps_oa.value">
                     </div>
                 </td>
             </tr>

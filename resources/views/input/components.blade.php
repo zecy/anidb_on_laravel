@@ -51,8 +51,10 @@
             index    : 用于结合 v-for 插入数组, $index
     --}}
     {{-- 第一级父项目 --}}
-    <div v-if="pid==0" class="ori-lv0">
-        <select v-model="data[0]">
+    <div v-if="pid===0" class="ori-lv0">
+        <select v-model="data[0]"
+                v-on:change="oriChange(data[0])"
+        >
             <option disabled selected hidden>原作类型</option>
             <option v-for="item in orilist | filtByValue 0 'ori_pid'"
                     :value="[{
@@ -85,7 +87,11 @@
         <div v-if="!multiple">
             <select v-model="data[lv][index]">
                 <option v-for="item in orilist | filtByValue pid 'ori_pid'"
-                        :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}"
+                        :value="{ 'id': item.ori_id,
+                                  'haschild': item.haschild,
+                                  'multiple': item.multiple,
+                                  'pid': pid
+                                }"
                 >
                     @{{ item.ori_catalog }}
                 </option>
@@ -113,11 +119,6 @@
         >
             {{-- 多选第二项 --}}
             <label>@{{ item.ori_catalog }}</label>
-            <select class="hidden" type="text" v-model="data[lv][$index]">
-                <option selected
-                        :value="{ 'id': item.ori_id, 'haschild': item.haschild, 'multiple': item.multiple, 'pid': pid}">
-                </option>
-            </select>
 
             {{-- 第三项 --}}
             {{-- 模板递归 --}}

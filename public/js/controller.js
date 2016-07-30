@@ -389,7 +389,14 @@ Vue.component('basicinput', {
 
 Vue.component('originalwork', {
     template: '#ori-work',
-    props:    ['pid', 'data', 'orilist', 'multiple', 'haschild', 'lv', 'index']
+    props:    ['pid', 'data', 'orilist', 'multiple', 'haschild', 'lv', 'index'],
+    methods: {
+        oriChange: function (val) {
+            let newOri = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
+            newOri[0] = val;
+            vue.basicData.oriWorks = newOri;
+        }
+    }
 });
 
 Vue.component('staffrow', {
@@ -858,27 +865,6 @@ var vue = new Vue({
         'onairSource':   ''
     },
     watch:   {
-        'basicData.oriWorks[0][0]': function (newVal, oldVal) {
-            if (newVal.id != oldVal.id && oldVal.id != 0) {
-                let item = this.basicData.oriWorks[1];
-                // 重置空数据, 部分类型第二项无内容, 不这样重置会造成第二项始终为空
-                let items = [{'id': 0, 'haschild': false, 'multiple': false, 'pid': 0}];
-                if (newVal.haschild) {
-                    items = [];
-                    for (let i = 0; i < item.length; i++) {
-                        if (item[i].pid == newVal.id) {
-                            items.push(item[i])
-                        }
-                    }
-                }
-                this.basicData.oriWorks = [
-                    [newVal],
-                    items,
-                    [{'id': '', 'haschild': false, 'multiple': false}],
-                    [{'id': '', 'haschild': false, 'multiple': false}]
-                ]
-            }
-        }
     },
     methods: {
         /*
@@ -1026,14 +1012,14 @@ var vue = new Vue({
                 let onairs       = oa.length != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
 
                 //当 oriWorks 未有数据时, 重置 oriWorks.
-                if (basicData.oriWorks.length == 0) {
+                if (basicData.oriWorks.length === 0) {
                     basicData.oriWorks = JSON.parse(JSON.stringify(basicDataTmp.oriWorks));
                 }
 
                 self.$set('basicData', basicData);
                 self.$set('staffMembers', staffMembers);
                 self.$set('castMembers', castMembers);
-                self.$set('onair', onairs)
+                self.$set('onair', onairs);
             };
 
             if (data != undefined) {
@@ -1120,7 +1106,6 @@ var vue = new Vue({
                     break;
             }
         },
-
 
         resetData: function (pos) {
             switch (pos) {

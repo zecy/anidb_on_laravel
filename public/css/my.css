@@ -6,10 +6,14 @@ body {
     font-size: 10.5px;
 }
 
-input, label, select, div {
+input, label, select, div, ul, li {
     box-sizing: border-box;
     margin:0;
     padding:0;
+}
+
+li {
+    list-style: none;
 }
 
 input {
@@ -45,6 +49,7 @@ textarea.form-control:focus {
 }
 
 button:active, button:focus,
+input:focus, input:hover,
 select:focus,
 textarea, textarea:active, textarea:focus
 {
@@ -236,12 +241,6 @@ form {
     background-color: transparent;
 }
 
-.sco input:focus, .sco input:hover {
-    -webkit-appearance: none;
-    border:none;
-    outline: none;
-}
-
 .sco .zebrarow {
     background-color: #f7f7f7;
 }
@@ -309,6 +308,120 @@ form {
 #navbtn a:last-child button {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
+}
+
+/* 选项框 */
+
+.v-select {
+    width: 100%;
+    position: relative;
+    height: 30px;
+    border: 1px solid #ccc;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+#maininfo .v-select div {
+    float: none;
+}
+
+.vs-arrow {
+    position: absolute;
+    display: block;
+    top:8px;
+    right:1em;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.vs-arrow::before {
+    content: '';
+    vertical-align: middle;
+    box-sizing: border-box;
+    display: block;
+    border: 3px solid rgba(60,60,60,.5);
+    border-left: none;
+    border-bottom: none;
+    height: 8px;
+    width: 8px;
+    transform: rotate(135deg);
+    transition: all 150ms cubic-bezier(0.3, 0.1, 0.8, 0.5);
+}
+
+.vs-arrow.open {
+    top:12px;
+}
+
+.vs-arrow.open::before {
+    transform: rotate(315deg);
+}
+
+.v-selected-tag {
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 5px;
+    margin-left: 5px;
+    background-color: #EEE;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.v-single-selected {
+    margin-left: 15px;
+}
+
+.v-selected-tag span {
+    color: #aaa;
+}
+
+.v-selected-tag:hover {
+    background-color: #ddd;
+}
+
+.v-selected-tag:hover span {
+    color: #000;
+}
+
+.vs-dropdown {
+    z-index: 10;
+    min-width:100%;
+    position: absolute;
+    top: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 0 1px #ccc,
+                inset 0 1px 0 0 rgba(0,0,0,.05),
+                inset 0 2px 0 0 rgba(0,0,0,.025);
+}
+
+.vs-dropdown-search {
+    margin: 5px 0;
+    padding:0 5px;
+    width: 100%;
+}
+
+.v-select > .vs-dropdown > .vs-dropdown-search > input[type=search] {
+    width:100%;
+}
+
+.vs-dropdown-menu {
+    margin:5px 0;
+}
+
+.vs-dropdown-menu li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.v-opt-selected {
+    background-color: #cfcfcf;
+}
+
+
+.vs-dropdown-menu li:hover,
+.vs-dropdown-menu li.pointed
+{
+    background-color: #ebf2fc;
 }
 
 /* ============================= *
@@ -493,17 +606,23 @@ form {
     margin-bottom: -2.5em; /* 后续版块右移, 整体高度下降一个选项框的高度 */
 }
 
+/* 多选框 */
+#maininfo .ori-multiple {
+    width: 200%;
+}
+
 /* 首播季度 */
 #oa-season {
     width: 240px;
 }
 
-#oa-season > div.input {
-    width: 100px;
+#oa-year {
+    width: 90px;
+    margin-right: 10px;
     position: relative;
 }
 
-#oa-season > div.input > span {
+#oa-year > span {
     position: absolute;
     line-height:30px;
     right: 1em;
@@ -511,19 +630,14 @@ form {
     user-select: none;
 }
 
-#oa-season input {
+#oa-year > input {
     text-align: right;
-    width: 100px;
     padding-right:2.5em;
 }
 
-#oa-season > div > select {
-    margin-left:10px;
-    line-height: 1em;
-    width: 60px;
-    padding-left: 1.2em;
+#oa-month {
+    width: 70px;
 }
-
 
 /* ============================= *
  *          Staff信息            *

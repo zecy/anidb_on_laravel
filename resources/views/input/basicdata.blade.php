@@ -89,11 +89,12 @@
                         >
                     </div>
                     <div style="width: 100px">
-                        <select v-model="title.lang">
-                            @foreach( $transLangs as $lang )
-                                <option value="{{ $lang->content }}">{{ $lang->comment }}</option>
-                            @endforeach
-                        </select>
+                        <vselect
+                                :vs_value.sync="title.lang"
+                                :vs_options="{{ $transLangs }}"
+                                :multiple="false"
+                                vs_placeholder="请选择"
+                        ></vselect>
                     </div>
                     <div class="is-official" style="width: 24px">
                         <togglebutton :toggle.sync="title.isOfficial"
@@ -119,11 +120,12 @@
             </tr>
             {{-- 原作类型 --}}
             <tr>
-                <td class="row">
+                <td>
                     <originalwork :orilist="{{ $oriWorks }}"
                                   :data.sync="basicData.oriWorks"
                                   :pid=0
-                                  multiple="false"
+                                  multiple_children="false"
+                                  multiple_selected="false"
                                   haschild="true"
                                   :lv=0
                                   :index="0"
@@ -135,6 +137,26 @@
                 <td></td>
             </tr>
 
+            <tr>
+                <td>
+                    <div style="width: 200px;">
+                        <vselect
+                                :vs_value.sync="basicData.title[0].lang"
+                                :vs_options="{{ $transLangs }}"
+                                :multiple="false"
+                                vs_placeholder="请选择"
+                        ></vselect>
+                    </div>
+                    <hr>
+                    <div style="margin-left:300px">
+                        <pre>@{{ basicData.title[0] | json }}</pre>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="hr">
+                <td></td>
+            </tr>
             {{-- 首播季度, 首播媒体, 系列长度, 集数 --}}
             <tr>
                 <td>
@@ -144,44 +166,48 @@
                             首播季度
                         </label>
 
-                        <div class="input" >
+                        <div id="oa-year" >
                             <input type="text" v-model="basicData.oa_year.value">
                             <span>年</span>
                         </div>
 
-                        <div>
-                            <select v-model="basicData.oa_season.value">
-                                <option value="1">1月</option>
-                                <option value="4">4月</option>
-                                <option value="7">7月</option>
-                                <option value="10">10月</option>
-                            </select>
+                        <div id="oa-month">
+                            <vselect
+                                    :vs_value.sync="basicData.oa_season.value"
+                                    :vs_options="[{'label':'1月', 'value':'1'},
+                                                  {'label':'4月', 'value':'3'},
+                                                  {'label':'7月', 'value':'7'},
+                                                  {'label':'10月', 'value':'10'}]"
+                                    :multipe="false"
+                            ></vselect>
                         </div>
                     </div>
 
                     {{-- 首播媒体 --}}
                     <label>首播媒体</label>
                     <div class="input-id">
-                        <select v-model="basicData.premiereMedia.value">
-                            @foreach($premiereMedia as $pm)
-                                <option value="{{ $pm->content }}">{{ $pm->comment }}</option>
-                            @endforeach
-                        </select>
+                        <vselect
+                                :vs_value.sync="basicData.premiereMedia.value"
+                                :vs_options="{{ $premiereMedia }}"
+                                :multiple="false"
+                        ></vselect>
                     </div>
 
                     {{-- 系列长度 --}}
                     <label>系列长度</label>
 
                     <div class="input-id">
-                        <select v-model="basicData.kur.value">
-                            <option value="0">特别篇</option>
-                            <option value="1">一季度</option>
-                            <option value="2">两季度</option>
-                            <option value="3">三季度</option>
-                            <option value="4">年番</option>
-                            <option value="5">长篇</option>
-                            <option value="6">大长篇</option>
-                        </select>
+                        <vselect
+                                :vs_value.sync="basicData.kur.value"
+                                :vs_options="[{'label':'特别篇', 'value':0},
+                                              {'label':'一季度', 'value':1},
+                                              {'label':'两季度', 'value':2},
+                                              {'label':'三季度', 'value':3},
+                                              {'label':'年番',   'value':4},
+                                              {'label':'长篇',   'value':5},
+                                              {'label':'大长篇', 'value':6}]"
+                                :multipe="false"
+                        ></vselect>
                     </div>
 
                     {{-- 播出集数 --}}
@@ -198,11 +224,11 @@
 
                     <label>时间规格</label>
                     <div style="width: 170px">
-                        <select v-model="basicData.duration.value">
-                            @foreach($animeDurationFormat as $adf)
-                                <option value="{{ $adf->content }}">{{ $adf->comment }}</option>
-                            @endforeach
-                        </select>
+                        <vselect
+                                :vs_value.sync="basicData.duration.value"
+                                :vs_options="{{ $animeDurationFormat }}"
+                                :multiple="false"
+                        ></vselect>
                     </div>
 
                     <label>首播时段</label>
@@ -235,15 +261,15 @@
             {{-- LINK --}}
             <tr class="anime-link" v-for="link in basicData.links" track-by="$index">
                 <td>
-                    <div style="width: 100px">
-                        <select v-model="link.class">
-                            @foreach( $links as $link )
-                                <option value="{{ $link->content }}">{{ $link->comment }}</option>
-                            @endforeach
-                        </select>
+                    <div style="width: 130px">
+                        <vselect
+                                :vs_value.sync="link.class"
+                                :vs_options="{{ $links }}"
+                                :multiple="false"
+                        ></vselect>
                     </div>
 
-                    <div style="width: 300px">
+                    <div style="width: 270px">
                         <input type="text"
                                v-model="link.value"
                                placeholder="网站地址"

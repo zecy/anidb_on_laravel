@@ -357,8 +357,11 @@ var onairFormatedTextToArray = function (str, animeID) {
     return arr;
 };
 
-/** JQuery 动画效果 **/
+/**
+ * JQuery UI 效果
+ */
 $(document).ready(function(){
+    // 平滑滚动
     $('a').smoothScroll({
         offset: -10,
         speed: 400
@@ -389,12 +392,130 @@ Vue.component('basicinput', {
 
 Vue.component('originalwork', {
     template: '#ori-work',
-    props:    ['pid', 'data', 'orilist', 'multiple', 'haschild', 'lv', 'index'],
+    props:    ['pid', 'data', 'orilist', 'multiple_children','multiple_selected', 'haschild', 'lv', 'index'],
     methods: {
         oriChange: function (val) {
             let newOri = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
             newOri[0] = val;
             vue.basicData.oriWorks = newOri;
+        }
+    }
+});
+
+Vue.component('vselect', {
+    template: '#v-select',
+    props: ['vs_options', 'vs_value', 'vs_placeholder','multiple'],
+    data: function(){
+        return {
+            'open':       false,
+            'search':     '',
+            'pointer':    0,
+            'filtResult': [],
+            'options':    []
+        }
+    },
+    computed: {
+        options(){
+            const arr = JSON.parse(JSON.stringify(this.vs_options));
+            arr.forEach(function(e){
+                e.selected = false
+            });
+            return arr
+        }
+    },
+    filters: {
+        filtRes(arr) {
+            this.$set('filtResult', arr);
+            return arr
+        }
+    },
+    methods: {
+        select(opt) {
+            const multiple = this.multiple;
+            let value      = this.vs_value;
+            let self       = this;
+            this.$els.vs_search.focus();
+            if ( multiple && typeof value === 'object') {
+                if(opt.selected) {
+                    for(let i = 0; i < value.length; i++) {
+                        if(opt === value[i]) {
+                            value.splice(i, 1);
+                            opt.selected = false;
+                        }
+                    }
+                } else {
+                    for(let i = 0; i < value.length; i++) {
+                        if(opt.value === value[i]) {
+                            opt.selected = true;
+                            return
+                        }
+                    }
+                    value.push(opt.value);
+                }
+            } else {
+                if( value === 0 || value === ''){
+                    this.vs_value = opt.value;
+                } else {
+                    const oldOpt = value;
+                    for(let i = 0; i < self.options.length; i++) {
+                        if(oldOpt === self.options[i].value) {
+                            self.options[i].selected = false
+                        }
+                    }
+                    this.vs_value = opt.value
+                }
+            };
+            this.closeDropdown();
+        },
+        toggleDropdown() {
+            if(this.open){
+                this.open = false;
+            } else {
+                const self = this;
+                this.open = true;
+                this.$nextTick(function(){
+                    self.$els.vs_search.focus();
+                })
+            }
+        },
+        closeDropdown() {
+            if(!this.multiple){
+                this.open = false
+            }
+        },
+        getLabel(value) {
+            let res = '';
+            this.options.forEach(function(e){
+                if(value === e.value) {
+                    res = e.label
+                }
+            });
+            return res
+        },
+        enterSelect(){
+            this.select(this.filtResult[this.pointer]);
+            this.$set('pointer', 0);
+            this.$set('search', "");
+            this.closeDropdown();
+        },
+        pointerMove(act) {
+            const max = this.vs_options.length - 1;
+            if( act === 'up' && this.pointer <= 0 ) {
+                this.pointer = max;
+            }
+            else if ( act === 'down' && this.pointer >= max ) {
+                this.pointer = 0;
+            }
+            else {
+                switch (act) {
+                    case 'up':
+                        this.pointer--;
+                        break;
+                    case 'down':
+                        this.pointer++;
+                        break
+                }
+            }
         }
     }
 });
@@ -626,7 +747,10 @@ Vue.component('searchanime', {
                     const id = r.data.basicData.id.value;
                     vue.showAnime(id, r);
                 } else if(r.data.multiple === 1) {
+
                     let animeNames;
+
+                    this.animeNameList = [];
 
                     animeNames = r.data.animes;
 
@@ -790,10 +914,10 @@ var basicDataTmp = {
     'eps_soft':      {'label': '集数', 'value': 0},
     'duration':      {'label': '时间规格', 'value': 'general'},
     'oriWorks':      [
-        [{'id': 0, 'haschild': false, 'multiple': false}],
-        [{'id': 0, 'haschild': false, 'multiple': false}],
-        [{'id': 0, 'haschild': false, 'multiple': false}],
-        [{'id': 0, 'haschild': false, 'multiple': false}]
+        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}]
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
     'links':         [
@@ -854,6 +978,7 @@ var onairTmp = [{
 var vue = new Vue({
     el:      '#animedata',
     data:    {
+        'testData': [],
         'processing':    false,
         'scrolled':      0,
         'basicData':     JSON.parse(JSON.stringify(basicDataTmp)),

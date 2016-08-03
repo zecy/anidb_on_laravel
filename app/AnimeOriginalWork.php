@@ -14,6 +14,7 @@ class AnimeOriginalWork extends Model
         'ori_pid',
         'lv',
         'haschild',
-        'multiple'
+        'multiple_children',
+        'multiple_selected'
     ];
 }

@@ -30,7 +30,7 @@
                     v-for="animeName in animeNameList"
                     v-on:click="showAnime(animeName.id)"
             >
-                @{{ animeName.ori + ' | ' + animeName.zh_CN }}
+                @{{ animeName.ori + ' | ' + animeName.zh_cn }}
             </button>
         </div>
         <div v-if="res === false" class="nores">
@@ -41,98 +41,107 @@
 
 {{-- 原作类型 --}}
 <template id="ori-work">
-    {{-- Argument:
-            pid      : 父项目 ID
-            data     : basicData.oriWorks
-            orilist  : 来自数据库的全部原作类型列表
-            multiple : 子项目是否多选
-            haschild : 是否有子项目, haschild
-            lv       : 当前层数, ori_level
-            index    : 用于结合 v-for 插入数组, $index
-    --}}
-    {{-- 第一级父项目 --}}
-    <div v-if="pid===0" class="ori-lv0">
-        <select v-model="data[0]"
-                v-on:change="oriChange(data[0])"
-        >
-            <option disabled selected hidden>原作类型</option>
-            <option v-for="item in orilist | filtByValue 0 'ori_pid'"
-                    :value="[{
-                              'id'        : item.ori_id,
-                              'haschild'  : item.haschild,
-                              'multiple'  : item.multiple,
-                              'pid'       : 0
+        {{-- Argument:
+                pid      : 父项目 ID
+                data     : basicData.oriWorks
+                orilist  : 来自数据库的全部原作类型列表
+                multiple_children : 子项目是否多选
+                haschild : 是否有子项目, haschild
+                lv       : 当前层数, ori_level
+                index    : 用于结合 v-for 插入数组, $index
+        --}}
+        {{-- 第一级父项目 --}}
+        <div v-if="pid===0" class="ori-lv0">
+            <select v-model="data[0]"
+                    v-on:change="oriChange(data[0])"
+            >
+                <option disabled selected hidden>原作类型</option>
+                <option v-for="item in orilist | filtByValue 0 'ori_pid'"
+                        :value="[{
+                              'id'                 : item.ori_id,
+                              'haschild'           : item.haschild,
+                              'multiple_children'  : item.multiple_children,
+                              'multiple_selected'  : item.multiple_selected,
+                              'pid'                : 0
                               }]"
-            >
-                @{{ item.ori_catalog }}
-            </option>
-        </select>
-
-        <div v-if="data[0][0].haschild">
-            <originalwork
-                    :pid="data[0][0].id"
-                    :data.sync="data"
-                    :orilist="orilist"
-                    :multiple="data[0][0].multiple"
-                    :haschild="data[0][0].haschild"
-                    :lv="1"
-                    :index="0"
-            >
-            </originalwork>
-        </div>
-    </div>
-    {{-- 子项目 --}}
-    <div v-if="pid>0" class="ori-lv@{{ lv }}">
-        {{-- 子项目单选 --}}
-        <div v-if="!multiple">
-            <select v-model="data[lv][index]">
-                <option v-for="item in orilist | filtByValue pid 'ori_pid'"
-                        :value="{ 'id': item.ori_id,
-                                  'haschild': item.haschild,
-                                  'multiple': item.multiple,
-                                  'pid': pid
-                                }"
                 >
-                    @{{ item.ori_catalog }}
+                    @{{ item.ori_id + ' | ' + item.ori_catalog }}
                 </option>
             </select>
 
-            {{-- 模板递归 --}}
-            {{-- 生成单选第二项及第四项等 --}}
-            <div v-if="data[lv][index] ? data[lv][index].haschild : false">
+            <div v-if="data[0][0].haschild">
                 <originalwork
-                        :pid="data[lv][index].id"
+                        :pid="data[0][0].id"
                         :data.sync="data"
                         :orilist="orilist"
-                        :multiple="data[lv][index].multiple"
-                        :haschild="data[lv][index].haschild"
-                        :lv="lv+1"
+                        :multiple_children="data[0][0].multiple_children"
+                        :multiple_selected="data[0][0].multiple_selected"
+                        :haschild="data[0][0].haschild"
+                        :lv="1"
                         :index="0"
+                >
+                </originalwork>
+            </div>
+        </div>
+        {{-- 子项目 --}}
+        <div v-if="pid>0" class="ori-lv@{{ lv }}">
+            {{-- 子项目单选 --}}
+            <div v-if="!multiple_children">
+                {{-- 单选 --}}
+                <select v-model="data[lv][index]"
+                        :multiple="multiple_selected ? 'multiple' : false"
+                        :class="{'ori-multiple' : multiple_selected}"
+                >
+                    <option v-for="item in orilist | filtByValue pid 'ori_pid'"
+                            :value="{ 'id': item.ori_id,
+                                  'haschild': item.haschild,
+                                  'multiple_children': item.multiple_children,
+                                  'multiple_selected': item.multiple_selected,
+                                  'pid': pid
+                                }"
+                    >
+                        @{{ item.ori_id + ' | ' +  item.ori_catalog }}
+                    </option>
+                </select>
+
+                {{-- 模板递归 --}}
+                {{-- 生成单选第三项及第四项等的下拉选择框 --}}
+                <div v-if="data[lv][index] ? data[lv][index].haschild : false">
+                    <originalwork
+                            :pid="data[lv][index].id"
+                            :data.sync="data"
+                            :orilist="orilist"
+                            :multiple_children="data[lv][index].multiple_children"
+                            :multiple_selected="data[lv][index].multiple_selected"
+                            :haschild="data[lv][index].haschild"
+                            :lv="lv+1"
+                            :index="0"
+                    ></originalwork>
+                </div>
+            </div>
+
+            {{-- 子项目多选 --}}
+            <div class="clearfix"
+                 v-if="multiple_children"
+                 v-for="item in orilist | filtByValue pid 'ori_pid'"
+            >
+                {{-- 多选第二项, 作为第三项下拉框的标签 --}}
+                <label>@{{ item.ori_catalog }}</label>
+
+                {{-- 第三项 --}}
+                {{-- 模板递归 --}}
+                <originalwork
+                        :pid="item.ori_id"
+                        :data.sync="data"
+                        :orilist="orilist"
+                        :multiple_children="item.multiple_children"
+                        :multiple_selected="item.multiple_selected"
+                        :haschild="item.haschild"
+                        :lv="lv+1"
+                        :index="$index"
                 ></originalwork>
             </div>
         </div>
-
-        {{-- 子项目多选 --}}
-        <div class="clearfix"
-             v-if="multiple"
-             v-for="item in orilist | filtByValue pid 'ori_pid'"
-        >
-            {{-- 多选第二项 --}}
-            <label>@{{ item.ori_catalog }}</label>
-
-            {{-- 第三项 --}}
-            {{-- 模板递归 --}}
-            <originalwork
-                    :pid="item.ori_id"
-                    :data.sync="data"
-                    :orilist="orilist"
-                    :multiple="item.multiple"
-                    :haschild="item.haschild"
-                    :lv="lv+1"
-                    :index="$index"
-            ></originalwork>
-        </div>
-    </div>
 </template>
 
 {{-- 介绍框 --}}
@@ -336,7 +345,6 @@
 </template>
 
 {{-- 导航按钮 --}}
-
 <template id="nav-btn">
    <div id="navbtn">
        <a href="#animedata">
@@ -360,4 +368,54 @@
            </button>
        </a>
    </div>
+</template>
+
+{{-- 选项框 --}}
+<template id="v-select">
+    <div class="v-select"
+    >
+        <div v-el:vs_content
+             v-on:mousedown.prevent="toggleDropdown"
+        >
+            <span class="v-selected-tag"
+                  v-if="multiple"
+                  v-for="selected in vs_value"
+                  track-by="$index"
+                  v-on:click="select(selected)"
+            >
+                @{{ getLabel(selected) }}
+                <span aria-hidden="true">&times;</span>
+            </span>
+            <span v-if="!multiple"
+                  class="v-single-selected"
+            >
+                @{{ vs_value === '' ? vs_placeholder : getLabel(vs_value) }}
+            </span>
+            <i class="vs-arrow" :class="{ 'open': open }"></i>
+        </div>
+
+        <div class="vs-dropdown"
+             v-show="open"
+             v-on:focus="open = true"
+             v-on:blur="open = false"
+        >
+            <div class="vs-dropdown-search">
+                <input v-el:vs_search
+                       v-model="search"
+                       type="search"
+                       v-on:blur="open = false"
+                       v-on:keyup.esc="search = ''"
+                       v-on:keydown.enter="enterSelect"
+                       v-on:keydown.up="pointerMove('up')"
+                       v-on:keydown.down="pointerMove('down')"
+                >
+            </div>
+            <ul class="vs-dropdown-menu">
+                <li v-for="option in options | filterBy search 'label' | filtRes"
+                    v-bind:class="{'v-opt-selected' : option.selected, 'pointed' : (pointer === $index)}"
+                    v-on:mousedown.prevent="select(option)"
+                >@{{ option.label }}</li>
+            </ul>
+        </div>
+    </div>
 </template>

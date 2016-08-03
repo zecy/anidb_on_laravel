@@ -27,11 +27,23 @@ class AnimeInput extends staffController
      */
     public function index()
     {
-        $transLangs = ClassSupport::where('class', '=', 'language')->get(array('content', 'comment'));
-        $links = ClassSupport::where('class', '=', 'links')->get(array('content', 'comment'));
-        $premiereMedia = ClassSupport::where('class', '=', 'premiere_media')->get(array('content', 'comment'));
-        $animeDurationFormat = ClassSupport::where('class', '=', 'anime_duration_format')->get(array('content', 'comment'));
-        $oriWorks = AnimeOriginalWorkSupport::all()->toJson();
+        $transLangs = ClassSupport::where('class', '=', 'language')
+            ->get(array('content as value', 'comment as label'))
+            ->toJson();
+
+        $links = ClassSupport::where('class', '=', 'links')
+            ->get(array('content as value', 'comment as label'))
+            ->toJson();
+
+        $premiereMedia = ClassSupport::where('class', '=', 'premiere_media')
+            ->get(array('content as value', 'comment as label'))
+            ->toJson();
+
+        $animeDurationFormat = ClassSupport::where('class', '=', 'anime_duration_format')
+            ->get(array('content as value', 'comment as label'))
+            ->toJson();
+
+        $oriWorks = AnimeOriginalWorkSupport::orderBy('ori_id')->get()->toJson();
 
         return view('input.index', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
@@ -110,7 +122,8 @@ class AnimeInput extends staffController
                                 'ori_pid'  => $origenres['pid'],
                                 'lv'       => $i,
                                 'haschild' => $origenres['haschild'],
-                                'multiple' => $origenres['multiple']
+                                'multiple_children' => $origenres['multiple_children'],
+                                'multiple_selected' => $origenres['multiple_selected']
                             ]
                         );
                     }
@@ -467,7 +480,8 @@ class AnimeInput extends staffController
                                     'ori_pid'  => $origenres['pid'],
                                     'lv'       => $i,
                                     'haschild' => $origenres['haschild'],
-                                    'multiple' => $origenres['multiple']
+                                    'multiple_children' => $origenres['multiple_children'],
+                                    'multiple_selected' => $origenres['multiple_selected']
                                 ]
                             );
                         }

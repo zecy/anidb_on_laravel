@@ -105,6 +105,18 @@ form {
     border-radius: 5px;
 }
 
+/* 介绍框 */
+#describox {
+    width:100%;
+}
+
+#maininfo #describox label {
+    float: none;
+    padding-left: 0.8em;
+    text-align: left;
+    width: auto;
+}
+
 /* 创建编辑按钮 */
 .cae-btn {
     margin: 0 auto 10px 10px;

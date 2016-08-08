@@ -154,7 +154,7 @@
 
 {{-- 介绍框 --}}
 <template id="descri-box">
-    <div style="width:100%">
+    <div id="describox">
         <label class="control-label"
                v-if="!processing"
         >

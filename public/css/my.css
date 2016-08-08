@@ -317,7 +317,7 @@ form {
     position: relative;
     height: 30px;
     border: 1px solid #ccc;
-    padding: 5px 0;
+    padding: 4px 0 5px 0;
     cursor: pointer;
 }
 
@@ -356,19 +356,23 @@ form {
     transform: rotate(315deg);
 }
 
-.v-selected-tag {
+.v-selected-tag,
+.v-single-selected {
     display: inline-block;
     height: 20px;
     line-height: 20px;
+    cursor: pointer;
+}
+
+.v-selected-tag {
     padding: 0 5px;
     margin-left: 5px;
     background-color: #EEE;
-    cursor: pointer;
     border-radius: 3px;
 }
 
 .v-single-selected {
-    margin-left: 15px;
+    padding-left: 1em;
 }
 
 .v-selected-tag span {
@@ -414,14 +418,13 @@ form {
 }
 
 .v-opt-selected {
-    background-color: #cfcfcf;
+    background-color: #ebf2fc;
 }
-
 
 .vs-dropdown-menu li:hover,
 .vs-dropdown-menu li.pointed
 {
-    background-color: #ebf2fc;
+    box-shadow: inset 0 0 0 1px dodgerblue;
 }
 
 /* ============================= *
@@ -487,7 +490,7 @@ form {
     width: 100px;
 }
 
-#maininfo .input-text {
+ .input-text {
     width: 200px;
 }
 
@@ -607,7 +610,7 @@ form {
 }
 
 /* 多选框 */
-#maininfo .ori-multiple {
+#maininfo #ori-works .ori-multiple {
     width: 200%;
 }
 

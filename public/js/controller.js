@@ -360,11 +360,11 @@ var onairFormatedTextToArray = function (str, animeID) {
 /**
  * JQuery UI 效果
  */
-$(document).ready(function(){
+$(document).ready(function () {
     // 平滑滚动
     $('a').smoothScroll({
         offset: -10,
-        speed: 400
+        speed:  400
     });
 
     $('.goto .bottom').smoothScroll({
@@ -372,7 +372,7 @@ $(document).ready(function(){
     });
 });
 
-window.addEventListener('scroll', function(e){
+window.addEventListener('scroll', function (e) {
     vue.scrolled = document.body.scrollTop;
 });
 
@@ -392,11 +392,18 @@ Vue.component('basicinput', {
 
 Vue.component('originalwork', {
     template: '#ori-work',
-    props:    ['pid', 'data', 'orilist', 'multiple_children','multiple_selected', 'haschild', 'lv', 'index'],
-    methods: {
+    props:    ['pid', 'data', 'orilist', 'multiple_children', 'multiple_selected', 'haschild', 'lv', 'index', 'parent_name'],
+    data() {
+        return {
+            optionslist() {
+                return JSON.parse(this.orilist)
+            }
+        }
+    },
+    methods:  {
         oriChange: function (val) {
-            let newOri = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
-            newOri[0] = val;
+            let newOri             = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
+            newOri[0]              = val;
             vue.basicData.oriWorks = newOri;
         }
     }
@@ -404,93 +411,137 @@ Vue.component('originalwork', {
 
 Vue.component('vselect', {
     template: '#v-select',
-    props: ['vs_options', 'vs_value', 'vs_placeholder','multiple'],
-    data: function(){
+    props:    ['vs_options', 'vs_value', 'vs_placeholder', 'multiple', 'vs_label', 'vs_value_label', 'opt_is_value'],
+    data:     function () {
         return {
             'open':       false,
             'search':     '',
             'pointer':    0,
             'filtResult': [],
-            'options':    []
+            'options':    [],
+            'keyLabel':   '',
+            'valueLabel': '',
+            'optIsValue': false
         }
     },
     computed: {
         options(){
+            // 为所有选项增加 'selected' 项
             const arr = JSON.parse(JSON.stringify(this.vs_options));
-            arr.forEach(function(e){
-                e.selected = false
-            });
-            return arr
-        }
-    },
-    filters: {
-        filtRes(arr) {
-            this.$set('filtResult', arr);
-            return arr
-        }
-    },
-    methods: {
-        select(opt) {
-            const multiple = this.multiple;
-            let value      = this.vs_value;
-            let self       = this;
-            this.$els.vs_search.focus();
-            if ( multiple && typeof value === 'object') {
-                if(opt.selected) {
-                    for(let i = 0; i < value.length; i++) {
-                        if(opt === value[i]) {
-                            value.splice(i, 1);
-                            opt.selected = false;
-                        }
+            const val = this.vs_value;
+            for (let i = 0; i < arr.length; i++) {
+                if (this.optIsValue) {
+                    if (val[this.valueLabel] === arr[i][this.valueLabel]) {
+                        arr[i].selected = true
+                    } else {
+                        arr[i].selected = false
                     }
                 } else {
-                    for(let i = 0; i < value.length; i++) {
-                        if(opt.value === value[i]) {
-                            opt.selected = true;
+                    if (val === arr[i][this.valueLabel]) {
+                        arr[i].selected = true
+                    } else {
+                        arr[i].selected = false
+                    }
+                }
+            }
+            return arr
+        },
+        keyLabel() {
+            return this.vs_label === undefined ? 'label' : this.vs_label;
+        },
+        valueLabel(){
+            return this.vs_value_label === undefined ? 'value' : this.vs_value_label;
+        },
+        optIsValue(){
+            return this.opt_is_value === undefined ? false : this.opt_is_value;
+        }
+    },
+    filters:  {
+        filtRes(arr) {
+            this.$set('filtResult', arr); // 让经过 filter 的数组内容同步到 this.options 里面
+            return arr
+        }
+    },
+    methods:  {
+        select(opt) {
+            let self = this;
+
+            const multiple = this.multiple;
+
+            const valueLabel = this.valueLabel;
+
+            let value    = this.vs_value;
+            let optValue = this.optIsValue ? opt : opt[valueLabel];    // <options value="optValue">
+
+            if (multiple) {
+                // 多选
+                if (value.length > 0) {
+                    for (let i = 0; i < value.length; i++) {
+                        if (optValue === value[i]) {
+                            if (opt.selected) {
+                                value.splice(i, 1);
+                            }
+                            opt.selected = !opt.selected;
                             return
                         }
                     }
-                    value.push(opt.value);
                 }
+                opt.selected = true;
+                value.push(optValue);
+                this.vs_value = value;
             } else {
-                if( value === 0 || value === ''){
-                    this.vs_value = opt.value;
-                } else {
-                    const oldOpt = value;
-                    for(let i = 0; i < self.options.length; i++) {
-                        if(oldOpt === self.options[i].value) {
-                            self.options[i].selected = false
-                        }
+                // 单选
+                const oldOpt = value;
+                for (let i = 0; i < self.options.length; i++) {
+                    const curOptValue = this.optIsValue ? self.options[i] : self.options[i][valueLabel];
+                    if (oldOpt === curOptValue) {
+                        self.options[i].selected = false
                     }
-                    this.vs_value = opt.value
                 }
-            };
-            this.closeDropdown();
+                opt.selected  = true;
+                this.vs_value = optValue;
+                this.closeDropdown();
+            }
         },
         toggleDropdown() {
-            if(this.open){
+            if (this.open) {
                 this.open = false;
             } else {
                 const self = this;
-                this.open = true;
-                this.$nextTick(function(){
+                this.open  = true;
+                this.$nextTick(function () {
                     self.$els.vs_search.focus();
                 })
             }
         },
         closeDropdown() {
-            if(!this.multiple){
+            if (!this.multiple) {
                 this.open = false
             }
         },
         getLabel(value) {
-            let res = '';
-            this.options.forEach(function(e){
-                if(value === e.value) {
-                    res = e.label
+            let res          = '';
+            const options    = this.options;
+            const valueLabel = this.valueLabel;
+            const keyLabel   = this.keyLabel;
+            const optIsValue = this.opt_is_value;
+            const rawValue   = optIsValue ? value[valueLabel] : value;
+
+            if (value === undefined || value === '') {
+                res = this.vs_placeholder;
+            } else {
+                for (let i = 0; i < options.length; i++) {
+                    const item     = options[i];
+                    const optValue = item[valueLabel];
+                    if (rawValue === optValue) {
+                        res = item[keyLabel];
+                        break;
+                    } else {
+                        res = this.vs_placeholder;
+                    }
                 }
-            });
-            return res
+            }
+            return res;
         },
         enterSelect(){
             this.select(this.filtResult[this.pointer]);
@@ -500,10 +551,10 @@ Vue.component('vselect', {
         },
         pointerMove(act) {
             const max = this.vs_options.length - 1;
-            if( act === 'up' && this.pointer <= 0 ) {
+            if (act === 'up' && this.pointer <= 0) {
                 this.pointer = max;
             }
-            else if ( act === 'down' && this.pointer >= max ) {
+            else if (act === 'down' && this.pointer >= max) {
                 this.pointer = 0;
             }
             else {
@@ -746,7 +797,7 @@ Vue.component('searchanime', {
                 if (r.data.multiple === 0) {
                     const id = r.data.basicData.id.value;
                     vue.showAnime(id, r);
-                } else if(r.data.multiple === 1) {
+                } else if (r.data.multiple === 1) {
 
                     let animeNames;
 
@@ -764,15 +815,16 @@ Vue.component('searchanime', {
                             'zh_cn': animeName.zh_cn
                         };
                         this.animeNameList.push(anime);
-                    };
+                    }
+                    ;
                     this.searchProcessing = false;
-                    this.res = true
+                    this.res              = true
                 } else if (r.data.multiple === -1 && r.data.animes === '') {
-                    this.res =  false
+                    this.res = false
                 }
             });
         },
-        showAnime: function (id) {
+        showAnime:   function (id) {
             vue.showAnime(id);
         }
     }
@@ -816,9 +868,9 @@ Vue.component('textformat', {
 Vue.component('formtotop', {
     template: '#form-to-top',
     props:    ['pos', 'view_top'],
-    data:  function () {
+    data:     function () {
         return {
-            'form_id': this.pos + '-form',
+            'form_id':       this.pos + '-form',
             'formTop':       0,
             'viewHeight':    0,
             'arrivedTop':    false,
@@ -833,21 +885,21 @@ Vue.component('formtotop', {
             return window.innerHeight;
         }
     },
-    watch: {
+    watch:    {
         'view_top': function (newVal) {
-            const viewTop       = newVal;                                                // 滚动条滚过的距离
-            const viewHeight    = this.viewHeight;                                       // 窗口的高度
-            const formHeight    = document.getElementById(this.form_id).offsetHeight;    // 表格的高度
-            const formTop       = this.formTop;                                          // 表格上边到顶的距离
-            const formBottom    = formHeight + formTop;                                  // 表格下边到顶的距离
-            const toTop         = (viewTop - formTop) >= 0;                              // 表格上边到顶
-            const toBottom      = (viewTop - formBottom) >= -viewHeight;                 // 表格下边到窗口底边
+            const viewTop = newVal;                                                // 滚动条滚过的距离
+            const viewHeight = this.viewHeight;                                       // 窗口的高度
+            const formHeight = document.getElementById(this.form_id).offsetHeight;    // 表格的高度
+            const formTop = this.formTop;                                          // 表格上边到顶的距离
+            const formBottom = formHeight + formTop;                                  // 表格下边到顶的距离
+            const toTop = (viewTop - formTop) >= 0;                              // 表格上边到顶
+            const toBottom = (viewTop - formBottom) >= -viewHeight;                 // 表格下边到窗口底边
 
             if (formHeight > viewHeight) {              // 表格高度大于窗口高度才运作
                 if (toTop && !toBottom) {               // 表格顶到顶, 未看到表格底
                     this.arrivedTop    = true;
                     this.arrivedBottom = false
-                } else if ( toTop && toBottom ) {       // 表格顶过顶, 表格底到底
+                } else if (toTop && toBottom) {       // 表格顶过顶, 表格底到底
                     this.arrivedTop    = false;
                     this.arrivedBottom = true
                 } else {                                // 表格顶未到顶
@@ -857,14 +909,14 @@ Vue.component('formtotop', {
             }
         }
     },
-    methods: {
+    methods:  {
         'goto': function (id, pos) {
             const formTop    = this.formTop;
             const formHeight = document.getElementById(id).offsetHeight;
             const formBottom = formHeight + formTop;
             const viewHeight = this.viewHeight;
 
-            switch(pos) {
+            switch (pos) {
                 case 'top':
                     let i = 0;
                     while (i < formTop) {
@@ -917,7 +969,7 @@ var basicDataTmp = {
         [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
         [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
         [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
-        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}]
+        [[]]
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
     'links':         [
@@ -978,19 +1030,18 @@ var onairTmp = [{
 var vue = new Vue({
     el:      '#animedata',
     data:    {
-        'testData': [],
-        'processing':    false,
-        'scrolled':      0,
-        'basicData':     JSON.parse(JSON.stringify(basicDataTmp)),
-        'staffMembers':  JSON.parse(JSON.stringify(staffMembersTmp)),
-        'castMembers':   JSON.parse(JSON.stringify(castMembersTmp)),
-        'onair':         JSON.parse(JSON.stringify(onairTmp)),
-        'staffSource':   '',
-        'castSource':    '',
-        'onairSource':   ''
+        'testData':     [],
+        'processing':   false,
+        'scrolled':     0,
+        'basicData':    JSON.parse(JSON.stringify(basicDataTmp)),
+        'staffMembers': JSON.parse(JSON.stringify(staffMembersTmp)),
+        'castMembers':  JSON.parse(JSON.stringify(castMembersTmp)),
+        'onair':        JSON.parse(JSON.stringify(onairTmp)),
+        'staffSource':  '',
+        'castSource':   '',
+        'onairSource':  ''
     },
-    watch:   {
-    },
+    watch:   {},
     methods: {
         /*
          * Display the Anime Basic Data

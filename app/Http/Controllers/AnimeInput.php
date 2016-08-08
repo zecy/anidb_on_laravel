@@ -57,8 +57,40 @@ class AnimeInput extends staffController
     {
     }
 
+    // 判断是否关联数组
+    private function isAssoc($arr) {
+        if(is_array($arr)){
+            return array_keys($arr) !== range(0, count($arr) - 1);
+        } else {
+            return false;
+        }
+    }
+
+    // 用于贮存内容到数据库
+    private function createOriWorks ($ID, $arr) {
+        if (is_array($arr) ) {
+            foreach ($arr as $child) {
+                if ($this->isAssoc($child)) {
+                    $origenre = AnimeOriginalWork::create(
+                        [
+                            'anime_id'          => $ID,
+                            'ori_id'            => $child['ori_id'],
+                            'ori_pid'           => $child['ori_pid'],
+                            'lv'                => $child['ori_level'] - 1,
+                            'haschild'          => $child['haschild'],
+                            'multiple_children' => $child['multiple_children'],
+                            'multiple_selected' => $child['multiple_selected']
+                        ]
+                    );
+                } else {
+                    $this->createOriWorks($ID, $child);
+                }
+            }
+        }
+    }
+
     /**
-     * Store a newly created resource in storage.
+     *  a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
      *
@@ -69,6 +101,7 @@ class AnimeInput extends staffController
         $data = $request->all()['data'];
 
         $ID = 0;
+
 
         \DB::transaction(function () use ($data, &$ID) {
             //基本信息
@@ -111,25 +144,7 @@ class AnimeInput extends staffController
             }
 
             // Original Works
-            $i = 0;
-            foreach ($data['oriWorks'] as $lv) {
-                foreach ( $lv as $origenres ) {
-                    if($origenres['id'] != '' && $origenres['id'] != 0) {
-                        $origenres = AnimeOriginalWork::create(
-                            [
-                                'anime_id' => $ID,
-                                'ori_id'   => $origenres['id'],
-                                'ori_pid'  => $origenres['pid'],
-                                'lv'       => $i,
-                                'haschild' => $origenres['haschild'],
-                                'multiple_children' => $origenres['multiple_children'],
-                                'multiple_selected' => $origenres['multiple_selected']
-                            ]
-                        );
-                    }
-                }
-                ++$i; // the level
-            }
+            $this->createOriWorks($ID, $data['oriWorks']);
 
             // Links
             foreach ($data['links'] as $theLink) {
@@ -170,7 +185,7 @@ class AnimeInput extends staffController
                 'description',
                 'order_index'
             ))->toArray();
-        $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)->get()->toArray();
+        $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)->orderBy('ori_id')->get()->toArray();
 
         $basicData = [
             'id'            => ['label' => '动画ID', 'value' => $animeBasicData['anime_id']],
@@ -203,7 +218,8 @@ class AnimeInput extends staffController
                 'isOfficial' => $title['is_official'],
                 'value'      => $title['title'],
                 'comment'    => $title['description'],
-                'orderIndex' => $title['order_index']
+                'orderIndex' => $title['order_index'],
+                'selected'   => true
             ];
         }
 
@@ -214,17 +230,41 @@ class AnimeInput extends staffController
                 'isOfficial' => $link['link_is_official'],
                 'value'      => $link['link_url'],
                 'comment'    => $link['link_comment'],
-                'orderIndex' => $title['order_index']
+                'orderIndex' => $title['order_index'],
+                'selected'   => true
             ];
         }
 
-        foreach ( $animeOriWorks as $work ) {
-            $basicData['oriWorks'][$work['lv']][] = [
-                'id'       => $work['ori_id'],
-                'haschild' => $work['haschild'],
-                'multiple' => $work['multiple'],
-                'pid'      => $work['ori_pid']
+        function showOriWorks($sourceArr, $level) {
+            $resArr = [
+                'ori_id'            => $sourceArr['ori_id'],
+                'haschild'          => $sourceArr['haschild'],
+                'ori_catalog'       => \App\AnimeOriginalWorkSupport::find($sourceArr['ori_id'])->ori_catalog,
+                'multiple_selected' => $sourceArr['multiple_selected'],
+                'multiple_children' => $sourceArr['multiple_children'],
+                'ori_pid'           => $sourceArr['ori_pid'],
+                'ori_level'         => $level + 1,
+                'selected'          => true
             ];
+            return $resArr;
+        }
+
+        foreach ( $animeOriWorks as $work ) {
+            $lv = $work['lv'];
+            if ($lv > 0) {
+                $parentWorks = $basicData['oriWorks'][$lv - 1];
+                $count = 0;
+                foreach ( $parentWorks as $parentWork ) {
+                    if( $work['ori_pid'] == $parentWork['ori_id'] && $parentWork['multiple_selected'] == true) {
+                        $basicData['oriWorks'][$lv][$count][] = showOriWorks($work, $lv);
+                    } elseif( $work['ori_pid'] == $parentWork['ori_id'] ) {
+                        $basicData['oriWorks'][$lv][] = showOriWorks($work, $lv);
+                    }
+                    ++$count;
+                }
+            } else {
+                $basicData['oriWorks'][0][] = showOriWorks($work, $lv);
+            }
         }
 
         //TODO: 置空处理
@@ -469,6 +509,9 @@ class AnimeInput extends staffController
                 // 因为不同的原作信息记录的条数不一样, 所以索性全部修改删除重新输入
                 $deletOriWorks = AnimeOriginalWork::where('anime_id', $id)->delete();
 
+                $this->createOriWorks($id, $data['oriWorks'], 0);
+
+                /*
                 $i = 0;
                 foreach ($data['oriWorks'] as $lv) {
                     foreach ( $lv as $origenres ) {
@@ -488,6 +531,7 @@ class AnimeInput extends staffController
                     }
                     ++$i; // the level
                 }
+                */
 
             });
 

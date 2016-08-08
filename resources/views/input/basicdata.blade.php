@@ -82,13 +82,13 @@
             <tr class="anime-title"
                 v-for="title in basicData.title" track-by="$index">
                 <td>
-                    <div style="width: 300px">
+                    <div style="width: 270px">
                         <input type="text"
                                v-model="title.value"
                                placeholder="@{{ title.label }}"
                         >
                     </div>
-                    <div style="width: 100px">
+                    <div style="width: 130px">
                         <vselect
                                 :vs_value.sync="title.lang"
                                 :vs_options="{{ $transLangs }}"
@@ -120,7 +120,7 @@
             </tr>
             {{-- 原作类型 --}}
             <tr>
-                <td>
+                <td id="ori-works">
                     <originalwork :orilist="{{ $oriWorks }}"
                                   :data.sync="basicData.oriWorks"
                                   :pid=0
@@ -130,27 +130,6 @@
                                   :lv=0
                                   :index="0"
                     ></originalwork>
-                </td>
-            </tr>
-
-            <tr class="hr">
-                <td></td>
-            </tr>
-
-            <tr>
-                <td>
-                    <div style="width: 200px;">
-                        <vselect
-                                :vs_value.sync="basicData.title[0].lang"
-                                :vs_options="{{ $transLangs }}"
-                                :multiple="false"
-                                vs_placeholder="请选择"
-                        ></vselect>
-                    </div>
-                    <hr>
-                    <div style="margin-left:300px">
-                        <pre>@{{ basicData.title[0] | json }}</pre>
-                    </div>
                 </td>
             </tr>
 

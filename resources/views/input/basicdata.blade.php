@@ -153,10 +153,10 @@
                         <div id="oa-month">
                             <vselect
                                     :vs_value.sync="basicData.oa_season.value"
-                                    :vs_options="[{'label':'1月', 'value':'1'},
-                                                  {'label':'4月', 'value':'3'},
-                                                  {'label':'7月', 'value':'7'},
-                                                  {'label':'10月', 'value':'10'}]"
+                                    :vs_options="[{'label':'1月', 'value':1},
+                                                  {'label':'4月', 'value':3},
+                                                  {'label':'7月', 'value':7},
+                                                  {'label':'10月', 'value':10}]"
                                     :multipe="false"
                             ></vselect>
                         </div>

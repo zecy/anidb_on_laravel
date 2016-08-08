@@ -511,28 +511,6 @@ class AnimeInput extends staffController
 
                 $this->createOriWorks($id, $data['oriWorks'], 0);
 
-                /*
-                $i = 0;
-                foreach ($data['oriWorks'] as $lv) {
-                    foreach ( $lv as $origenres ) {
-                        if($origenres['id'] != '' && $origenres['id'] != 0) {
-                            $origenres = AnimeOriginalWork::create(
-                                [
-                                    'anime_id' => $id,
-                                    'ori_id'   => $origenres['id'],
-                                    'ori_pid'  => $origenres['pid'],
-                                    'lv'       => $i,
-                                    'haschild' => $origenres['haschild'],
-                                    'multiple_children' => $origenres['multiple_children'],
-                                    'multiple_selected' => $origenres['multiple_selected']
-                                ]
-                            );
-                        }
-                    }
-                    ++$i; // the level
-                }
-                */
-
             });
 
             \DB::commit();

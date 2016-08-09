@@ -26,11 +26,13 @@
             </div>
         </div>
         <div v-if="res === true">
-            <a class="btn btn-block"
+            <a class="search-result btn btn-default btn-block"
+               role="button"
                v-for="animeName in animeNameList"
                :href="'/input/' + animeName.abbr"
             >
-                @{{ animeName.ori + ' | ' + animeName.zh_cn }}
+                <span>@{{ animeName.ori }}</span>
+                <span>@{{ animeName.zh_cn }}</span>
             </a>
         </div>
         <div v-if="res === false" class="nores btn-processing">

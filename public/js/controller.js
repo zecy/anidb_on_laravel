@@ -779,7 +779,19 @@ Vue.component('searchanime', {
             'searchProcessing': false,
             'searching_msg':    '正在搜索',
             'res':              '',
-            'animeNameList':    []
+            'animeNameList':    [],
+            'errmsg': '没有找到了相关作品，请检查或换用关键词',
+            'anime_id' : anime_id
+        }
+    },
+    ready() {
+        const animeID = this.anime_id;
+        if ( animeID === 0) {
+            return
+        } else if (animeID === -1) {
+            this.res = false;
+            this.errmsg = '没有相关作品，即将返回';
+            setTimeout("javascript:location.href='/input'", 2000);
         }
     },
     watch:    {
@@ -793,7 +805,7 @@ Vue.component('searchanime', {
     methods:  {
         searchAnime: function () {
             this.searchProcessing = true;
-            this.$http.get('input/search/' + this.title).then(function (r) {
+            this.$http.get('/input/search/' + this.title).then(function (r) {
                 if (r.data.multiple === 0) {
                     const id = r.data.basicData.id.value;
                     vue.showAnime(id, r);
@@ -812,11 +824,11 @@ Vue.component('searchanime', {
                         const anime = {
                             'id':    animeName.anime_id,
                             'ori':   animeName.ori,
-                            'zh_cn': animeName.zh_cn
+                            'zh_cn': animeName.zh_cn,
+                            'abbr' : animeName.anime_abbr
                         };
                         this.animeNameList.push(anime);
                     }
-                    ;
                     this.searchProcessing = false;
                     this.res              = true
                 } else if (r.data.multiple === -1 && r.data.animes === '') {
@@ -826,6 +838,7 @@ Vue.component('searchanime', {
         },
         showAnime:   function (id) {
             vue.showAnime(id);
+            this.animeNameList = [];
         }
     }
 });
@@ -1030,7 +1043,6 @@ var onairTmp = [{
 var vue = new Vue({
     el:      '#animedata',
     data:    {
-        'testData':     [],
         'processing':   false,
         'scrolled':     0,
         'basicData':    JSON.parse(JSON.stringify(basicDataTmp)),
@@ -1041,7 +1053,12 @@ var vue = new Vue({
         'castSource':   '',
         'onairSource':  ''
     },
-    watch:   {},
+    ready() {
+        const animeID = anime_id;
+        if(animeID > 0) {
+            this.showAnime(animeID);
+        }
+    },
     methods: {
         /*
          * Display the Anime Basic Data
@@ -1201,7 +1218,7 @@ var vue = new Vue({
             if (data != undefined) {
                 inject(data, this);
             } else {
-                this.$http.get('input/' + id).then(function (res) {
+                this.$http.get('/input/' + id).then(function (res) {
                     inject(res, this);
                 });
             }

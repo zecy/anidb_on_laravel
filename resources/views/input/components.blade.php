@@ -1,5 +1,5 @@
 {{-- 搜索动画 --}}
-<template id="search-anime" xmlns="http://www.w3.org/1999/html">
+<template id="search-anime">
     <div id="search" class="form-group" style="width: 75%;margin:50px auto">
         <h2>查找</h2>
 
@@ -26,15 +26,15 @@
             </div>
         </div>
         <div v-if="res === true">
-            <button class="btn btn-block"
-                    v-for="animeName in animeNameList"
-                    v-on:click="showAnime(animeName.id)"
+            <a class="btn btn-block"
+               v-for="animeName in animeNameList"
+               :href="'/input/' + animeName.abbr"
             >
                 @{{ animeName.ori + ' | ' + animeName.zh_cn }}
-            </button>
+            </a>
         </div>
-        <div v-if="res === false" class="nores">
-            没有找到了相关作品，请检查或换用关键词
+        <div v-if="res === false" class="nores btn-processing">
+            @{{ errmsg }}<span v-if="anime_id === -1">...</span>
         </div>
     </div>
 </template>

@@ -20,13 +20,7 @@ use PhpParser\Node\Expr\Cast\Array_;
 
 class AnimeInput extends staffController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+    private function basicInfo() {
         $transLangs = ClassSupport::where('class', '=', 'language')
             ->get(array('content as value', 'comment as label'))
             ->toJson();
@@ -45,7 +39,32 @@ class AnimeInput extends staffController
 
         $oriWorks = AnimeOriginalWorkSupport::orderBy('ori_id')->get()->toJson();
 
-        return view('input.index', compact('basicData', 'transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
+        return [
+            'transLangs'          => $transLangs,
+            'links'               => $links,
+            'premiereMedia'      => $premiereMedia,
+            'animeDurationFormat' => $animeDurationFormat,
+            'oriWorks'            => $oriWorks
+        ];
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index ()
+    {
+        $animeID = 0;
+
+        $basicInfo = $this->basicInfo();
+
+        $transLangs             = $basicInfo['transLangs'];
+        $links                  = $basicInfo['links'];
+        $premiereMedia          = $basicInfo['premiereMedia'];
+        $animeDurationFormat    = $basicInfo['animeDurationFormat'];
+        $oriWorks               = $basicInfo['oriWorks'];
+
+        return view('input.index', compact('animeID','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
     }
 
     /**
@@ -53,13 +72,14 @@ class AnimeInput extends staffController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create ()
     {
     }
 
     // 判断是否关联数组
-    private function isAssoc($arr) {
-        if(is_array($arr)){
+    private function isAssoc ($arr)
+    {
+        if (is_array($arr)) {
             return array_keys($arr) !== range(0, count($arr) - 1);
         } else {
             return false;
@@ -67,8 +87,9 @@ class AnimeInput extends staffController
     }
 
     // 用于贮存内容到数据库
-    private function createOriWorks ($ID, $arr) {
-        if (is_array($arr) ) {
+    private function createOriWorks ($ID, $arr)
+    {
+        if (is_array($arr)) {
             foreach ($arr as $child) {
                 if ($this->isAssoc($child)) {
                     $origenre = AnimeOriginalWork::create(
@@ -96,7 +117,7 @@ class AnimeInput extends staffController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store (Request $request)
     {
         $data = $request->all()['data'];
 
@@ -171,7 +192,7 @@ class AnimeInput extends staffController
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show ($id)
     {
         $animeBasicData = AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
         $animeLinks = AnimeLinks::where('anime_id', $id)->get()->toArray();
@@ -223,7 +244,7 @@ class AnimeInput extends staffController
             ];
         }
 
-        foreach ($animeLinks as $link ) {
+        foreach ($animeLinks as $link) {
             $basicData['links'][] = [
                 'id'         => $link['link_id'],
                 'class'      => $link['link_class'],
@@ -235,7 +256,8 @@ class AnimeInput extends staffController
             ];
         }
 
-        function showOriWorks($sourceArr, $level) {
+        function showOriWorks ($sourceArr, $level)
+        {
             $resArr = [
                 'ori_id'            => $sourceArr['ori_id'],
                 'haschild'          => $sourceArr['haschild'],
@@ -246,18 +268,19 @@ class AnimeInput extends staffController
                 'ori_level'         => $level + 1,
                 'selected'          => true
             ];
+
             return $resArr;
         }
 
-        foreach ( $animeOriWorks as $work ) {
+        foreach ($animeOriWorks as $work) {
             $lv = $work['lv'];
             if ($lv > 0) {
                 $parentWorks = $basicData['oriWorks'][$lv - 1];
                 $count = 0;
-                foreach ( $parentWorks as $parentWork ) {
-                    if( $work['ori_pid'] == $parentWork['ori_id'] && $parentWork['multiple_selected'] == true) {
+                foreach ($parentWorks as $parentWork) {
+                    if ($work['ori_pid'] == $parentWork['ori_id'] && $parentWork['multiple_selected'] == true) {
                         $basicData['oriWorks'][$lv][$count][] = showOriWorks($work, $lv);
-                    } elseif( $work['ori_pid'] == $parentWork['ori_id'] ) {
+                    } elseif ($work['ori_pid'] == $parentWork['ori_id']) {
                         $basicData['oriWorks'][$lv][] = showOriWorks($work, $lv);
                     }
                     ++$count;
@@ -299,7 +322,7 @@ class AnimeInput extends staffController
         // staffsP[0] ~ staffsP[n]
         foreach ($staffsP as $staffP) {
             // 如果 haschild 为真, 说明存在子项目
-            if($staffP['haschild']){
+            if ($staffP['haschild']) {
                 /**
                  * 先把父项目格式化为需要的形式
                  * $staffItem = [
@@ -317,9 +340,9 @@ class AnimeInput extends staffController
                  *     'child'              => []
                  * ];
                  **/
-                $staffPItem  = $this->staffItem($staffP, $id);
+                $staffPItem = $this->staffItem($staffP, $id);
                 // 根据父项目的 id 取出子项目清单 staffsC
-                $staffsC     = $this->getStaffDB($id, $staffP['staff_id']);
+                $staffsC = $this->getStaffDB($id, $staffP['staff_id']);
 
                 // 创建一个容器来装载格式化后的子项目
                 $staffChildren = [];
@@ -334,7 +357,7 @@ class AnimeInput extends staffController
                 $staffPItem['child'] = $staffChildren;
 
                 // 组装好的父项目放到容器中, 准备输出
-                $staffMembers[]      = $staffPItem;
+                $staffMembers[] = $staffPItem;
 
                 // 如果没有子项目的, 直接格式化然后放到容器中去
             } else {
@@ -359,7 +382,7 @@ class AnimeInput extends staffController
 
         $castMembers = [];
 
-        foreach ( $casts as $cast ) {
+        foreach ($casts as $cast) {
             $castMembers[] = [
                 'animeID'      => $id,
                 'id'           => $cast['cast_id'],
@@ -388,7 +411,7 @@ class AnimeInput extends staffController
 
         $onairs = [];
 
-        foreach ( $onairData as $onair ) {
+        foreach ($onairData as $onair) {
             $onairs[] = [
                 'id'           => $onair['oa_id'],
                 'animeID'      => $onair['anime_id'],
@@ -411,17 +434,37 @@ class AnimeInput extends staffController
             'castMembers'  => $castMembers,
             'onairs'       => $onairs
         ]);
-
     }
 
-   /**
+    public function showAbbr($animeAbbr = '') {
+        if($animeAbbr != '') {
+            $basicInfo = $this->basicInfo();
+
+            $transLangs             = $basicInfo['transLangs'];
+            $links                  = $basicInfo['links'];
+            $premiereMedia          = $basicInfo['premiereMedia'];
+            $animeDurationFormat    = $basicInfo['animeDurationFormat'];
+            $oriWorks               = $basicInfo['oriWorks'];
+
+            $anime = AnimeBasicData::where('anime_abbr', $animeAbbr)->get(array('anime_id'))->toArray();
+            if(!empty($anime)){
+                $animeID = $anime[0]['anime_id'];
+            } else {
+                $animeID = -1;
+            }
+            return view('input.index', compact('animeID','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
+        } else {
+            return $this->index();
+        }
+    }
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update (Request $request, $id)
     {
         // Basic Data
         $data = $request->all()['data'];
@@ -432,35 +475,35 @@ class AnimeInput extends staffController
                 // BasicData
                 $basicData = AnimeBasicData::find($id);
 
-                $basicData->anime_series_id          = $data['seriesID']['value'];
-                $basicData->anime_abbr               = $data['abbr']['value'];
-                $basicData->anime_kur                = $data['kur']['value'];
-                $basicData->anime_premiere_media     = $data['premiereMedia']['value'];
-                $basicData->anime_sequel             = $data['isSequel']['value'];
-                $basicData->anime_duration_format    = $data['duration']['value'];
-                $basicData->anime_end                = $data['isEnd']['value'];
-                $basicData->anime_description        = $data['description']['value'];
-                $basicData->anime_counted            = $data['isCounted']['value'];
-                $basicData->anime_oa_year            = $data['oa_year']['value'];
-                $basicData->anime_oa_season          = $data['oa_season']['value'];
-                $basicData->anime_eps_oa             = $data['eps_oa']['value'];
-                $basicData->anime_eps_soft           = $data['eps_soft']['value'];
+                $basicData->anime_series_id = $data['seriesID']['value'];
+                $basicData->anime_abbr = $data['abbr']['value'];
+                $basicData->anime_kur = $data['kur']['value'];
+                $basicData->anime_premiere_media = $data['premiereMedia']['value'];
+                $basicData->anime_sequel = $data['isSequel']['value'];
+                $basicData->anime_duration_format = $data['duration']['value'];
+                $basicData->anime_end = $data['isEnd']['value'];
+                $basicData->anime_description = $data['description']['value'];
+                $basicData->anime_counted = $data['isCounted']['value'];
+                $basicData->anime_oa_year = $data['oa_year']['value'];
+                $basicData->anime_oa_season = $data['oa_season']['value'];
+                $basicData->anime_eps_oa = $data['eps_oa']['value'];
+                $basicData->anime_eps_soft = $data['eps_soft']['value'];
 
                 $basicData->save();
 
                 // Titles
                 $Titles = $data['title'];
 
-                foreach($Titles as $title) {
+                foreach ($Titles as $title) {
                     $titleID = $title['id'];
-                    if ( $titleID != 0 ) {
+                    if ($titleID != 0) {
                         $theTitle = AnimeTitles::find($titleID);
 
-                        $theTitle->title         = $title['value'];
-                        $theTitle->lang          = $title['lang'];
-                        $theTitle->is_official   = $title['isOfficial'];
-                        $theTitle->description   = $title['comment'];
-                        $theTitle->order_index   = $title['orderIndex'];
+                        $theTitle->title = $title['value'];
+                        $theTitle->lang = $title['lang'];
+                        $theTitle->is_official = $title['isOfficial'];
+                        $theTitle->description = $title['comment'];
+                        $theTitle->order_index = $title['orderIndex'];
 
                         $theTitle->save();
                     } else {
@@ -479,17 +522,17 @@ class AnimeInput extends staffController
 
                 // Links
                 $Links = $data['links'];
-                foreach ( $Links as $link ) {
+                foreach ($Links as $link) {
                     $linkID = $link['id'];
 
-                    if ( $linkID != 0 ) {
+                    if ($linkID != 0) {
                         $theLink = AnimeLinks::find($linkID);
 
-                        $theLink->link_class        = $link['class'];
-                        $theLink->link_comment      = $link['comment'];
-                        $theLink->link_url          = $link['value'];
-                        $theLink->link_is_official  = $link['isOfficial'];
-                        $theLink->order_index       = $link['orderIndex'];
+                        $theLink->link_class = $link['class'];
+                        $theLink->link_comment = $link['comment'];
+                        $theLink->link_url = $link['value'];
+                        $theLink->link_is_official = $link['isOfficial'];
+                        $theLink->order_index = $link['orderIndex'];
 
                         $theLink->save();
                     } else {
@@ -516,8 +559,7 @@ class AnimeInput extends staffController
             \DB::commit();
 
             return $this->show($id);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -526,70 +568,73 @@ class AnimeInput extends staffController
      * Search the Anime
      *
      */
+    public function searchAnime (Request $request, $animeName)
+    {
+        $animeIDs = \App\AnimeTitles::where('title', 'ilike', '%' . $animeName . '%')// 据说 ilike 只支持 postgresql, 未证实
+        ->get(array('anime_id'))
+            ->toArray();
 
-   public function searchAnime(Request $request, $animeName)
-   {
-       $animeIDs = \App\AnimeTitles::where('title', 'ilike', '%'.$animeName.'%') // 据说 ilike 只支持 postgresql, 未证实
-           ->get(array('anime_id'))
-           ->toArray();
+        $res = [];
 
-       $res = [];
+        // 如果日文标题和中文标题一致, 那么会导致查找出重复的 id, 需要去重
+        foreach ($animeIDs as $animeID) {
+            $res[$animeID['anime_id']] = $animeID['anime_id'];
+        }
 
-       // 如果日文标题和中文标题一致, 那么会导致查找出重复的 id, 需要去重
-       foreach ( $animeIDs as $animeID ) {
-           $res[$animeID['anime_id']] = $animeID['anime_id'];
-       }
+        $animeIDs = $res;
 
-       $animeIDs = $res;
+        $animes = count($animeIDs);
 
-       $animes = count($animeIDs);
+        if ($animes == 1) {
+            return $this->show(current($animeIDs));
+        } else if ($animes > 1) {
+            $animes = [];
 
-       if ( $animes == 1 ) {
-           return $this->show(current($animeIDs));
-       } else if ( $animes > 1 ) {
-           $animes = [];
+            foreach ($animeIDs as $animeID) {
+                $animeTitles = \App\AnimeTitles::where('anime_id', $animeID)
+                    ->orderBy('order_index', 'asc')
+                    ->get(array(
+                        'anime_id',
+                        'title',
+                        'lang',
+                        'is_official'
+                    ))
+                    ->toArray();
 
-           foreach ( $animeIDs as $animeID ) {
-               $animeTitles = \App\AnimeTitles::where('anime_id', $animeID )
-                   ->orderBy('order_index', 'asc')
-                   ->get(array(
-                       'anime_id',
-                       'title',
-                       'lang',
-                       'is_official'
-                   ))
-                   ->toArray();
+                $anime_db = [
+                    'anime_id'   => 0,
+                    'ori'        => '',
+                    'zh_cn'      => '',
+                    'anime_abbr' => ''
+                ];
 
-               $anime_db = [
-                   'anime_id' => 0,
-                   'ori'      => '',
-                   'zh_cn'    => ''
-               ];
+                $anime_db['anime_id'] = $animeID;
 
-               $anime_db['anime_id'] = $animeID;
+                $anime_db['anime_abbr'] = AnimeBasicData::find($animeID)->toArray()['anime_abbr'];
 
-               foreach( $animeTitles as $title ) {
-                   if($title['lang'] == 'jp' && $title['is_official'] == true){
-                       $anime_db['ori'] = $anime_db['ori'] == '' ? $title['title'] : $anime_db['ori'];
-                   } elseif( $title['lang'] == 'zh-cn') {
-                       $anime_db['zh_cn'] = $anime_db['zh_cn'] == '' ? $title['title'] : $anime_db['zh_cn'];
-                   }
-               }
+                foreach ($animeTitles as $title) {
+                    if ($title['lang'] == 'jp' && $title['is_official'] == true) {
+                        $anime_db['ori'] = $anime_db['ori'] == '' ? $title['title'] : $anime_db['ori'];
+                    } elseif ($title['lang'] == 'zh-cn') {
+                        $anime_db['zh_cn'] = $anime_db['zh_cn'] == '' ? $title['title'] : $anime_db['zh_cn'];
+                    }
+                }
 
-               $animes[] = $anime_db;
-           }
+                $animes[] = $anime_db;
 
-           return \Response::json([
-               'multiple' => 1,
-               'animes'   => $animes
-           ]);
-       } else {
-           return \Response::json([
-               'multiple' => -1,
-               'animes'   => ''
-           ]);
-       }
-   }
+            }
+
+            return \Response::json([
+                'multiple' => 1,
+                'animes'   => $animes
+            ]);
+        } else {
+            return \Response::json([
+                'multiple' => -1,
+                'animes'   => ''
+            ]);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -598,7 +643,7 @@ class AnimeInput extends staffController
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy ($id)
     {
         //
     }

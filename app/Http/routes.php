@@ -12,10 +12,17 @@
 */
 
 // 数据录入
-
-Route::resource('input', 'AnimeInput');
-
 Route::get('input/search/{animeName}', 'AnimeInput@searchAnime');
+
+Route::get('input/{id}', 'AnimeInput@show')->where('id', '^\d+$');
+
+Route::get('input/{any?}', 'AnimeInput@showAbbr');
+
+Route::get('input', 'AnimeInput@index');
+
+Route::post('input', 'AnimeInput@store');
+
+Route::put('input/{request}', 'AnimeInput@update');
 
 Route::DELETE('input/title/{id}', 'titleController@destroy');
 

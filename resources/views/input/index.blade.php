@@ -8,6 +8,10 @@
 
     <div id="animedata" class="container">
 
+        <script>
+            const anime_id = {{ $animeID }}
+        </script>
+
         {{-- BasicData --}}
         @include('input.basicdata')
 

@@ -4,6 +4,10 @@
     数据录入
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/input.css') }}">
+@stop
+
 @section('content')
 
     <div id="animedata" class="container">
@@ -31,6 +35,10 @@
 
     </div>
 
-    @include('input.components')
+    @include('components.components')
 
+@stop
+
+@section('js_controller')
+    <script src="{{ asset('js/input-controller.js') }}"></script>
 @stop

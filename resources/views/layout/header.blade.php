@@ -8,6 +8,6 @@
     </title>
 
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/my.css') }}">
+    @yield('css')
 </head>
 <body>

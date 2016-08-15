@@ -1,0 +1,65 @@
+/* ============================= *
+ *          基本元素重置         *
+ * ============================= */
+
+html, body, div {
+    height: 100%;
+}
+
+body {
+    font-size: 10.5px;
+}
+
+input, label, select, div, ul, li {
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
+}
+
+li {
+    list-style: none;
+}
+
+input {
+    padding: 0 10px;
+}
+
+select {
+    -webkit-appearance: none;
+    background-color: transparent;
+    border-width:1px;
+    border-style: solid;
+    border-radius: 0;
+    padding:0 10px;
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%);
+    background-position: calc(100% - 10px) calc(1em),
+    calc(100% - 5px) calc(1em);
+    background-size: 5px 5px,
+    5px 5px;
+    background-repeat: no-repeat;
+}
+
+table {
+    border-collapse: separate
+}
+
+button.btn, textarea.form-control {
+    border-radius:2px;
+}
+
+textarea.form-control:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075)
+}
+
+button:active, button:focus,
+input:focus, input:hover,
+select:focus,
+textarea, textarea:active, textarea:focus
+{
+    outline: none !important; /* 去除 Chrome 默认的蓝色描边 */
+}
+
+form {
+    position: relative;
+}

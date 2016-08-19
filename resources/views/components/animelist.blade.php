@@ -1,5 +1,31 @@
+<style>
+    .anime-list {
+        width: 750px;
+        margin: 0 auto;
+    }
+
+    .anime-list .flex-cell {
+        flex: 0 0 20%
+    }
+
+    .anime-info {
+        height: 300px;
+        padding: 5px;
+    }
+
+    .anime-img {
+        display: block;
+        width: 100%;
+        height: 200px;
+        background-color: #ccc;
+    }
+
+    .anime-img img {
+        width: 100%;
+    }
+</style>
 <script>
-    Vue.component('animelist', {
+    var anime_list = Vue.extend({
         template: '#anime-list',
         props: {
             'after_date': {
@@ -59,7 +85,7 @@
             }
         },
         ready:    function () {
-            if (!this.useFilter) {
+           if (!this.useFilter) {
                 this.all();
             } else {
                 const afterDate   = this.after_date;
@@ -72,7 +98,6 @@
         },
         methods:  {
             all: function () {
-                console.log('yeah');
                 this.$http.get('/manager/resource').then(function (res) {
                     if (res.status === 200) {
                         this.animeList = res.data;
@@ -88,14 +113,15 @@
                     'is_end':      ie,
                     'is_complete': ic
                 };
-                this.$http.post('/manager/resource/filt?=' + conditions).then(function (res) {
+                console.log(conditions);
+/*                this.$http.post('/manager/resource/filt?=' + conditions).then(function (res) {
                     if (res.status === 200) {
                         return res.data;
                     }
-                });
+                });*/
             }
         }
-    })
+    });
 </script>
 <template id="anime-list">
     <div class="anime-list flex-grid">
@@ -105,6 +131,7 @@
         <div v-if="!loading"
              class="anime-info flex-cell"
              v-for="anime in animeList"
+             track-by="$index"
         >
             <a class="anime-img" :href="'/input/' + anime.abbr" about="_blank">
                 <img :src="'{{ asset('anime-image') }}/' + anime.abbr + '/thumb.png'">

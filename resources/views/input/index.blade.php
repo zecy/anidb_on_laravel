@@ -35,8 +35,10 @@
 
     </div>
 
-    @include('input.components')
+@stop
 
+@section('vue_components')
+    @include('input.components')
 @stop
 
 @section('js_controller')

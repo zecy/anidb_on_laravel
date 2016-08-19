@@ -2,3 +2,4 @@
 @include('components.spinkit')
 @include('components.batchimport')
 @include('components.vselect')
+@include('components.togglebutton')

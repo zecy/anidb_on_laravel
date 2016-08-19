@@ -4,3 +4,4 @@
  --}}
 @include('components.components')
 @include('components.vselect')
+@include('components.togglebutton')

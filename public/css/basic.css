@@ -69,3 +69,8 @@ form {
     display: flex;
     flex-wrap: wrap;
 }
+
+.flex-cell {
+    flex-grow: 1;
+    flex-shrink: 1;
+}

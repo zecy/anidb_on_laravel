@@ -299,17 +299,6 @@
     </div>
 </template>
 
-{{-- 重要按钮 --}}
-<template id="toggle-button">
-    <button v-on:click="toggle = !toggle" type="button"
-            v-bind:class="toggle?'btn-primary':'btn-default'"
-            class="btn btn-xs"
-    >
-        <span class="@{{ style }}">@{{ content }}</span>
-        <input type="checkbox" v-model="toggle" class="hidden"/>
-    </button>
-</template>
-
 {{-- 行上下增删操作 --}}
 <template id="row-control">
     <div class="row-control">

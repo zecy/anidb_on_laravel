@@ -2,7 +2,7 @@
  *          基本元素重置         *
  * ============================= */
 
-html, body, div {
+html, body {
     height: 100%;
 }
 
@@ -62,4 +62,10 @@ textarea, textarea:active, textarea:focus
 
 form {
     position: relative;
+}
+
+/* grid system */
+.flex-grid {
+    display: flex;
+    flex-wrap: wrap;
 }

@@ -5,6 +5,6 @@
 <script src="{{ asset('js/vue-resource.js') }}"></script>
 <script src="{{ asset('js/vue-router.js') }}"></script>
 <script src="{{ asset('js/jquery.smooth-scroll.js') }}"></script>
-@yield('vue_components')
-@yield('js_controller')
+@yield('vue_components');
+@yield('js_controller');
 </html>

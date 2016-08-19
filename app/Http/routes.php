@@ -35,13 +35,14 @@ Route::resource('input/cast', 'castController');
 Route::resource('onair/input', 'onairController');
 
 // 管理页面
-//// 显示页面
-Route::get('manager', 'AnimeManagerPage@index');
-Route::get('manager/import', 'AnimeManagerPage@edit');
-
 //// 操作数据
 Route::post('manager/resource/filt?={conditon}', 'AnimeMangerResource@filt');
 Route::resource('manager/resource', 'AnimeManagerResource');
+
+//// 显示页面
+Route::get('manager/{any?}', 'AnimeManagerPage@index');
+Route::get('manager/import', 'AnimeManagerPage@edit');
+
 
 /*
 $api = app('Dingo\Api\Routing\Router');

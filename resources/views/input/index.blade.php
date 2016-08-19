@@ -35,7 +35,7 @@
 
     </div>
 
-    @include('components.components')
+    @include('input.components')
 
 @stop
 

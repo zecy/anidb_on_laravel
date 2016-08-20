@@ -68,9 +68,10 @@ form {
 .flex-grid {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .flex-cell {
-    flex-grow: 1;
-    flex-shrink: 1;
+    flex-grow: 0;
+    flex-shrink: 0;
 }

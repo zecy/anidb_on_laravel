@@ -123,7 +123,6 @@ class AnimeInput extends staffController
 
         $ID = 0;
 
-
         \DB::transaction(function () use ($data, &$ID) {
             //基本信息
             $basicData = AnimeBasicData::create([

@@ -347,10 +347,31 @@
     width: 200px;
 }
 
+/*<editor-fold desc="Toggle Button">*/
+#maininfo .toggle-button {
+    line-height: 30px;
+    margin-right: 10px;
+}
+
+    #maininfo .toggle-button button {
+        position: relative;
+        bottom: 1px;
+    }
+
+    #maininfo .toggle-button span {
+        font-size: 1.2rem;
+    }
+
+/*</editor-fold>*/
+
 #maininfo select {
     height: 30px;
     width: 100%;
     border-color: #ccc;
+}
+
+#maininfo .v-select div {
+    float: none;
 }
 
 #maininfo .btn-xs {

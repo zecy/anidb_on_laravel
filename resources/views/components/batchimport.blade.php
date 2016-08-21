@@ -189,22 +189,6 @@
                     <span>&nbsp;条数据</span>
                 </div>
 
-                {{-- 显示已选择的内容卡数量 --}}
-                <div class="sbdo-item flex cell">
-                    <span>选中&nbsp;</span>
-                    @{{ animeSelectedCount }}
-                    <span>&nbsp;条数据</span>
-                </div>
-
-                <div class="sbdo-item flex-cell">
-                    <button type="button"
-                            class="btn btn-sm"
-                            v-bind:class="allSelected ? 'btn-danger' : 'btn-success'"
-                            v-on:click="toggleSelect(allSelected ? -2 : -1)"
-                    >
-                        @{{ allSelected ? '全部不选' : '全部选择' }}
-                    </button>
-                </div>
 
                 {{-- 清除来源框数据 --}}
                 <div class="sbdo-item flex-cell">
@@ -235,6 +219,37 @@
             </div>
 
             {{-- 设置多选, 反选, 取消选择等 --}}
+            <div class="setting-row flex-grid">
+                {{-- 显示已选择的内容卡数量 --}}
+                <div class="sbdo-item flex cell">
+                    <span>选中&nbsp;</span>
+                    @{{ animeSelectedCount }}
+                    <span>&nbsp;条数据</span>
+                </div>
+
+                {{-- 全选 / 全不选 --}}
+                <div class="sbdo-item flex-cell">
+                    <button type="button"
+                            class="btn btn-sm"
+                            v-bind:class="allSelected ? 'btn-danger' : 'btn-success'"
+                            v-on:click="toggleSelect(allSelected ? -2 : -1)"
+                    >
+                        @{{ allSelected ? '全部不选' : '全部选择' }}
+                    </button>
+                </div>
+
+                {{-- 反选 --}}
+                <div class="sbdo-item flex-cell">
+                    <button type="button"
+                            class="btn btn-sm btn-primary"
+                            v-on:click="toggleSelect(-3)"
+                    >
+                        反选
+                    </button>
+                </div>
+
+                {{-- 范围选择 --}}
+            </div>
 
             {{-- 数据统一操作 --}}
             <div class="setting-row flex-grid">
@@ -685,25 +700,30 @@
                 *  0 ~ : toggle an item.selected
                 *  -1  : change all item.selected = true
                 *  -2  : change all item.selected = false
+                *  -3  : inverse
                 *
                 * */
                 const i = Number(index);
                 const arr = JSON.parse(JSON.stringify(this.animeList));
 
-                if(i === -1 ) {
-                    for(let j = 0; j < arr.length; j++ ){
-                        if(!arr[j].selected) {
+                if (i === -1) {
+                    for (let j = 0; j < arr.length; j++) {
+                        if (!arr[j].selected) {
                             arr[j].selected = true;
                         }
                     }
-                } else if (i === -2 ) {
-                    for(let j = 0; j < arr.length; j++ ){
-                        if(arr[j].selected) {
+                } else if (i === -2) {
+                    for (let j = 0; j < arr.length; j++) {
+                        if (arr[j].selected) {
                             arr[j].selected = false;
                         }
                     }
+                } else if (i === -3) {
+                    for (let j = 0; j < arr.length; j++) {
+                        arr[j].selected = !arr[j].selected;
+                    }
                 } else {
-                   arr[i].selected = !arr[i].selected
+                    arr[i].selected = !arr[i].selected
                 }
                 this.animeList = arr;
             },

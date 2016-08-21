@@ -8,11 +8,11 @@
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value');
 
-var App = Vue.extend({})
+var App = Vue.extend({});
 
 var router = new VueRouter({
-    history: true,
-})
+    history: true
+});
 
 router.map({
     '/manager': {

@@ -231,10 +231,10 @@
                 <div class="sbdo-item flex-cell">
                     <button type="button"
                             class="btn btn-sm"
-                            v-bind:class="allSelected ? 'btn-danger' : 'btn-success'"
-                            v-on:click="toggleSelect(allSelected ? -2 : -1)"
+                            v-bind:class="allSelected === 1 ? 'btn-danger' : 'btn-success'"
+                            v-on:click="toggleSelect(allSelected === 1 ? -2 : -1)"
                     >
-                        @{{ allSelected ? '全部不选' : '全部选择' }}
+                        @{{ allSelected === 1 ? '全部不选' : '全部选择' }}
                     </button>
                 </div>
 
@@ -242,6 +242,7 @@
                 <div class="sbdo-item flex-cell">
                     <button type="button"
                             class="btn btn-sm btn-primary"
+                            v-if="allSelected === 0"
                             v-on:click="toggleSelect(-3)"
                     >
                         反选
@@ -249,6 +250,32 @@
                 </div>
 
                 {{-- 范围选择 --}}
+                <div class="sbdo-item flex-cell">
+                    <div class="flex-grid">
+
+                        <div class="flex-cell">
+                            <input type="text"
+                                   v-model="selectRangeMin"
+                            >
+                        </div>
+                        <span>〜</span>
+                        <div class="flex-cell">
+                            <input type="text"
+                                   v-model="selectRangeMax"
+                            >
+                        </div>
+
+                        <div class="flex-cell">
+                            <button type="button"
+                                    class="btn btn-sm btn-primary"
+                                    v-on:click="toggleSelect(-4)"
+                            >
+                                选择标号范围内作品
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             {{-- 数据统一操作 --}}
@@ -542,21 +569,45 @@
                     'oa_year':    2016,
                     'oa_season':  1,
                     'lifecycle':  '',
-                    'selected': true
+                    'selected':   true
                 }],
-                'animeListDefault': [],
-                'animeSelectedCount': 1,
-                'allSelected': true
+                'animeListDefault':    [],
+                'animeSelectedCount':  1,
+                'allSelected':         1,
+                'selectRangeMin':      1,
+                'selectRangeMax':      1
+            }
+        },
+        computed: {
+            selectRangeMax: function() {
+                return this.animeList.length
             }
         },
         watch:{
             animeList: function(newVal) {
-                let i = 0;
+                let i     = 0;
+                const len = newVal.length;
                 for(let j = 0; j < newVal.length; j++) {
                     if(newVal[j].selected) i++
                 }
-                this.allSelected = (i === this.animeList.length)
+                if( i === len ) {
+                    // 全选
+                    this.allSelected = 1
+                } else if ( i === 0 ) {
+                    // 全不选
+                    this.allSelected = -1
+                } else {
+                    // 部分选, 此时将会出现反选按钮
+                   this.allSelected = 0
+                }
                 this.animeSelectedCount = i
+            },
+            selectRangeMin: function(newVal) {
+                if(newVal < 1) this.selectRangeMin = 1
+            },
+            selectRangeMax: function(newVal) {
+                const len = this.animeList.length;
+                if(newVal > len) this.selectRangeMax = len
             }
         },
         methods:  {
@@ -701,6 +752,7 @@
                 *  -1  : change all item.selected = true
                 *  -2  : change all item.selected = false
                 *  -3  : inverse
+                *  -3  : select in range
                 *
                 * */
                 const i = Number(index);

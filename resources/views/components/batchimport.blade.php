@@ -332,6 +332,7 @@
         {{-- 内容卡片 --}}
         <div class="quick-import-dialog flex-cell"
              v-for="animeData in animeList"
+             v-bind:id="'quick-import-dialog-' + $index"
              track-by="$index"
         >
             {{-- 标题行 --}}
@@ -357,36 +358,42 @@
                 <div class="dialog-control flex-cell">
                     <button type="button"
                             class="btn btn-xs btn-default"
+                            v-bind:id="'dialog-control-left-' + $index"
                             v-on:click="move('left', $index)"
                     >
                         <span class="glyphicon glyphicon-menu-left"></span>
                     </button>
                     <button type="button"
                             class="btn btn-xs btn-default"
+                            v-bind:id="'dialog-control-up-' + $index"
                             v-on:click="move('up', $index)"
                     >
                         <span class="glyphicon glyphicon-menu-up"></span>
                     </button>
                     <button type="button"
                             class="btn btn-xs btn-default"
+                            v-bind:id="'dialog-control-down-' + $index"
                             v-on:click="move('down', $index)"
                     >
                         <span class="glyphicon glyphicon-menu-down"></span>
                     </button>
                     <button type="button"
                             class="btn btn-xs btn-default"
+                            v-bind:id="'dialog-control-right-' + $index"
                             v-on:click="move('right', $index)"
                     >
                         <span class="glyphicon glyphicon-menu-right"></span>
                     </button>
                     <button type="button"
                             class="btn btn-xs btn-success"
+                            v-bind:id="'dialog-control-add-' + $index"
                             v-on:click="add($index)"
                     >
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                     <button type="button"
                             class="btn btn-xs btn-danger"
+                            v-bind:id="'dialog-control-remove-' + $index"
                             v-on:click="remove($index)"
                     >
                         <span class="glyphicon glyphicon-remove"></span>
@@ -399,6 +406,7 @@
                 {{-- 第一行 --}}
                 <div class="dialog-row">
                     <input type="text"
+                           v-bind:id="'quick-import-dialog-title-ori-' + $index"
                            placeholder="原标题"
                            v-model="animeData.title_ori"
                     >
@@ -590,6 +598,8 @@
                             arr.splice(i - 1, 1, tmp1);
                             arr.splice(i    , 1, tmp2);
                         }
+                        this.animeList = arr;
+                        document.getElementById('dialog-control-' + direction + '-' + (i - 2)).focus();
                         break;
                     case 'down':
                         if (i >= (arr.length - 2)) {
@@ -601,6 +611,8 @@
                             arr.splice(i + 1, 1, tmp2);
                             arr.splice(i    , 1, tmp1);
                         }
+                        this.animeList = arr;
+                        document.getElementById('dialog-control-' + direction + '-' + (i + 2)).focus();
                         break;
                     case 'left':
                         if (i === 0) {
@@ -610,6 +622,8 @@
                             arr.splice(i - 1, 1, arr[i]);
                             arr.splice(i, 1, tmp);
                         }
+                        this.animeList = arr;
+                        document.getElementById('dialog-control-' + direction + '-' + (i - 1)).focus();
                         break;
                     case 'right':
                         if (i == (arr.length - 1)) {
@@ -619,16 +633,22 @@
                             arr.splice(i, 1, arr[i + 1]);
                             arr.splice(i + 1, 1, tmp);
                         }
+                        this.animeList = arr;
+                        document.getElementById('dialog-control-' + direction + '-' + (i + 1)).focus();
                         break;
                 }
-                this.animeList = arr;
             },
             'add': function(index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
-                const obj = arr[i];
+                let obj = arr[i];
+                obj.title_ori = '';
+                obj.title_zhcn = '';
+                obj.hp = '';
+                obj.abbr = '';
                 arr.splice(i + 1, 0, obj);
                 this.animeList = arr;
+                document.getElementById('quick-import-dialog-title-ori-' + (i + 1)).focus();
             },
             'remove': function(index){
                 const i = Number(index);

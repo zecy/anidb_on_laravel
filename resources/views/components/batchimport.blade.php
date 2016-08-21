@@ -578,15 +578,15 @@
             },
             'move': function(direction, index){
                 const i = Number(index);
-                let arr     = JSON.parse(JSON.stringify(this.animeList));
+                let arr = JSON.parse(JSON.stringify(this.animeList));
 
                 switch (direction) {
                     case 'up':
                         if(i <= 1) {
                             alert('这已经是首行，添加卡片请用「 + 」按钮')
                         } else {
-                            var tmp1 = arr[i - 2];
-                            var tmp2 = arr[i - 1];
+                            const tmp1 = arr[i - 2];
+                            const tmp2 = arr[i - 1];
                             arr.splice(i - 2, 1, arr[i]);
                             arr.splice(i - 1, 1, tmp1);
                             arr.splice(i    , 1, tmp2);
@@ -594,6 +594,16 @@
                         }
                         break;
                     case 'down':
+                        if (i >= (arr.length - 2)) {
+                            alert('这已经是尾行，添加卡片请用「 + 」按钮')
+                        } else {
+                            const tmp1 = arr[i + 1];
+                            const tmp2 = arr[i + 2];
+                            arr.splice(i + 2, 1, arr[i]);
+                            arr.splice(i + 1, 1, tmp2);
+                            arr.splice(i    , 1, tmp1);
+                            this.animeList = arr;
+                        }
                         break;
                     case 'left':
                         break;

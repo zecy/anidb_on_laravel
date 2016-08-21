@@ -33,34 +33,58 @@
         font-size: 1.5rem;
     }
 
+    /* <editor-fold desc="控制栏"> */
     #unify-setting {
         font-size: 1.4rem;
         color: #666;
         padding: 10px;
-        background: rgba(0,0,0,.05);
+        background: #f3f3f3;
         border: 1px solid #aaa;
         border-radius: 3px;
     }
-
-        #unify-setting  label {
-            margin:0 1em;
+        /* <editor-fold desc="0. 通用设置"> */
+        /* 0. 固定设置栏 */
+        .unify-sticky {
+            position: fixed;
+            top: 0;
+            width: 750px;
+            z-index: 2;
         }
+
+        /* </editor-fold> */
+
+        /* <editor-fold desc="1. 数据来源框操作栏"> */
+        .sbdo-item {
+            flex-grow: 1;
+        }
+
+        /* </editor-fold> */
+
+        /* <editor-fold desc="2. 统一设置栏"> */
+        #unify-setting label {
+                                 margin: 0 1em;
+                                 }
 
         #unify-setting .toggle-button {
-            margin: 0 5px;
-        }
+                                          margin: 0 5px;
+                                          }
 
         #unify-setting-year {
-            width: 60px;
-            margin-right: 0.5em;
-        }
+                                width: 60px;
+                                margin-right: 0.5em;
+                                }
 
-            #unify-setting-year input {
-                height: 24px;
-                line-height: 24px;
-                text-align: center;
-            }
+        #unify-setting-year input {
+                                      height: 24px;
+                                      line-height: 24px;
+                                      text-align: center;
+                                      }
 
+        /* </editor-fold> */
+
+    /*</editor-fold>*/
+
+    /* <editor-fold desc="动画卡片"> */
     .quick-import-dialog {
         border: 1px solid #aaa;
         border-radius: 3px;
@@ -68,31 +92,27 @@
         width: calc(50% - 20px);
     }
 
-    .quick-import-dialog label {
-        height: 30px;
-        line-height: 30px;
-        margin: 0 10px;
-    }
+        /* <editor-fold desc="1. 标题栏"> */
+        .dialog-header {
+            width: 100%;
+            background: #efefef;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            padding: 5px;
+            font-size: 1.6rem;
+        }
+
+            .dialog-selected {
+                margin-right: 5px
+            }
+
+            .dialog-selected button {
+                flex-shrink: 1;
+                transform: scale(0.7)
+            }
 
 
-    /* <editor-fold desc="Dialog Header"> */
-    .dialog-header {
-        width: 100%;
-        background: #efefef;
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
-        padding: 5px;
-    }
-
-    .title-ori {
-        flex-grow: 1;
-    }
-
-    .title-ori input {
-        border: none;
-    }
-
-    /* </editor-fold> */
+        /* </editor-fold> */
 
     .quick-import-dialog .dialog-row {
         border-top: 1px solid #ccc;
@@ -129,6 +149,7 @@
 
     /* </editor-fold> */
 
+    /* </editor-fold> */
 </style>
 
 <template id="batch-import">
@@ -138,14 +159,64 @@
         <div class="import-box flex-cell">
             <textarea v-model="batch_import_source"
                       rows="25"
-                      placeholder="请粘贴动画数据" >
+                      placeholder="请粘贴动画数据">
             </textarea>
         </div>
 
-        <button v-on:click="sourceToList">导入</button>
-
+        {{-- 统一设置栏 --}}
         <div id="unify-setting" class="flex-cell">
-            <div class="flex-grid">
+
+            {{-- 来源框操作 --}}
+            <div id="source-box-data-operation" class="setting-row flex-grid">
+
+                {{-- 导入来源框数据 --}}
+                <div class="sbdo-item flex-cell">
+                    <button class="btn btn-sm btn-success"
+                            v-on:click="sourceToList"
+                    >
+                        导入来源框数据
+                    </button>
+                </div>
+
+                {{-- 已导入数据显示 --}}
+                <div class="sbdo-item flex cell">
+                    <span>现有&nbsp;</span>
+                        @{{ animeList.length }}
+                    <span>&nbsp;条数据</span>
+                </div>
+
+                {{-- 清除来源框数据 --}}
+                <div class="sbdo-item flex-cell">
+                    <button class="btn btn-sm btn-danger"
+                            v-on:click="batch_import_source = ''"
+                    >
+                        清除来源框数据
+                    </button>
+                </div>
+
+                {{-- 清除已导入的数据 --}}
+                <div class="sbdo-item flex-cell">
+                    <button class="btn btn-sm btn-danger"
+                            v-on:click="animeList = ''"
+                    >
+                         清除已导入的数据
+                    </button>
+                </div>
+
+                {{-- 重置已导入的数据 --}}
+                <div class="sbdo-item flex-cell">
+                    <button class="btn btn-sm btn-danger"
+                            v-on:click="animeList = animeListDefault"
+                    >
+                        重置已导入的数据
+                    </button>
+                </div>
+            </div>
+
+            {{-- 设置多选, 反选, 取消选择等 --}}
+
+            {{-- 数据统一操作 --}}
+            <div class="setting-row flex-grid">
 
                 {{-- 出品周期 --}}
                 <div class="flex-cell">
@@ -196,7 +267,7 @@
                     </div>
                 </div>
 
-                {{--  --}}
+                {{-- 统一设置 --}}
                 <div style="flex-grow: 1; text-align: right" class="flex-cell">
                     <button type="button" class="btn btn-sm btn-primary"
                             v-on:click="unifySet"
@@ -205,23 +276,80 @@
                     </button>
                 </div>
             </div>
+
+            {{-- 导入数据库 --}}
+            <div class="setting-row flex-grid">
+
+                {{-- 全部导入到数据库 --}}
+                <div style="flex-grow: 1;" class="flex-cell">
+                    <button class="btn btn-sm btn-success"
+                            v-on:click="sourceToList"
+                    >
+                        全部导入到数据库
+                    </button>
+                </div>
+
+                {{-- 选中部分导入数据库 --}}
+                <div style="flex-grow: 1" class="flex-cell">
+                    <button class="btn btn-sm btn-success"
+                            v-on:click="batch_import_source = ''"
+                    >
+                        选中部分导入数据库
+                    </button>
+                </div>
+
+                {{-- 删除未选中内容 --}}
+                <div style="flex-grow: 1" class="flex-cell">
+                    <button class="btn btn-sm btn-danger"
+                            v-on:click="animeList = ''"
+                    >
+                        删除未选中内容
+                    </button>
+                </div>
+
+                {{-- 重置已导入的数据 --}}
+                <div style="flex-grow: 1" class="flex-cell">
+                    <button class="btn btn-sm btn-danger"
+                            v-on:click="animeList = animeListDefault"
+                    >
+                        重置已导入的数据
+                    </button>
+                </div>
+            </div>
+
         </div>
 
+        {{-- 内容卡片 --}}
         <div class="quick-import-dialog flex-cell"
              v-for="animeData in animeList"
         >
-            {{-- 第一行 --}}
+            {{-- 标题行 --}}
             <div class="dialog-header flex-grid">
-                <div class="title-ori flex-cell">
-                    <input type="text"
-                           placeholder="原标题"
-                           v-model="animeData.title_ori"
+                <div class="dialog-selected flex-cell">
+                    <button type="button"
+                            class="btn btn-xs"
+                            v-on:click="animeData.selected = !animeData.selected"
+                            v-bind:class="animeData.selected ? 'btn-success' : 'btn-default'"
                     >
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </button>
+                </div>
+                <div class="flex-cell">
+                    <label>#@{{ $index + 1 }}</label>
                 </div>
             </div>
 
             <div class="dialog-body">
 
+                {{-- 第一行 --}}
+                <div class="dialog-row">
+                    <input type="text"
+                           placeholder="原标题"
+                           v-model="animeData.title_ori"
+                    >
+                </div>
+
+                {{-- 第二行 --}}
                 <div class="dialog-row">
                     <div class="title-zh-cn">
                         <input type="text"
@@ -231,14 +359,15 @@
                     </div>
                 </div>
 
-                {{-- 第二行 --}}
+                {{-- 第三行 --}}
                 <div class="dialog-row">
-                        <input type="text"
-                               placeholder="官方网站"
-                               v-model="animeData.hp"
-                        >
+                    <input type="text"
+                           placeholder="官方网站"
+                           v-model="animeData.hp"
+                    >
                 </div>
 
+                {{-- 第四行 --}}
                 <div class="dialog-row flex-grid">
 
                     {{-- 简称 --}}
@@ -285,37 +414,52 @@
             </div>
         </div>
 
-        <button type="button"
-                class="btn btn-success"
-                v-on:click="create"
-        >导入</button>
     </div>
 </template>
 
 <script>
+
+    let unifySetting    = '';
+    const stickyClass   = "unify-sticky";
+    let ibh             = 0;
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > ibh) {
+            unifySetting.addClass(stickyClass);
+        } else {
+            unifySetting.removeClass(stickyClass);
+        }
+    });
+
     var batch_import = Vue.extend({
         template: '#batch-import',
+        ready: function() {
+            unifySetting = $("#unify-setting");
+            ibh          = $('.import-box').height();
+        },
         data:     function () {
             return {
                 'batch_import_source': '',
-                'unifySetting': {
+                'unifySetting':        {
                     'lifecycle': 'comming',
-                    'oa_year': 2016,
+                    'oa_year':   2016,
                     'oa_season': 1
                 },
-                'animeList': [{
-                    'title_ori': '',
+                'animeList':           [{
+                    'title_ori':  '',
                     'title_zhcn': '',
-                    'hp': '',
-                    'abbr': '',
-                    'oa_year': 2016,
-                    'oa_season': 1,
-                    'lifecycle':''
-                }]
+                    'hp':         '',
+                    'abbr':       '',
+                    'oa_year':    2016,
+                    'oa_season':  1,
+                    'lifecycle':  '',
+                    'selected': true
+                }],
+                'animeListDefault': []
             }
         },
-        methods: {
-            'sourceToList': function() {
+        methods:  {
+            'sourceToList': function () {
 
                 // 把源数据按换行切成数组
                 const arr = this.batch_import_source.split('\n');
@@ -335,32 +479,41 @@
                 getAbbrTLD.compile(getAbbrTLD);
                 SLD.compile(SLD);
 
-                for(let i = 0; i < arr.length; i++) {
+                for (let i = 0; i < arr.length; i++) {
                     const item = arr[i].split(',');
-                    let abbr = arr[i] !== '' ? arr[i] : '';
-                    if(abbr.search(SLD) !== -1) {
-                        abbr = abbr.match(getAbbrTLD)[1];
+                    let abbr = [];
+                    let hp   = '';
+                    if(item[1] !== '' && item[1] !== undefined) {
+                        hp = item[1];
+                        if (hp.search(SLD) > -1) {
+                            abbr = hp.match(getAbbrTLD)[1];
+                        } else {
+                            abbr = hp.match(getAbbrSLD)[1];
+                        }
                     } else {
-                        abbr = abbr.match(getAbbrSLD)[1];
+                       abbr = ''
                     }
                     res.push({
-                        'title_ori': item[0],
+                        'title_ori':  item[0],
                         'title_zhcn': '',
-                        'hp': item[1],
-                        'abbr': abbr,
-                        'oa_year': 2016,
-                        'oa_season': 1,
-                        'lifecycle':'comming'
+                        'hp':         hp,
+                        'abbr':       abbr,
+                        'oa_year':    2016,
+                        'oa_season':  1,
+                        'lifecycle':  'comming',
+                        'selected': true
                     });
                 }
 
-                this.animeList = res;
+                this.animeList        = res;
+                // 多存一份备份数据, 用于恢复
+                this.animeListDefault = JSON.parse(JSON.stringify(res));
             },
-            'unifySet': function() {
-                let targetArr = this.animeList;
+            'unifySet':     function () {
+                let targetArr   = this.animeList;
                 const sourceObj = this.unifySetting;
 
-                for(let i = 0; i < targetArr.length; i++) {
+                for (let i = 0; i < targetArr.length; i++) {
                     targetArr[i].oa_year   = sourceObj.oa_year;
                     targetArr[i].oa_season = sourceObj.oa_season;
                     targetArr[i].lifecycle = sourceObj.lifecycle;
@@ -368,7 +521,7 @@
 
                 this.animeList = targetArr;
             },
-            'create': function(){
+            'create':       function () {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {
                         console.log('year');

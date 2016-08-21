@@ -787,10 +787,14 @@
                 })
             },
             remove: function(index){
-                const i = Number(index);
-                let arr = JSON.parse(JSON.stringify(this.animeList));
-                arr.splice(i, 1);
-                this.animeList = arr;
+                if(this.animeList.length > 1) {
+                    const i = Number(index);
+                    let arr = JSON.parse(JSON.stringify(this.animeList));
+                    arr.splice(i, 1);
+                    this.animeList = arr;
+                } else {
+                    alert('不能删除最后一个内容卡')
+                }
             },
             toggleSelect: function(index){
                 /*

@@ -108,9 +108,13 @@
 
             .dialog-selected button {
                 flex-shrink: 1;
-                transform: scale(0.7)
+                transform: scale(0.75)
             }
 
+            .dialog-control {
+                flex-grow: 1;
+                text-align: right;
+            }
 
         /* </editor-fold> */
 
@@ -182,6 +186,12 @@
                 <div class="sbdo-item flex cell">
                     <span>现有&nbsp;</span>
                         @{{ animeList.length }}
+                    <span>&nbsp;条数据</span>
+                </div>
+
+                <div class="sbdo-item flex cell">
+                    <span>选中&nbsp;</span>
+                    @{{ animeList | filterBy 'selected' }}
                     <span>&nbsp;条数据</span>
                 </div>
 
@@ -322,9 +332,12 @@
         {{-- 内容卡片 --}}
         <div class="quick-import-dialog flex-cell"
              v-for="animeData in animeList"
+             track-by="$index"
         >
             {{-- 标题行 --}}
             <div class="dialog-header flex-grid">
+
+                {{-- 多选框 --}}
                 <div class="dialog-selected flex-cell">
                     <button type="button"
                             class="btn btn-xs"
@@ -334,8 +347,50 @@
                         <span class="glyphicon glyphicon-ok"></span>
                     </button>
                 </div>
+
+                {{-- 标号 --}}
                 <div class="flex-cell">
                     <label>#@{{ $index + 1 }}</label>
+                </div>
+
+                {{-- 卡片控制按钮 --}}
+                <div class="dialog-control flex-cell">
+                    <button type="button"
+                            class="btn btn-xs btn-default"
+                            v-on:click="move('left')"
+                    >
+                        <span class="glyphicon glyphicon-menu-left"></span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-xs btn-default"
+                            v-on:click="move('up', $index)"
+                    >
+                        <span class="glyphicon glyphicon-menu-up"></span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-xs btn-default"
+                            v-on:click="move('down', $index)"
+                    >
+                        <span class="glyphicon glyphicon-menu-down"></span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-xs btn-default"
+                            v-on:click="move('right', $index)"
+                    >
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-xs btn-success"
+                            v-on:click="add($index)"
+                    >
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-xs btn-danger"
+                            v-on:click="remove($index)"
+                    >
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
                 </div>
             </div>
 
@@ -521,6 +576,33 @@
 
                 this.animeList = targetArr;
             },
+            'move': function(direction, index){
+                const i = Number(index);
+                let arr     = JSON.parse(JSON.stringify(this.animeList));
+
+                switch (direction) {
+                    case 'up':
+                        if(i <= 1) {
+                            alert('这已经是首行，添加卡片请用「 + 」按钮')
+                        } else {
+                            var tmp1 = arr[i - 2];
+                            var tmp2 = arr[i - 1];
+                            arr.splice(i - 2, 1, arr[i]);
+                            arr.splice(i - 1, 1, tmp1);
+                            arr.splice(i    , 1, tmp2);
+                            this.animeList = arr;
+                        }
+                        break;
+                    case 'down':
+                        break;
+                    case 'left':
+                        break;
+                    case 'right':
+                        break
+                }
+            },
+            'add': function(){},
+            'remove': function(){},
             'create':       function () {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {

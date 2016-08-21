@@ -650,14 +650,13 @@
             },
             add: function(index){
                 const i = Number(index);
-                let arr = JSON.parse(JSON.stringify(this.animeList));
+                const arr = JSON.parse(JSON.stringify(this.animeList));
                 let obj = arr[i];
                 obj.title_ori = '';
                 obj.title_zhcn = '';
                 obj.hp = '';
                 obj.abbr = '';
-                arr.splice(i + 1, 0, obj);
-                this.animeList = arr;
+                this.animeList.splice(i + 1, 0, obj);
                 this.$nextTick(function(){
                     document.getElementById('quick-import-dialog-title-ori-' + (i + 1)).focus();
                 })

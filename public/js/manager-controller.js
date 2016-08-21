@@ -2,6 +2,8 @@
  * Created by zecy on 16/8/10.
  */
 
+Vue.config.debug = true;
+
 /**
  * COMPONENTS
  */

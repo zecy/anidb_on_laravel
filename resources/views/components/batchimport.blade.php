@@ -357,7 +357,7 @@
                 <div class="dialog-control flex-cell">
                     <button type="button"
                             class="btn btn-xs btn-default"
-                            v-on:click="move('left')"
+                            v-on:click="move('left', $index)"
                     >
                         <span class="glyphicon glyphicon-menu-left"></span>
                     </button>
@@ -606,6 +606,14 @@
                         }
                         break;
                     case 'left':
+                        if (i === 0) {
+                            alert('这已经是第一个卡片，添加卡片请用「 + 」按钮')
+                        } else {
+                            const tmp = arr[i - 1];
+                            arr.splice(i - 1, 1, arr[i]);
+                            arr.splice(i, 1, tmp);
+                            this.animeList = arr;
+                        }
                         break;
                     case 'right':
                         break

@@ -51,6 +51,10 @@
             z-index: 2;
         }
 
+        #unify-setting input {
+            background: #fefefe;
+        }
+
         /* </editor-fold> */
 
         /* <editor-fold desc="1. 数据来源框操作栏"> */
@@ -60,7 +64,36 @@
 
         /* </editor-fold> */
 
-        /* <editor-fold desc="2. 统一设置栏"> */
+        /* <editor-fold desc="2. 多选控制栏"> */
+        button.select-range {
+            flex-shrink: 1;
+        }
+
+        button.select-range.min {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: 0;
+        }
+
+        button.select-range.max {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: 0;
+        }
+
+        input.select-range {
+            flex-shrink: 1;
+            min-width: 30px;
+            max-width: 50px;
+        }
+
+        span.select-range {
+            margin: 0 0.5em
+        }
+
+        /* </editor-fold> */
+
+        /* <editor-fold desc="3. 统一设置栏"> */
         #unify-setting label {
                                  margin: 0 1em;
                                  }
@@ -189,7 +222,6 @@
                     <span>&nbsp;条数据</span>
                 </div>
 
-
                 {{-- 清除来源框数据 --}}
                 <div class="sbdo-item flex-cell">
                     <button class="btn btn-sm btn-danger"
@@ -250,19 +282,36 @@
                 </div>
 
                 {{-- 范围选择 --}}
-                <div class="sbdo-item flex-cell">
+                <div class="sbdo-item select-range flex-cell">
                     <div class="flex-grid">
-
                         <div class="flex-cell">
-                            <input type="text"
+                            <button type="button"
+                                    class="select-range min btn btn-sm btn-default"
+                                    v-on:click="selectRangeMin = 1"
+                            >
+                                <span class="glyphicon glyphicon-step-backward"></span>
+                            </button>
+                        </div>
+                            <div class="flex-cell">
+                            <input class="select-range"
+                                   type="text"
                                    v-model="selectRangeMin"
                             >
                         </div>
-                        <span>〜</span>
+                        <span class="select-range">〜</span>
                         <div class="flex-cell">
-                            <input type="text"
+                            <input class="select-range"
+                                   type="text"
                                    v-model="selectRangeMax"
                             >
+                        </div>
+                        <div class="flex-cell">
+                            <button type="button"
+                                    class="select-range max btn btn-sm btn-default"
+                                    v-on:click="selectRangeMax = animeList.length"
+                            >
+                                <span class="glyphicon glyphicon glyphicon-step-forward"></span>
+                            </button>
                         </div>
 
                         <div class="flex-cell">
@@ -576,11 +625,6 @@
                 'allSelected':         1,
                 'selectRangeMin':      1,
                 'selectRangeMax':      1
-            }
-        },
-        computed: {
-            selectRangeMax: function() {
-                return this.animeList.length
             }
         },
         watch:{

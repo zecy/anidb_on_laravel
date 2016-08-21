@@ -630,7 +630,12 @@
                 arr.splice(i + 1, 0, obj);
                 this.animeList = arr;
             },
-            'remove': function(){},
+            'remove': function(index){
+                const i = Number(index);
+                let arr = JSON.parse(JSON.stringify(this.animeList));
+                arr.splice(i, 1);
+                this.animeList = arr;
+            },
             'create':       function () {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {

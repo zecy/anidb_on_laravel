@@ -204,51 +204,52 @@
         <div id="unify-setting" class="flex-cell">
 
             {{-- 来源框操作 --}}
-            <div id="source-box-data-operation" class="setting-row flex-grid">
+            <fieldset v-bind:disabled="batch_import_source === ''">
+                <div id="source-box-data-operation" class="setting-row flex-grid">
+                    {{-- 导入来源框数据 --}}
+                    <div class="sbdo-item flex-cell">
+                        <button class="btn btn-sm btn-success"
+                                v-on:click="sourceToList"
+                        >
+                            导入来源框数据
+                        </button>
+                    </div>
 
-                {{-- 导入来源框数据 --}}
-                <div class="sbdo-item flex-cell">
-                    <button class="btn btn-sm btn-success"
-                            v-on:click="sourceToList"
-                    >
-                        导入来源框数据
-                    </button>
-                </div>
-
-                {{-- 已导入数据显示 --}}
-                <div class="sbdo-item flex cell">
-                    <span>现有&nbsp;</span>
+                    {{-- 已导入数据显示 --}}
+                    <div class="sbdo-item flex cell">
+                        <span>现有&nbsp;</span>
                         @{{ animeList.length }}
-                    <span>&nbsp;条数据</span>
-                </div>
+                        <span>&nbsp;条数据</span>
+                    </div>
 
-                {{-- 清除来源框数据 --}}
-                <div class="sbdo-item flex-cell">
-                    <button class="btn btn-sm btn-danger"
-                            v-on:click="batch_import_source = ''"
-                    >
-                        清除来源框数据
-                    </button>
-                </div>
+                    {{-- 清除来源框数据 --}}
+                    <div class="sbdo-item flex-cell">
+                        <button class="btn btn-sm btn-danger"
+                                v-on:click="batch_import_source = ''"
+                        >
+                            清除来源框数据
+                        </button>
+                    </div>
 
-                {{-- 清除已导入的数据 --}}
-                <div class="sbdo-item flex-cell">
-                    <button class="btn btn-sm btn-danger"
-                            v-on:click="animeList = ''"
-                    >
-                         清除已导入的数据
-                    </button>
-                </div>
+                    {{-- 清除已导入的数据 --}}
+                    <div class="sbdo-item flex-cell">
+                        <button class="btn btn-sm btn-danger"
+                                v-on:click="animeList = ''"
+                        >
+                            清除已导入的数据
+                        </button>
+                    </div>
 
-                {{-- 重置已导入的数据 --}}
-                <div class="sbdo-item flex-cell">
-                    <button class="btn btn-sm btn-danger"
-                            v-on:click="animeList = animeListDefault"
-                    >
-                        重置已导入的数据
-                    </button>
+                    {{-- 重置已导入的数据 --}}
+                    <div class="sbdo-item flex-cell">
+                        <button class="btn btn-sm btn-danger"
+                                v-on:click="animeList = animeListDefault"
+                        >
+                            重置已导入的数据
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </fieldset>
 
             {{-- 设置多选, 反选, 取消选择等 --}}
             <div class="setting-row flex-grid">
@@ -390,45 +391,46 @@
             </div>
 
             {{-- 导入数据库 --}}
-            <div class="setting-row flex-grid">
+            <fieldset v-bind:disabled="animeList[0].title_ori === ''">
+                <div class="setting-row flex-grid">
 
-                {{-- 全部导入到数据库 --}}
-                <div style="flex-grow: 1;" class="flex-cell">
-                    <button class="btn btn-sm btn-success"
-                            v-on:click="sourceToList"
-                    >
-                        全部导入到数据库
-                    </button>
+                    {{-- 全部导入到数据库 --}}
+                    <div style="flex-grow: 1;" class="flex-cell">
+                        <button class="btn btn-sm btn-success"
+                                v-on:click="sourceToList"
+                        >
+                            全部导入到数据库
+                        </button>
+                    </div>
+
+                    {{-- 选中部分导入数据库 --}}
+                    <div style="flex-grow: 1" class="flex-cell">
+                        <button class="btn btn-sm btn-success"
+                                v-on:click="batch_import_source = ''"
+                        >
+                            选中部分导入数据库
+                        </button>
+                    </div>
+
+                    {{-- 删除未选中内容 --}}
+                    <div style="flex-grow: 1" class="flex-cell">
+                        <button class="btn btn-sm btn-danger"
+                                v-on:click="animeList = ''"
+                        >
+                            删除未选中内容
+                        </button>
+                    </div>
+
+                    {{-- 重置已导入的数据 --}}
+                    <div style="flex-grow: 1" class="flex-cell">
+                        <button class="btn btn-sm btn-danger"
+                                v-on:click="animeList = animeListDefault"
+                        >
+                            重置已导入的数据
+                        </button>
+                    </div>
                 </div>
-
-                {{-- 选中部分导入数据库 --}}
-                <div style="flex-grow: 1" class="flex-cell">
-                    <button class="btn btn-sm btn-success"
-                            v-on:click="batch_import_source = ''"
-                    >
-                        选中部分导入数据库
-                    </button>
-                </div>
-
-                {{-- 删除未选中内容 --}}
-                <div style="flex-grow: 1" class="flex-cell">
-                    <button class="btn btn-sm btn-danger"
-                            v-on:click="animeList = ''"
-                    >
-                        删除未选中内容
-                    </button>
-                </div>
-
-                {{-- 重置已导入的数据 --}}
-                <div style="flex-grow: 1" class="flex-cell">
-                    <button class="btn btn-sm btn-danger"
-                            v-on:click="animeList = animeListDefault"
-                    >
-                        重置已导入的数据
-                    </button>
-                </div>
-            </div>
-
+            </fieldset>
         </div>
 
         {{-- 内容卡片 --}}
@@ -799,7 +801,7 @@
                 *  -4  : select in range
                 * */
 
-                const i = Number(index);
+                const i   = Number(index);
                 const arr = JSON.parse(JSON.stringify(this.animeList));
 
                 switch (i) {

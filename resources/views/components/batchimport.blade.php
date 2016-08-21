@@ -191,7 +191,7 @@
 
                 <div class="sbdo-item flex cell">
                     <span>选中&nbsp;</span>
-                    @{{ animeList | filterBy 'selected' }}
+                    @{{ animeSelectedCount }}
                     <span>&nbsp;条数据</span>
                 </div>
 
@@ -480,7 +480,7 @@
     </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
 
     let unifySetting    = '';
     const stickyClass   = "unify-sticky";
@@ -496,11 +496,11 @@
 
     var batch_import = Vue.extend({
         template: '#batch-import',
-        ready() {
+        ready: function() {
             unifySetting = $("#unify-setting");
             ibh          = $('.import-box').height();
         },
-        data() {
+        data:function() {
             return {
                 'batch_import_source': '',
                 'unifySetting':        {
@@ -518,11 +518,21 @@
                     'lifecycle':  '',
                     'selected': true
                 }],
-                'animeListDefault': []
+                'animeListDefault': [],
+                'animeSelectedCount': 1
+            }
+        },
+        watch:{
+            animeList: function(newVal) {
+                let i = 0;
+                for(let j = 0; j < newVal.length; j++) {
+                    if(newVal[j].selected) i++
+                }
+                this.animeSelectedCount = i
             }
         },
         methods:  {
-            sourceToList() {
+            sourceToList: function() {
 
                 // 把源数据按换行切成数组
                 const arr = this.batch_import_source.split('\n');
@@ -572,7 +582,7 @@
                 // 多存一份备份数据, 用于恢复
                 this.animeListDefault = JSON.parse(JSON.stringify(res));
             },
-            unifySet() {
+            unifySet: function() {
                 let targetArr   = this.animeList;
                 const sourceObj = this.unifySetting;
 
@@ -584,7 +594,7 @@
 
                 this.animeList = targetArr;
             },
-            move(direction, index){
+            move: function(direction, index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 switch (direction) {
@@ -638,7 +648,7 @@
                         break;
                 }
             },
-            add(index){
+            add: function(index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 let obj = arr[i];
@@ -648,24 +658,33 @@
                 obj.abbr = '';
                 arr.splice(i + 1, 0, obj);
                 this.animeList = arr;
-                document.getElementById('quick-import-dialog-title-ori-' + (i + 1)).focus();
+                this.$nextTick(function(){
+                    document.getElementById('quick-import-dialog-title-ori-' + (i + 1)).focus();
+                })
             },
-            remove(index){
+            remove: function(index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 arr.splice(i, 1);
                 this.animeList = arr;
             },
-            toggleAll(){
-                let isAllSelected = true;
+            toggleAll: function(boolen){
                 const arr = JSON.parse(JSON.stringify(this.animeList));
-                arr.forEach(elem => {
-                    if (!elem.selected) {
-                        isAllSelected = false;
+                if(boolen) {
+                    for(let i = 0; i < arr.length; i++ ){
+                        if(!arr[i].selected) {
+                            arr[i].selected = true;
+                        }
                     }
-                });
+                } else {
+                    for(let i = 0; i < arr.length; i++ ){
+                        if(arr[i].selected) {
+                            arr[i].selected = false;
+                        }
+                    }
+                }
             },
-            create() {
+            create: function() {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {
                         console.log('year');

@@ -480,7 +480,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 
     let unifySetting    = '';
     const stickyClass   = "unify-sticky";
@@ -496,11 +496,11 @@
 
     var batch_import = Vue.extend({
         template: '#batch-import',
-        ready: function() {
+        ready() {
             unifySetting = $("#unify-setting");
             ibh          = $('.import-box').height();
         },
-        data:     function () {
+        data() {
             return {
                 'batch_import_source': '',
                 'unifySetting':        {
@@ -522,7 +522,7 @@
             }
         },
         methods:  {
-            'sourceToList': function () {
+            sourceToList() {
 
                 // 把源数据按换行切成数组
                 const arr = this.batch_import_source.split('\n');
@@ -572,7 +572,7 @@
                 // 多存一份备份数据, 用于恢复
                 this.animeListDefault = JSON.parse(JSON.stringify(res));
             },
-            'unifySet':     function () {
+            unifySet() {
                 let targetArr   = this.animeList;
                 const sourceObj = this.unifySetting;
 
@@ -584,7 +584,7 @@
 
                 this.animeList = targetArr;
             },
-            'move': function(direction, index){
+            move(direction, index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 switch (direction) {
@@ -638,7 +638,7 @@
                         break;
                 }
             },
-            'add': function(index){
+            add(index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 let obj = arr[i];
@@ -650,13 +650,22 @@
                 this.animeList = arr;
                 document.getElementById('quick-import-dialog-title-ori-' + (i + 1)).focus();
             },
-            'remove': function(index){
+            remove(index){
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 arr.splice(i, 1);
                 this.animeList = arr;
             },
-            'create':       function () {
+            toggleAll(){
+                let isAllSelected = true;
+                const arr = JSON.parse(JSON.stringify(this.animeList));
+                arr.forEach(elem => {
+                    if (!elem.selected) {
+                        isAllSelected = false;
+                    }
+                });
+            },
+            create() {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {
                         console.log('year');

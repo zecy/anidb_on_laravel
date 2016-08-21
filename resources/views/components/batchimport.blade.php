@@ -274,7 +274,7 @@
                 <div class="sbdo-item flex-cell">
                     <button type="button"
                             class="btn btn-sm btn-primary"
-                            v-if="allSelected === 0"
+                            v-bind:disabled="!(allSelected === 0)"
                             v-on:click="toggleSelect(-3)"
                     >
                         反选

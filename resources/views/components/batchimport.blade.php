@@ -797,8 +797,8 @@
                 *  -2  : change all item.selected = false
                 *  -3  : inverse
                 *  -4  : select in range
-                *
                 * */
+
                 const i = Number(index);
                 const arr = JSON.parse(JSON.stringify(this.animeList));
 
@@ -823,12 +823,32 @@
                         }
                         break;
                     case -4:
+                        let min = Number(this.selectRangeMin);
+                        let max = Number(this.selectRangeMax);
+                        if(min > max) {
+                            const r = confirm('你填写的标号范围中，最小值 ＞ 最大值\n你要把两个值对调并继续吗？');
+                            if(r) {
+                                const tmp = min;
+                                min       = max;
+                                max       = tmp;
+                                this.selectRangeMin = min;
+                                this.selectRangeMax = max;
+                            } else {
+                                return
+                            }
+                        }
+                        for( let j = 0; j < arr.length; j++) {
+                            if(min - 1 <= j && j < max) {
+                                arr[j].selected = true
+                            } else {
+                                arr[j].selected = false
+                            }
+                        }
                         break;
                     default :
                         arr[i].selected = !arr[i].selected;
                         break
                 }
-
                 this.animeList = arr;
             },
             create: function() {

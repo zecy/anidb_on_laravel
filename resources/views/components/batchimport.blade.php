@@ -189,10 +189,21 @@
                     <span>&nbsp;条数据</span>
                 </div>
 
+                {{-- 显示已选择的内容卡数量 --}}
                 <div class="sbdo-item flex cell">
                     <span>选中&nbsp;</span>
                     @{{ animeSelectedCount }}
                     <span>&nbsp;条数据</span>
+                </div>
+
+                <div class="sbdo-item flex-cell">
+                    <button type="button"
+                            class="btn btn-sm"
+                            v-bind:class="allSelected ? 'btn-danger' : 'btn-success'"
+                            v-on:click="toggleSelect(allSelected ? -2 : -1)"
+                    >
+                        @{{ allSelected ? '全部不选' : '全部选择' }}
+                    </button>
                 </div>
 
                 {{-- 清除来源框数据 --}}
@@ -342,7 +353,7 @@
                 <div class="dialog-selected flex-cell">
                     <button type="button"
                             class="btn btn-xs"
-                            v-on:click="animeData.selected = !animeData.selected"
+                            v-on:click="toggleSelect($index)"
                             v-bind:class="animeData.selected ? 'btn-success' : 'btn-default'"
                     >
                         <span class="glyphicon glyphicon-ok"></span>
@@ -519,7 +530,8 @@
                     'selected': true
                 }],
                 'animeListDefault': [],
-                'animeSelectedCount': 1
+                'animeSelectedCount': 1,
+                'allSelected': true
             }
         },
         watch:{
@@ -528,6 +540,7 @@
                 for(let j = 0; j < newVal.length; j++) {
                     if(newVal[j].selected) i++
                 }
+                this.allSelected = (i === this.animeList.length)
                 this.animeSelectedCount = i
             }
         },
@@ -667,21 +680,32 @@
                 arr.splice(i, 1);
                 this.animeList = arr;
             },
-            toggleAll: function(boolen){
+            toggleSelect: function(index){
+                /*
+                *  0 ~ : toggle an item.selected
+                *  -1  : change all item.selected = true
+                *  -2  : change all item.selected = false
+                *
+                * */
+                const i = Number(index);
                 const arr = JSON.parse(JSON.stringify(this.animeList));
-                if(boolen) {
-                    for(let i = 0; i < arr.length; i++ ){
-                        if(!arr[i].selected) {
-                            arr[i].selected = true;
+
+                if(i === -1 ) {
+                    for(let j = 0; j < arr.length; j++ ){
+                        if(!arr[j].selected) {
+                            arr[j].selected = true;
+                        }
+                    }
+                } else if (i === -2 ) {
+                    for(let j = 0; j < arr.length; j++ ){
+                        if(arr[j].selected) {
+                            arr[j].selected = false;
                         }
                     }
                 } else {
-                    for(let i = 0; i < arr.length; i++ ){
-                        if(arr[i].selected) {
-                            arr[i].selected = false;
-                        }
-                    }
+                   arr[i].selected = !arr[i].selected
                 }
+                this.animeList = arr;
             },
             create: function() {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {

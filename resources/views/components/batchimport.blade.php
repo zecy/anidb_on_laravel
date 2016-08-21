@@ -796,31 +796,39 @@
                 *  -1  : change all item.selected = true
                 *  -2  : change all item.selected = false
                 *  -3  : inverse
-                *  -3  : select in range
+                *  -4  : select in range
                 *
                 * */
                 const i = Number(index);
                 const arr = JSON.parse(JSON.stringify(this.animeList));
 
-                if (i === -1) {
-                    for (let j = 0; j < arr.length; j++) {
-                        if (!arr[j].selected) {
-                            arr[j].selected = true;
+                switch (i) {
+                    case -1:
+                        for (let j = 0; j < arr.length; j++) {
+                            if (!arr[j].selected) {
+                                arr[j].selected = true;
+                            }
                         }
-                    }
-                } else if (i === -2) {
-                    for (let j = 0; j < arr.length; j++) {
-                        if (arr[j].selected) {
-                            arr[j].selected = false;
+                        break;
+                    case -2:
+                        for (let j = 0; j < arr.length; j++) {
+                            if (arr[j].selected) {
+                                arr[j].selected = false;
+                            }
                         }
-                    }
-                } else if (i === -3) {
-                    for (let j = 0; j < arr.length; j++) {
-                        arr[j].selected = !arr[j].selected;
-                    }
-                } else {
-                    arr[i].selected = !arr[i].selected
+                        break;
+                    case -3:
+                        for (let j = 0; j < arr.length; j++) {
+                            arr[j].selected = !arr[j].selected;
+                        }
+                        break;
+                    case -4:
+                        break;
+                    default :
+                        arr[i].selected = !arr[i].selected;
+                        break
                 }
+
                 this.animeList = arr;
             },
             create: function() {

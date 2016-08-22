@@ -193,6 +193,7 @@
     <div class="batch-import flex-grid">
         <h3>批量录入</h3>
 
+        {{--  导入框 --}}
         <div class="import-box flex-cell">
             <textarea v-model="batch_import_source"
                       rows="25"
@@ -200,12 +201,21 @@
             </textarea>
         </div>
 
-        {{-- 统一设置栏 --}}
+        {{-- 控制栏 --}}
         <div id="unify-setting" class="flex-cell">
 
             {{-- 来源框操作 --}}
             <fieldset v-bind:disabled="batch_import_source === ''">
                 <div id="source-box-data-operation" class="setting-row flex-grid">
+                    {{-- 格式化 --}}
+                    <div class="sbdo-item flex-cell">
+                        <button class="btn btn-sm btn-success"
+                                v-on:click="formatFromMP"
+                        >
+                             MoonPhase 源码格式化
+                        </button>
+                    </div>
+
                     {{-- 导入来源框数据 --}}
                     <div class="sbdo-item flex-cell">
                         <button class="btn btn-sm btn-success"
@@ -706,6 +716,27 @@
                 this.animeList        = res;
                 // 多存一份备份数据, 用于恢复
                 this.animeListDefault = JSON.parse(JSON.stringify(res));
+            },
+            formatFromMP: function(){
+                let source = this.batch_import_source;
+                source = source.replace(/^ +/, '');
+                source = source.replace(/\n +/g, '\n');
+                source = source.replace(/\n([^<])/g, '$1');
+
+                let arr = source.split('\n');
+                let res = [];
+                const getURL = /.*href="(.*?)".*>([^<].*?[^>])<\/.*/;
+                getURL.compile(getURL);
+
+                for(let i = 0; i < arr.length; i++) {
+                    if(arr[i].indexOf('href') > -1) {
+                        const url   = arr[i].match(getURL)[1];
+                        const title = arr[i].match(getURL)[2];
+                        res.push(title + ',' + url);
+                    }
+                }
+                res = res.join('\n');
+                this.batch_import_source = res;
             },
             unifySet: function() {
                 let targetArr   = this.animeList;

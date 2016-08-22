@@ -380,12 +380,12 @@
                     </div>
                 </div>
 
-                {{-- 统一设置 --}}
+                {{-- 设置选中的内容 --}}
                 <div style="flex-grow: 1; text-align: right" class="flex-cell">
                     <button type="button" class="btn btn-sm btn-primary"
                             v-on:click="unifySet"
                     >
-                        统一设置
+                        设置选中内容
                     </button>
                 </div>
             </div>
@@ -712,9 +712,11 @@
                 const sourceObj = this.unifySetting;
 
                 for (let i = 0; i < targetArr.length; i++) {
-                    targetArr[i].oa_year   = sourceObj.oa_year;
-                    targetArr[i].oa_season = sourceObj.oa_season;
-                    targetArr[i].lifecycle = sourceObj.lifecycle;
+                    if(targetArr[i].selected) {
+                        targetArr[i].oa_year   = sourceObj.oa_year;
+                        targetArr[i].oa_season = sourceObj.oa_season;
+                        targetArr[i].lifecycle = sourceObj.lifecycle;
+                    }
                 }
 
                 this.animeList = targetArr;

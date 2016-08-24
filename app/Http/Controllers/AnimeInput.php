@@ -132,7 +132,8 @@ class AnimeInput extends staffController
                 'anime_premiere_media'  => $data['premiereMedia']['value'],
                 'anime_sequel'          => $data['isSequel']['value'],
                 'anime_duration_format' => $data['duration']['value'],
-                'anime_end'             => $data['isEnd']['value'],
+                // TODO: 改为 anime_lifecycle
+                'anime_end'             => false,
                 'anime_oa_year'         => $data['oa_year']['value'],
                 'anime_oa_season'       => $data['oa_season']['value'],
                 'anime_oa_time'         => $data['oa_time']['value'],
@@ -217,7 +218,8 @@ class AnimeInput extends staffController
             'premiereMedia' => ['label' => '首播媒体', 'value' => $animeBasicData['anime_premiere_media']],
             'isSequel'      => ['label' => '是否续作', 'value' => $animeBasicData['anime_sequel']],
             'sequelComment' => ['label' => '备注', 'value' => $animeBasicData['anime_sequel_comment']],
-            'isEnd'         => ['label' => '是否完结', 'value' => $animeBasicData['anime_end']],
+            //TODO: 改为 anime_lifecycle
+//            'isEnd'         => ['label' => '是否完结', 'value' => $animeBasicData['anime_end']],
             'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['anime_counted']],
             'oa_year'       => ['value' => $animeBasicData['anime_oa_year']],
             'oa_season'     => ['value' => $animeBasicData['anime_oa_season']],
@@ -480,7 +482,8 @@ class AnimeInput extends staffController
                 $basicData->anime_premiere_media = $data['premiereMedia']['value'];
                 $basicData->anime_sequel = $data['isSequel']['value'];
                 $basicData->anime_duration_format = $data['duration']['value'];
-                $basicData->anime_end = $data['isEnd']['value'];
+                // TODO: 改为 anime_lifecycle
+//                $basicData->anime_end = $data['isEnd']['value'];
                 $basicData->anime_description = $data['description']['value'];
                 $basicData->anime_counted = $data['isCounted']['value'];
                 $basicData->anime_oa_year = $data['oa_year']['value'];

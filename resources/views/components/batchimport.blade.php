@@ -431,10 +431,19 @@
                             </button>
                         </div>
 
+                        {{-- 删除选中内容 --}}
+                        <div style="flex-grow: 1" class="flex-cell">
+                            <button class="btn btn-sm btn-danger"
+                                    v-on:click="removeSelected(true)"
+                            >
+                                删除选中内容
+                            </button>
+                        </div>
+
                         {{-- 删除未选中内容 --}}
                         <div style="flex-grow: 1" class="flex-cell">
                             <button class="btn btn-sm btn-danger"
-                                    v-on:click="animeList = ''"
+                                    v-on:click="removeSelected(false)"
                             >
                                 删除未选中内容
                             </button>
@@ -844,6 +853,24 @@
                     alert('不能删除最后一个内容卡')
                 }
             },
+            removeSelected: function(boolen){
+                const animeList = this.animeList;
+                let arr = [];
+                if(boolen) {
+                    for (let i = 0; i < animeList.length; i++) {
+                        if (!animeList[i].selected) {
+                            arr.push(animeList[i]);
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < animeList.length; i++) {
+                        if (animeList[i].selected) {
+                            arr.push(animeList[i]);
+                        }
+                    }
+                }
+                this.animeList = arr;
+            },
             toggleSelect: function (index) {
                 /*
                  *  0 ~ : toggle an item.selected
@@ -908,7 +935,7 @@
             create:       function () {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {
-                        console.log('year');
+                        console.log(r);
                     }
                 });
             }

@@ -16,7 +16,7 @@ class AnimeBasicData extends Model
         'anime_premiere_media',
         'anime_sequel',
         'anime_duration_format',
-        'anime_end',
+        'anime_lifecycle',
         'anime_descritption',
         'anime_counted',
         'anime_oa_year',

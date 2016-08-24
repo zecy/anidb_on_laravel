@@ -34,7 +34,7 @@ class AnimeBasicData extends Model
         'anime_sequel',
         'anime_sequel_comment',
         'anime_duration_format',
-        'anime_end',
+        'anime_lifecycle',
         'anime_story',
         'anime_description',
         'anime_counted',

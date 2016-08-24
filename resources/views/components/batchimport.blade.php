@@ -42,78 +42,79 @@
         border: 1px solid #aaa;
         border-radius: 3px;
     }
-        /* <editor-fold desc="0. 通用设置"> */
-        /* 0. 固定设置栏 */
-        .unify-sticky {
-            position: fixed;
-            top: 0;
-            width: 750px;
-            z-index: 2;
-        }
 
-        #unify-setting input {
-            background: #fefefe;
-        }
+    /* <editor-fold desc="0. 通用设置"> */
+    /* 0. 固定设置栏 */
+    .unify-sticky {
+        position: fixed;
+        top: 0;
+        width: 750px;
+        z-index: 2;
+    }
 
-        /* </editor-fold> */
+    #unify-setting input {
+        background: #fefefe;
+    }
 
-        /* <editor-fold desc="1. 数据来源框操作栏"> */
-        .sbdo-item {
-            flex-grow: 1;
-        }
+    /* </editor-fold> */
 
-        /* </editor-fold> */
+    /* <editor-fold desc="1. 数据来源框操作栏"> */
+    .sbdo-item {
+        flex-grow: 1;
+    }
 
-        /* <editor-fold desc="2. 多选控制栏"> */
-        button.select-range {
-            flex-shrink: 1;
-        }
+    /* </editor-fold> */
 
-        button.select-range.min {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-            border-right: 0;
-        }
+    /* <editor-fold desc="2. 多选控制栏"> */
+    button.select-range {
+        flex-shrink: 1;
+    }
 
-        button.select-range.max {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-            border-left: 0;
-        }
+    button.select-range.min {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: 0;
+    }
 
-        input.select-range {
-            flex-shrink: 1;
-            min-width: 30px;
-            max-width: 50px;
-        }
+    button.select-range.max {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: 0;
+    }
 
-        span.select-range {
-            margin: 0 0.5em
-        }
+    input.select-range {
+        flex-shrink: 1;
+        min-width: 30px;
+        max-width: 50px;
+    }
 
-        /* </editor-fold> */
+    span.select-range {
+        margin: 0 0.5em
+    }
 
-        /* <editor-fold desc="3. 统一设置栏"> */
-        #unify-setting label {
-                                 margin: 0 1em;
-                                 }
+    /* </editor-fold> */
 
-        #unify-setting .toggle-button {
-                                          margin: 0 5px;
-                                          }
+    /* <editor-fold desc="3. 统一设置栏"> */
+    #unify-setting label {
+        margin: 0 1em;
+    }
 
-        #unify-setting-year {
-                                width: 60px;
-                                margin-right: 0.5em;
-                                }
+    #unify-setting .toggle-button {
+        margin: 0 5px;
+    }
 
-        #unify-setting-year input {
-                                      height: 24px;
-                                      line-height: 24px;
-                                      text-align: center;
-                                      }
+    #unify-setting-year {
+        width: 60px;
+        margin-right: 0.5em;
+    }
 
-        /* </editor-fold> */
+    #unify-setting-year input {
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+    }
+
+    /* </editor-fold> */
 
     /*</editor-fold>*/
 
@@ -125,31 +126,31 @@
         width: calc(50% - 20px);
     }
 
-        /* <editor-fold desc="1. 标题栏"> */
-        .dialog-header {
-            width: 100%;
-            background: #efefef;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
-            padding: 5px;
-            font-size: 1.6rem;
-        }
+    /* <editor-fold desc="1. 标题栏"> */
+    .dialog-header {
+        width: 100%;
+        background: #efefef;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        padding: 5px;
+        font-size: 1.6rem;
+    }
 
-            .dialog-selected {
-                margin-right: 5px
-            }
+    .dialog-selected {
+        margin-right: 5px
+    }
 
-            .dialog-selected button {
-                flex-shrink: 1;
-                transform: scale(0.75)
-            }
+    .dialog-selected button {
+        flex-shrink: 1;
+        transform: scale(0.75)
+    }
 
-            .dialog-control {
-                flex-grow: 1;
-                text-align: right;
-            }
+    .dialog-control {
+        flex-grow: 1;
+        text-align: right;
+    }
 
-        /* </editor-fold> */
+    /* </editor-fold> */
 
     .quick-import-dialog .dialog-row {
         border-top: 1px solid #ccc;
@@ -204,243 +205,252 @@
         {{-- 控制栏 --}}
         <div id="unify-setting" class="flex-cell">
 
-            {{-- 来源框操作 --}}
-            <fieldset v-bind:disabled="batch_import_source === ''">
-                <div id="source-box-data-operation" class="setting-row flex-grid">
-                    {{-- 格式化 --}}
-                    <div class="sbdo-item flex-cell">
-                        <button class="btn btn-sm btn-success"
-                                v-on:click="formatFromMP"
-                        >
-                             MoonPhase 源码格式化
-                        </button>
-                    </div>
+            @{{ processing }}
+            {{--TODO: 增加一个动画效果, 在上传数据时整个控制栏内容变成 loading 动画--}}
+            <div v-if="processing">
+                <spinkit></spinkit>
+            </div>
 
-                    {{-- 导入来源框数据 --}}
-                    <div class="sbdo-item flex-cell">
-                        <button class="btn btn-sm btn-success"
-                                v-on:click="sourceToList"
-                        >
-                            导入来源框数据
-                        </button>
-                    </div>
+            <div v-if="!processing">
+                {{-- 来源框操作 --}}
+                <fieldset v-bind:disabled="batch_import_source === ''">
+                    <div id="source-box-data-operation" class="setting-row flex-grid">
+                        {{-- 格式化 --}}
+                        <div class="sbdo-item flex-cell">
+                            <button class="btn btn-sm btn-success"
+                                    v-on:click="formatFromMP"
+                            >
+                                MoonPhase 源码格式化
+                            </button>
+                        </div>
 
-                    {{-- 已导入数据显示 --}}
+                        {{-- 导入来源框数据 --}}
+                        <div class="sbdo-item flex-cell">
+                            <button class="btn btn-sm btn-success"
+                                    v-on:click="sourceToList"
+                            >
+                                导入来源框数据
+                            </button>
+                        </div>
+
+                        {{-- 已导入数据显示 --}}
+                        <div class="sbdo-item flex cell">
+                            <span>现有&nbsp;</span>
+                            @{{ animeList.length }}
+                            <span>&nbsp;条数据</span>
+                        </div>
+
+                        {{-- 清除来源框数据 --}}
+                        <div class="sbdo-item flex-cell">
+                            <button class="btn btn-sm btn-danger"
+                                    v-on:click="batch_import_source = ''"
+                            >
+                                清除来源框数据
+                            </button>
+                        </div>
+
+                        {{-- 清除已导入的数据 --}}
+                        <div class="sbdo-item flex-cell">
+                            <button class="btn btn-sm btn-danger"
+                                    v-on:click="animeList = ''"
+                            >
+                                清除已导入的数据
+                            </button>
+                        </div>
+
+                        {{-- 重置已导入的数据 --}}
+                        <div class="sbdo-item flex-cell">
+                            <button class="btn btn-sm btn-danger"
+                                    v-on:click="animeList = animeListDefault"
+                            >
+                                重置已导入的数据
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+
+                {{-- 设置多选, 反选, 取消选择等 --}}
+                <div class="setting-row flex-grid">
+                    {{-- 显示已选择的内容卡数量 --}}
                     <div class="sbdo-item flex cell">
-                        <span>现有&nbsp;</span>
-                        @{{ animeList.length }}
+                        <span>选中&nbsp;</span>
+                        @{{ animeSelectedCount }}
                         <span>&nbsp;条数据</span>
                     </div>
 
-                    {{-- 清除来源框数据 --}}
+                    {{-- 全选 / 全不选 --}}
                     <div class="sbdo-item flex-cell">
-                        <button class="btn btn-sm btn-danger"
-                                v-on:click="batch_import_source = ''"
+                        <button type="button"
+                                class="btn btn-sm"
+                                v-bind:class="allSelected === 1 ? 'btn-danger' : 'btn-success'"
+                                v-on:click="toggleSelect(allSelected === 1 ? -2 : -1)"
                         >
-                            清除来源框数据
+                            @{{ allSelected === 1 ? '全部不选' : '全部选择' }}
                         </button>
                     </div>
 
-                    {{-- 清除已导入的数据 --}}
+                    {{-- 反选 --}}
                     <div class="sbdo-item flex-cell">
-                        <button class="btn btn-sm btn-danger"
-                                v-on:click="animeList = ''"
+                        <button type="button"
+                                class="btn btn-sm btn-primary"
+                                v-bind:disabled="!(allSelected === 0)"
+                                v-on:click="toggleSelect(-3)"
                         >
-                            清除已导入的数据
+                            反选
                         </button>
                     </div>
 
-                    {{-- 重置已导入的数据 --}}
-                    <div class="sbdo-item flex-cell">
-                        <button class="btn btn-sm btn-danger"
-                                v-on:click="animeList = animeListDefault"
-                        >
-                            重置已导入的数据
-                        </button>
-                    </div>
-                </div>
-            </fieldset>
-
-            {{-- 设置多选, 反选, 取消选择等 --}}
-            <div class="setting-row flex-grid">
-                {{-- 显示已选择的内容卡数量 --}}
-                <div class="sbdo-item flex cell">
-                    <span>选中&nbsp;</span>
-                    @{{ animeSelectedCount }}
-                    <span>&nbsp;条数据</span>
-                </div>
-
-                {{-- 全选 / 全不选 --}}
-                <div class="sbdo-item flex-cell">
-                    <button type="button"
-                            class="btn btn-sm"
-                            v-bind:class="allSelected === 1 ? 'btn-danger' : 'btn-success'"
-                            v-on:click="toggleSelect(allSelected === 1 ? -2 : -1)"
-                    >
-                        @{{ allSelected === 1 ? '全部不选' : '全部选择' }}
-                    </button>
-                </div>
-
-                {{-- 反选 --}}
-                <div class="sbdo-item flex-cell">
-                    <button type="button"
-                            class="btn btn-sm btn-primary"
-                            v-bind:disabled="!(allSelected === 0)"
-                            v-on:click="toggleSelect(-3)"
-                    >
-                        反选
-                    </button>
-                </div>
-
-                {{-- 范围选择 --}}
-                <div class="sbdo-item select-range flex-cell">
-                    <div class="flex-grid">
-                        <div class="flex-cell">
-                            <button type="button"
-                                    class="select-range min btn btn-sm btn-default"
-                                    v-on:click="selectRangeMin = 1"
-                            >
-                                <span class="glyphicon glyphicon-step-backward"></span>
-                            </button>
-                        </div>
+                    {{-- 范围选择 --}}
+                    <div class="sbdo-item select-range flex-cell">
+                        <div class="flex-grid">
                             <div class="flex-cell">
-                            <input class="select-range"
-                                   type="text"
-                                   v-model="selectRangeMin"
-                            >
-                        </div>
-                        <span class="select-range">〜</span>
-                        <div class="flex-cell">
-                            <input class="select-range"
-                                   type="text"
-                                   v-model="selectRangeMax"
-                            >
-                        </div>
-                        <div class="flex-cell">
-                            <button type="button"
-                                    class="select-range max btn btn-sm btn-default"
-                                    v-on:click="selectRangeMax = animeList.length"
-                            >
-                                <span class="glyphicon glyphicon glyphicon-step-forward"></span>
-                            </button>
-                        </div>
+                                <button type="button"
+                                        class="select-range min btn btn-sm btn-default"
+                                        v-on:click="selectRangeMin = 1"
+                                >
+                                    <span class="glyphicon glyphicon-step-backward"></span>
+                                </button>
+                            </div>
+                            <div class="flex-cell">
+                                <input class="select-range"
+                                       type="text"
+                                       v-model="selectRangeMin"
+                                >
+                            </div>
+                            <span class="select-range">〜</span>
 
-                        <div class="flex-cell">
-                            <button type="button"
-                                    class="btn btn-sm btn-primary"
-                                    v-on:click="toggleSelect(-4)"
-                            >
-                                选择标号范围内作品
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                            <div class="flex-cell">
+                                <input class="select-range"
+                                       type="text"
+                                       v-model="selectRangeMax"
+                                >
+                            </div>
+                            <div class="flex-cell">
+                                <button type="button"
+                                        class="select-range max btn btn-sm btn-default"
+                                        v-on:click="selectRangeMax = animeList.length"
+                                >
+                                    <span class="glyphicon glyphicon glyphicon-step-forward"></span>
+                                </button>
+                            </div>
 
-            </div>
-
-            {{-- 数据统一操作 --}}
-            <div class="setting-row flex-grid">
-
-                {{-- 出品周期 --}}
-                <div class="flex-cell">
-                    <div class="flex-grid">
-                        <label>出品周期</label>
-
-                        <div class="toggle-button flex-cell"
-                             v-for="link in [{ label: '企划中', value : 'planning'},{ label: '动画化决定', value : 'comming'},{ label: '播出中', value : 'airing'},{ label: '完结', value : 'end'}]"
-                        >
-                            <button class="btn btn-xs"
-                                    type="button"
-                                    v-on:click="unifySetting.lifecycle = link.value"
-                                    v-bind:class="unifySetting.lifecycle === link.value ? 'btn-primary' : 'btn-default'"
-                            >
-                                <span>@{{ link.label }}</span>
-                                <input type="radio" value="@{{ link.value }}" v-model="unifySetting.lifecycle"
-                                       class="hidden">
-                            </button>
+                            <div class="flex-cell">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        v-on:click="toggleSelect(-4)"
+                                >
+                                    选择标号范围内作品
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-                {{-- 首播年月 --}}
-                <div id="unify-setting-season" class="flex-cell">
-                    <div class="flex-grid">
-                        <label>首播季度</label>
-
-                        <div id="unify-setting-year" class="flex-cell">
-                            <input type="text"
-                                   v-model="unifySetting.oa_year"
-                            >
-                        </div>
-
-                        <div class="flex-cell">年</div>
-
-                        <div class="toggle-button flex-cell"
-                             v-for="season in [{'label':'冬', 'value':1},{'label':'春', 'value':4},{'label':'夏', 'value':7},{'label':'秋', 'value':10}]">
-                            <button class="btn btn-xs"
-                                    type="button"
-                                    v-on:click="unifySetting.oa_season = season.value"
-                                    v-bind:class="unifySetting.oa_season === season.value ? 'btn-primary' : 'btn-default'"
-                            >
-                                <span>@{{ season.label }}</span>
-                                <input type="radio" value="@{{ season.value }}" v-model="unifySetting.season"
-                                       class="hidden">
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- 设置选中的内容 --}}
-                <div style="flex-grow: 1; text-align: right" class="flex-cell">
-                    <button type="button" class="btn btn-sm btn-primary"
-                            v-on:click="unifySet"
-                    >
-                        设置选中内容
-                    </button>
-                </div>
-            </div>
-
-            {{-- 导入数据库 --}}
-            <fieldset v-bind:disabled="animeList[0].title_ori === ''">
+                {{-- 数据统一操作 --}}
                 <div class="setting-row flex-grid">
 
-                    {{-- 全部导入到数据库 --}}
-                    <div style="flex-grow: 1;" class="flex-cell">
-                        <button class="btn btn-sm btn-success"
-                                v-on:click="sourceToList"
-                        >
-                            全部导入到数据库
-                        </button>
+                    {{-- 出品周期 --}}
+                    <div class="flex-cell">
+                        <div class="flex-grid">
+                            <label>出品周期</label>
+
+                            <div class="toggle-button flex-cell"
+                                 v-for="link in [{ label: '企划中', value : 'planning'},{ label: '动画化决定', value : 'comming'},{ label: '播出中', value : 'airing'},{ label: '完结', value : 'end'}]"
+                            >
+                                <button class="btn btn-xs"
+                                        type="button"
+                                        v-on:click="unifySetting.lifecycle = link.value"
+                                        v-bind:class="unifySetting.lifecycle === link.value ? 'btn-primary' : 'btn-default'"
+                                >
+                                    <span>@{{ link.label }}</span>
+                                    <input type="radio" value="@{{ link.value }}" v-model="unifySetting.lifecycle"
+                                           class="hidden">
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    {{-- 选中部分导入数据库 --}}
-                    <div style="flex-grow: 1" class="flex-cell">
-                        <button class="btn btn-sm btn-success"
-                                v-on:click="batch_import_source = ''"
-                        >
-                            选中部分导入数据库
-                        </button>
+                    {{-- 首播年月 --}}
+                    <div id="unify-setting-season" class="flex-cell">
+                        <div class="flex-grid">
+                            <label>首播季度</label>
+
+                            <div id="unify-setting-year" class="flex-cell">
+                                <input type="text"
+                                       v-model="unifySetting.oa_year"
+                                >
+                            </div>
+
+                            <div class="flex-cell">年</div>
+
+                            <div class="toggle-button flex-cell"
+                                 v-for="season in [{'label':'冬', 'value':1},{'label':'春', 'value':4},{'label':'夏', 'value':7},{'label':'秋', 'value':10}]">
+                                <button class="btn btn-xs"
+                                        type="button"
+                                        v-on:click="unifySetting.oa_season = season.value"
+                                        v-bind:class="unifySetting.oa_season === season.value ? 'btn-primary' : 'btn-default'"
+                                >
+                                    <span>@{{ season.label }}</span>
+                                    <input type="radio" value="@{{ season.value }}" v-model="unifySetting.season"
+                                           class="hidden">
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    {{-- 删除未选中内容 --}}
-                    <div style="flex-grow: 1" class="flex-cell">
-                        <button class="btn btn-sm btn-danger"
-                                v-on:click="animeList = ''"
+                    {{-- 设置选中的内容 --}}
+                    <div style="flex-grow: 1; text-align: right" class="flex-cell">
+                        <button type="button" class="btn btn-sm btn-primary"
+                                v-on:click="unifySet"
                         >
-                            删除未选中内容
-                        </button>
-                    </div>
-
-                    {{-- 重置已导入的数据 --}}
-                    <div style="flex-grow: 1" class="flex-cell">
-                        <button class="btn btn-sm btn-danger"
-                                v-on:click="animeList = animeListDefault"
-                        >
-                            重置已导入的数据
+                            设置选中内容
                         </button>
                     </div>
                 </div>
-            </fieldset>
+
+                {{-- 导入数据库 --}}
+                <fieldset v-bind:disabled="animeList[0].title_ori === ''">
+                    <div class="setting-row flex-grid">
+
+                        {{-- 全部导入到数据库 --}}
+                        <div style="flex-grow: 1;" class="flex-cell">
+                            <button class="btn btn-sm btn-success"
+                                    v-on:click="create"
+                            >
+                                全部导入到数据库
+                            </button>
+                        </div>
+
+                        {{-- 选中部分导入数据库 --}}
+                        <div style="flex-grow: 1" class="flex-cell">
+                            <button class="btn btn-sm btn-success"
+                                    v-on:click="batch_import_source = ''"
+                            >
+                                选中部分导入数据库
+                            </button>
+                        </div>
+
+                        {{-- 删除未选中内容 --}}
+                        <div style="flex-grow: 1" class="flex-cell">
+                            <button class="btn btn-sm btn-danger"
+                                    v-on:click="animeList = ''"
+                            >
+                                删除未选中内容
+                            </button>
+                        </div>
+
+                        {{-- 重置已导入的数据 --}}
+                        <div style="flex-grow: 1" class="flex-cell">
+                            <button class="btn btn-sm btn-danger"
+                                    v-on:click="animeList = animeListDefault"
+                            >
+                                重置已导入的数据
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
         </div>
 
         {{-- 内容卡片 --}}
@@ -596,9 +606,10 @@
 
 <script>
 
-    let unifySetting    = '';
-    const stickyClass   = "unify-sticky";
-    let ibh             = 0;
+    let unifySetting = '';
+    const stickyClass = "unify-sticky";
+    let ibh = 0;
+
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > ibh) {
@@ -608,30 +619,33 @@
         }
     });
 
+    const animeListTmp = [{
+        'title_ori':  '',
+        'title_zhcn': '',
+        'hp':         '',
+        'abbr':       '',
+        'oa_year':    2016,
+        'oa_season':  1,
+        'lifecycle':  'comming',
+        'selected':   true
+    }];
+
     var batch_import = Vue.extend({
         template: '#batch-import',
-        ready: function() {
+        ready:    function () {
             unifySetting = $("#unify-setting");
             ibh          = $('.import-box').height();
         },
-        data:function() {
+        data:     function () {
             return {
+                'processing':          false,
                 'batch_import_source': '',
                 'unifySetting':        {
                     'lifecycle': 'comming',
                     'oa_year':   2016,
                     'oa_season': 1
                 },
-                'animeList':           [{
-                    'title_ori':  '',
-                    'title_zhcn': '',
-                    'hp':         '',
-                    'abbr':       '',
-                    'oa_year':    2016,
-                    'oa_season':  1,
-                    'lifecycle':  '',
-                    'selected':   true
-                }],
+                'animeList': JSON.parse(JSON.stringify(animeListTmp)),
                 'animeListDefault':    [],
                 'animeSelectedCount':  1,
                 'allSelected':         1,
@@ -639,35 +653,35 @@
                 'selectRangeMax':      1
             }
         },
-        watch:{
-            animeList: function(newVal) {
+        watch:    {
+            animeList:      function (newVal) {
                 let i     = 0;
                 const len = newVal.length;
-                for(let j = 0; j < newVal.length; j++) {
-                    if(newVal[j].selected) i++
+                for (let j = 0; j < newVal.length; j++) {
+                    if (newVal[j].selected) i++
                 }
-                if( i === len ) {
+                if (i === len) {
                     // 全选
                     this.allSelected = 1
-                } else if ( i === 0 ) {
+                } else if (i === 0) {
                     // 全不选
                     this.allSelected = -1
                 } else {
                     // 部分选, 此时将会出现反选按钮
-                   this.allSelected = 0
+                    this.allSelected = 0
                 }
                 this.animeSelectedCount = i
             },
-            selectRangeMin: function(newVal) {
-                if(newVal < 1) this.selectRangeMin = 1
+            selectRangeMin: function (newVal) {
+                if (newVal < 1) this.selectRangeMin = 1
             },
-            selectRangeMax: function(newVal) {
+            selectRangeMax: function (newVal) {
                 const len = this.animeList.length;
-                if(newVal > len) this.selectRangeMax = len
+                if (newVal > len) this.selectRangeMax = len
             }
         },
         methods:  {
-            sourceToList: function() {
+            sourceToList: function () {
 
                 // 把源数据按换行切成数组
                 const arr = this.batch_import_source.split('\n');
@@ -682,6 +696,7 @@
                 const getAbbrTLD = /http[s]?:.*\/(.*?)$/;
 
                 // 找出属于使用三级域名的网址
+                // TODO: 持久化到数据库
                 const SLD = /tbs|dreamcreation|tv-tokyo|mbs/;
                 getAbbrSLD.compile(getAbbrSLD);
                 getAbbrTLD.compile(getAbbrTLD);
@@ -689,9 +704,9 @@
 
                 for (let i = 0; i < arr.length; i++) {
                     const item = arr[i].split(',');
-                    let abbr = [];
-                    let hp   = '';
-                    if(item[1] !== '' && item[1] !== undefined) {
+                    let abbr   = [];
+                    let hp     = '';
+                    if (item[1] !== '' && item[1] !== undefined) {
                         hp = item[1];
                         if (hp.search(SLD) > -1) {
                             abbr = hp.match(getAbbrTLD)[1];
@@ -699,7 +714,7 @@
                             abbr = hp.match(getAbbrSLD)[1];
                         }
                     } else {
-                       abbr = ''
+                        abbr = ''
                     }
                     res.push({
                         'title_ori':  item[0],
@@ -709,41 +724,41 @@
                         'oa_year':    2016,
                         'oa_season':  1,
                         'lifecycle':  'comming',
-                        'selected': true
+                        'selected':   true
                     });
                 }
 
-                this.animeList        = res;
+                this.animeList = res;
                 // 多存一份备份数据, 用于恢复
                 this.animeListDefault = JSON.parse(JSON.stringify(res));
             },
-            formatFromMP: function(){
+            formatFromMP: function () {
                 let source = this.batch_import_source;
-                source = source.replace(/^ +/, '');
-                source = source.replace(/\n +/g, '\n');
-                source = source.replace(/\n([^<])/g, '$1');
+                source     = source.replace(/^ +/, '');
+                source     = source.replace(/\n +/g, '\n');
+                source     = source.replace(/\n([^<])/g, '$1');
 
-                let arr = source.split('\n');
-                let res = [];
+                let arr      = source.split('\n');
+                let res      = [];
                 const getURL = /.*href="(.*?)".*>([^<].*?[^>])<\/.*/;
                 getURL.compile(getURL);
 
-                for(let i = 0; i < arr.length; i++) {
-                    if(arr[i].indexOf('href') > -1) {
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i].indexOf('href') > -1) {
                         const url   = arr[i].match(getURL)[1];
                         const title = arr[i].match(getURL)[2];
                         res.push(title + ',' + url);
                     }
                 }
-                res = res.join('\n');
+                res                      = res.join('\n');
                 this.batch_import_source = res;
             },
-            unifySet: function() {
+            unifySet:     function () {
                 let targetArr   = this.animeList;
                 const sourceObj = this.unifySetting;
 
                 for (let i = 0; i < targetArr.length; i++) {
-                    if(targetArr[i].selected) {
+                    if (targetArr[i].selected) {
                         targetArr[i].oa_year   = sourceObj.oa_year;
                         targetArr[i].oa_season = sourceObj.oa_season;
                         targetArr[i].lifecycle = sourceObj.lifecycle;
@@ -752,19 +767,19 @@
 
                 this.animeList = targetArr;
             },
-            move: function(direction, index){
+            move:         function (direction, index) {
                 const i = Number(index);
                 let arr = JSON.parse(JSON.stringify(this.animeList));
                 switch (direction) {
                     case 'up':
-                        if(i <= 1) {
+                        if (i <= 1) {
                             alert('这已经是首行，添加卡片请用「 + 」按钮')
                         } else {
                             const tmp1 = arr[i - 2];
                             const tmp2 = arr[i - 1];
                             arr.splice(i - 2, 1, arr[i]);
                             arr.splice(i - 1, 1, tmp1);
-                            arr.splice(i    , 1, tmp2);
+                            arr.splice(i, 1, tmp2);
                         }
                         this.animeList = arr;
                         document.getElementById('dialog-control-' + direction + '-' + (i - 2)).focus();
@@ -777,7 +792,7 @@
                             const tmp2 = arr[i + 2];
                             arr.splice(i + 2, 1, arr[i]);
                             arr.splice(i + 1, 1, tmp2);
-                            arr.splice(i    , 1, tmp1);
+                            arr.splice(i, 1, tmp1);
                         }
                         this.animeList = arr;
                         document.getElementById('dialog-control-' + direction + '-' + (i + 2)).focus();
@@ -806,21 +821,21 @@
                         break;
                 }
             },
-            add: function(index){
-                const i = Number(index);
-                const arr = JSON.parse(JSON.stringify(this.animeList));
-                let obj = arr[i];
-                obj.title_ori = '';
+            add:          function (index) {
+                const i        = Number(index);
+                const arr      = JSON.parse(JSON.stringify(this.animeList));
+                let obj        = arr[i];
+                obj.title_ori  = '';
                 obj.title_zhcn = '';
-                obj.hp = '';
-                obj.abbr = '';
+                obj.hp         = '';
+                obj.abbr       = '';
                 this.animeList.splice(i + 1, 0, obj);
-                this.$nextTick(function(){
+                this.$nextTick(function () {
                     document.getElementById('quick-import-dialog-title-ori-' + (i + 1)).focus();
                 })
             },
-            remove: function(index){
-                if(this.animeList.length > 1) {
+            remove:       function (index) {
+                if (this.animeList.length > 1) {
                     const i = Number(index);
                     let arr = JSON.parse(JSON.stringify(this.animeList));
                     arr.splice(i, 1);
@@ -829,14 +844,14 @@
                     alert('不能删除最后一个内容卡')
                 }
             },
-            toggleSelect: function(index){
+            toggleSelect: function (index) {
                 /*
-                *  0 ~ : toggle an item.selected
-                *  -1  : change all item.selected = true
-                *  -2  : change all item.selected = false
-                *  -3  : inverse
-                *  -4  : select in range
-                * */
+                 *  0 ~ : toggle an item.selected
+                 *  -1  : change all item.selected = true
+                 *  -2  : change all item.selected = false
+                 *  -3  : inverse
+                 *  -4  : select in range
+                 * */
 
                 const i   = Number(index);
                 const arr = JSON.parse(JSON.stringify(this.animeList));
@@ -864,20 +879,20 @@
                     case -4:
                         let min = Number(this.selectRangeMin);
                         let max = Number(this.selectRangeMax);
-                        if(min > max) {
+                        if (min > max) {
                             const r = confirm('你填写的标号范围中，最小值 ＞ 最大值\n你要把两个值对调并继续吗？');
-                            if(r) {
-                                const tmp = min;
-                                min       = max;
-                                max       = tmp;
+                            if (r) {
+                                const tmp           = min;
+                                min                 = max;
+                                max                 = tmp;
                                 this.selectRangeMin = min;
                                 this.selectRangeMax = max;
                             } else {
                                 return
                             }
                         }
-                        for( let j = 0; j < arr.length; j++) {
-                            if(min - 1 <= j && j < max) {
+                        for (let j = 0; j < arr.length; j++) {
+                            if (min - 1 <= j && j < max) {
                                 arr[j].selected = true
                             } else {
                                 arr[j].selected = false
@@ -890,7 +905,7 @@
                 }
                 this.animeList = arr;
             },
-            create: function() {
+            create:       function () {
                 this.$http.post('/manager/resource', {data: this.animeList}).then(function (r) {
                     if (r.status == 200) {
                         console.log('year');

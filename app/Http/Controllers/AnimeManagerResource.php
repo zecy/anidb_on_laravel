@@ -82,4 +82,13 @@ class AnimeManagerResource extends Controller
     public function filt(Request $request) {
         dd($request);
     }
+
+    public function store(Request $request) {
+
+        $data = $request->all()['data'];
+
+
+
+        return \Response::json($data);
+    }
 }

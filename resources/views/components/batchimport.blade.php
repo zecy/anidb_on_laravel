@@ -252,7 +252,7 @@
                         {{-- 清除已导入的数据 --}}
                         <div class="sbdo-item flex-cell">
                             <button class="btn btn-sm btn-danger"
-                                    v-on:click="animeList = ''"
+                                    v-on:click="animeList = primitiveAnimeList"
                             >
                                 清除已导入的数据
                             </button>
@@ -610,7 +610,6 @@
     const stickyClass = "unify-sticky";
     let ibh = 0;
 
-
     $(window).scroll(function () {
         if ($(this).scrollTop() > ibh) {
             unifySetting.addClass(stickyClass);
@@ -645,7 +644,8 @@
                     'oa_year':   2016,
                     'oa_season': 1
                 },
-                'animeList': JSON.parse(JSON.stringify(animeListTmp)),
+                'primitiveAnimeList':  JSON.parse(JSON.stringify(animeListTmp)),
+                'animeList':           JSON.parse(JSON.stringify(animeListTmp)),
                 'animeListDefault':    [],
                 'animeSelectedCount':  1,
                 'allSelected':         1,

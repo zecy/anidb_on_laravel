@@ -23,39 +23,123 @@
     .anime-img img {
         width: 100%;
     }
+
+    .paginavitor {
+        width: auto;
+        margin: auto;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .paginavitor__page {
+        text-align: center;
+        padding:0 5px;
+    }
+
+    .paginavitor__page__btn {
+        padding: 0 0.5em;
+    }
+
+    .paginavitor__page.flex-cell {
+        flex-shrink: 1;
+        flex-basis: auto;
+    }
 </style>
+<template id="anime-list">
+    <div class="anime-list flex-grid">
+
+        <div v-if="loading">
+            <spinkit></spinkit>
+        </div>
+
+        <div v-if="!loading"
+             class="anime-info flex-cell"
+             v-for="anime in animeList"
+             track-by="$index"
+        >
+            <a class="anime-img" :href="'/input/' + anime.abbr" about="_blank">
+                <img :src="'{{ asset('anime-image') }}/' + anime.abbr + '/thumb.png'">
+            </a>
+
+            <p class="title">@{{ anime.title_ori }}</p>
+
+            <p class="title">@{{ anime.title_zh_cn }}</p>
+        </div>
+
+        <ul class="paginavitor flex-grid">
+            <li class="paginavitor__page flex-cell"
+                v-on:click="currentPage = 1"
+                v-show="currentPage > 3"
+            >
+                <button class="paginavitor__page__btn btn btn-xs btn-default"
+                >
+                    <span class="glyphicon glyphicon-step-backward"></span>
+                    1
+                    </button>
+            </li>
+            <li class="paginavitor__page flex-cell">
+                <button class="paginavitor__page__btn btn btn-xs btn-default">
+                    <span class="glyphicon glyphicon-triangle-left"></span>
+                </button>
+            </li>
+            <li class="paginavitor__page flex-cell"
+                v-for="page in pages"
+                v-on:click="currentPage = page"
+            >
+                <button class="btn btn-xs paginavitor__page__btn"
+                        v-bind:class="page === currentPage ? 'btn-primary' : 'btn-default'"
+                >
+                    @{{ page }}
+                </button>
+            </li>
+            <li class="paginavitor__page flex-cell"
+                {{--v-if="currentPage + 2 < lastPage"--}}
+            >
+                <button class="paginavitor__page__btn btn btn-xs btn-default">
+                    <span class="glyphicon glyphicon-triangle-right"></span>
+                </button>
+            </li>
+            <li class="paginavitor__page flex-cell"
+                v-show="currentPage < 9"
+            >
+                <button class="paginavitor__page__btn btn btn-xs btn-default"
+                        v-on:click="currentPage = lastPage"
+                >
+                    @{{ lastPage }}
+                    <span class="glyphicon glyphicon-step-forward"></span>
+                </button>
+            </li>
+        </ul>
+    </div>
+</template>
 <script>
     var anime_list = Vue.extend({
         template: '#anime-list',
-        props: {
-            'after_date': {
+        props:    {
+            'after_date':  {
                 // 统计晚于这个日期播出的作品(含)
                 // 格式: yyyy-mm-dd
                 type:    String,
                 default: ''
             },  // 统计晚于这个日期播出的作品(含)
-
             'before_date': {
                 // 统计早这个日期播出的作品(含)
                 // 格式: yyyy-mm-dd
                 type:    String,
                 default: ''
             },  // 统计早这个日期播出的作品(含)
-
-            'time': {
+            'time':        {
                 // 作品播出的时段
                 // 分 all, daily, morning, prime, midnight
                 type:    String,
                 default: 'all'
             }, // 作品播出的时段
-
-            'is_end': {
+            'is_end':      {
                 // 统计的作品是否已经结束
                 // true: 1, false: -1, all: 0
                 type:    Number,
                 default: 0
             }, // 统计的作品是否已经结束
-
             'is_complete': {
                 // 作品信息是否已经录入完全
                 // true: 1, false: -1, all: 0
@@ -65,9 +149,12 @@
         },
         data:     function () {
             return {
-                'animeList': [],
-                'useFilter': false,
-                'loading': true
+                'animeList':   [],
+                'useFilter':   false,
+                'loading':     true,
+                'pages':       [1],
+                'currentPage': 0,
+                'lastPage':  1
             }
         },
         computed: {
@@ -84,8 +171,38 @@
                 }
             }
         },
+        watch: {
+            currentPage: function(val) {
+                const curPage = val;
+                const lastPage = this.lastPage;
+                let pages = [];
+
+                if(lastPage > 5 && curPage <= 2 ) {
+                    for(let i = 1; i <= 5; i++ ) {
+                        pages.push(i);
+                    }
+                } else if ( lastPage > 5 && 2 < curPage && curPage < ( lastPage -2  ) ) {
+                    pages[0] = curPage - 2;
+                    pages[1] = curPage - 1;
+                    pages[2] = curPage;
+                    pages[3] = curPage + 1;
+                    pages[4] = curPage + 2
+                } else if ( lastPage > 5 && curPage > ( lastPage - 3 ) ) {
+                    pages[0] = lastPage - 4;
+                    pages[1] = lastPage - 3;
+                    pages[2] = lastPage - 2;
+                    pages[3] = lastPage - 1;
+                    pages[4] = lastPage
+                } else {
+                    for(let i = 1; i <= lastPage; i++ ) {
+                        pages.push(i);
+                    }
+                }
+                this.pages = pages;
+            }
+        },
         ready:    function () {
-           if (!this.useFilter) {
+            if (!this.useFilter) {
                 this.all();
             } else {
                 const afterDate   = this.after_date;
@@ -97,13 +214,15 @@
             }
         },
         methods:  {
-            all: function () {
+            all:       function () {
                 this.$http.get('/manager/resource').then(function (res) {
                     if (res.status === 200) {
-                        this.animeList = res.data;
-                        this.loading   = false;
+                        this.animeList   = res.data.animes;
+                        this.currentPage = res.data.current_page;
+                        this.lastPage  = res.data.last_page;
+                        this.loading     = false;
                     }
-                });
+                })
             },
             someAnime: function (ad, bd, ti, ie, ic) {
                 const conditions = {
@@ -114,32 +233,12 @@
                     'is_complete': ic
                 };
                 console.log(conditions);
-/*                this.$http.post('/manager/resource/filt?=' + conditions).then(function (res) {
-                    if (res.status === 200) {
-                        return res.data;
-                    }
-                });*/
+                /*                this.$http.post('/manager/resource/filt?=' + conditions).then(function (res) {
+                 if (res.status === 200) {
+                 return res.data;
+                 }
+                 });*/
             }
         }
     });
 </script>
-<template id="anime-list">
-    <div class="anime-list flex-grid">
-        <div v-if="loading">
-            <spinkit></spinkit>
-        </div>
-        <div v-if="!loading"
-             class="anime-info flex-cell"
-             v-for="anime in animeList"
-             track-by="$index"
-        >
-            <a class="anime-img" :href="'/input/' + anime.abbr" about="_blank">
-                <img :src="'{{ asset('anime-image') }}/' + anime.abbr + '/thumb.png'">
-            </a>
-
-            <p class="title">@{{ anime.title_ori }}</p>
-
-            <p class="title">@{{ anime.title_zh_cn }}</p>
-        </div>
-    </div>
-</template>

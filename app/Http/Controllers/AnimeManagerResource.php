@@ -15,9 +15,12 @@ class AnimeManagerResource extends Controller
 
         $animes = AnimeBasicData::orderBy('anime_oa_year')
             ->orderBy('anime_oa_season')
-            ->get();
+            ->paginate(10);
 
-        $animeInfo = [];
+        $animeInfo = $animes->toArray();
+
+        $animeInfo['data'] = [];
+        $animeInfo['animes'] = [];
 
         foreach($animes as $anime) {
 
@@ -58,11 +61,11 @@ class AnimeManagerResource extends Controller
                 'date'        => $animeOA
             ];
 
-            $animeInfo[] = $singleAnimeInfo;
+            $animeInfo['animes'][] = $singleAnimeInfo;
 
         }
 
-        usort($animeInfo, function($a, $b){
+        usort($animeInfo['data'], function($a, $b){
             if ($a['date'] === '') {
                 return 1;
             } elseif ($b['date'] === '') {

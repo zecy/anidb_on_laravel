@@ -620,10 +620,12 @@
     let ibh = 0;
 
     $(window).scroll(function () {
-        if ($(this).scrollTop() > ibh) {
-            unifySetting.addClass(stickyClass);
-        } else {
-            unifySetting.removeClass(stickyClass);
+        if(unifySetting) {
+            if ($(this).scrollTop() > ibh) {
+                unifySetting.addClass(stickyClass);
+            } else {
+                unifySetting.removeClass(stickyClass);
+            }
         }
     });
 

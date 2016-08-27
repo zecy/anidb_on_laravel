@@ -70,7 +70,7 @@
             <li class="paginavitor__page flex-cell"
             >
                 <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="currentPage = 1"
+                        v-on:click="getAll(1)"
                         v-bind:disabled="currentPage < 4"
                 >
                     <span class="glyphicon glyphicon-step-backward"></span>
@@ -79,7 +79,7 @@
             </li>
             <li class="paginavitor__page flex-cell">
                 <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="currentPage -= 1"
+                        v-on:click="getAll(currentPage -= 1)"
                         v-bind:disabled="currentPage === 1"
                 >
                     <span class="glyphicon glyphicon-triangle-left"></span>
@@ -91,13 +91,14 @@
             >
                 <button class="btn btn-xs paginavitor__page__btn"
                         v-bind:class="page === currentPage ? 'btn-primary' : 'btn-default'"
+                        v-on:click="getAll(page)"
                 >
                     @{{ page }}
                 </button>
             </li>
             <li class="paginavitor__page flex-cell">
                 <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="currentPage += 1"
+                        v-on:click="getAll(currentPage += 1)"
                         v-bind:disabled="currentPage === lastPage"
                 >
                     <span class="glyphicon glyphicon-triangle-right"></span>
@@ -106,7 +107,7 @@
             <li class="paginavitor__page flex-cell"
             >
                 <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="currentPage = lastPage"
+                        v-on:click="getAll(lastPage)"
                         v-bind:disabled="currentPage > 8"
                 >
                     @{{ lastPage }}
@@ -158,7 +159,7 @@
                 'loading':     true,
                 'pages':       [1],
                 'currentPage': 0,
-                'lastPage':  1
+                'lastPage':    1
             }
         },
         computed: {
@@ -207,7 +208,7 @@
         },
         ready:    function () {
             if (!this.useFilter) {
-                this.all();
+                this.getAll();
             } else {
                 const afterDate   = this.after_date;
                 const beforeDate  = this.before_date;
@@ -218,8 +219,10 @@
             }
         },
         methods:  {
-            all:       function () {
-                this.$http.get('/manager/resource').then(function (res) {
+            getAll:       function (p) {
+                this.loading = true;
+                const page = p === undefined ? '' : ('?page=' + p);
+                this.$http.get('/manager/resource' + page).then(function (res) {
                     if (res.status === 200) {
                         this.animeList   = res.data.animes;
                         this.currentPage = res.data.current_page;

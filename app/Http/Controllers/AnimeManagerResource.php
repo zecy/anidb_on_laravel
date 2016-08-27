@@ -15,7 +15,7 @@ class AnimeManagerResource extends Controller
 
         $animes = AnimeBasicData::orderBy('anime_oa_year')
             ->orderBy('anime_oa_season')
-            ->paginate(10);
+            ->paginate(20);
 
         $animeInfo = $animes->toArray();
 

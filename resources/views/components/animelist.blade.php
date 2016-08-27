@@ -27,7 +27,6 @@
     .paginavitor {
         width: auto;
         margin: auto;
-        font-size: 1.2rem;
         text-align: center;
     }
 
@@ -37,6 +36,7 @@
     }
 
     .paginavitor__page__btn {
+        font-size: 1.4rem;
         padding: 0 0.5em;
     }
 
@@ -68,17 +68,20 @@
 
         <ul class="paginavitor flex-grid">
             <li class="paginavitor__page flex-cell"
-                v-on:click="currentPage = 1"
-                v-show="currentPage > 3"
             >
                 <button class="paginavitor__page__btn btn btn-xs btn-default"
+                        v-on:click="currentPage = 1"
+                        v-bind:disabled="currentPage < 4"
                 >
                     <span class="glyphicon glyphicon-step-backward"></span>
                     1
                     </button>
             </li>
             <li class="paginavitor__page flex-cell">
-                <button class="paginavitor__page__btn btn btn-xs btn-default">
+                <button class="paginavitor__page__btn btn btn-xs btn-default"
+                        v-on:click="currentPage -= 1"
+                        v-bind:disabled="currentPage === 1"
+                >
                     <span class="glyphicon glyphicon-triangle-left"></span>
                 </button>
             </li>
@@ -92,18 +95,19 @@
                     @{{ page }}
                 </button>
             </li>
-            <li class="paginavitor__page flex-cell"
-                {{--v-if="currentPage + 2 < lastPage"--}}
-            >
-                <button class="paginavitor__page__btn btn btn-xs btn-default">
+            <li class="paginavitor__page flex-cell">
+                <button class="paginavitor__page__btn btn btn-xs btn-default"
+                        v-on:click="currentPage += 1"
+                        v-bind:disabled="currentPage === lastPage"
+                >
                     <span class="glyphicon glyphicon-triangle-right"></span>
                 </button>
             </li>
             <li class="paginavitor__page flex-cell"
-                v-show="currentPage < 9"
             >
                 <button class="paginavitor__page__btn btn btn-xs btn-default"
                         v-on:click="currentPage = lastPage"
+                        v-bind:disabled="currentPage > 8"
                 >
                     @{{ lastPage }}
                     <span class="glyphicon glyphicon-step-forward"></span>

@@ -8,6 +8,10 @@
         flex: 0 0 20%
     }
 
+    .anime-list__spinkit {
+        width: 100%;
+    }
+
     .anime-info {
         height: 300px;
         padding: 5px;
@@ -28,7 +32,16 @@
 <template id="anime-list">
     <div class="anime-list flex-grid">
 
-        <div v-if="loading">
+        <div style="width: 100%;">
+            <paginavigator
+                    :last_page="lastPage"
+                    :current_page.sync="currentPage"
+            ></paginavigator>
+        </div>
+
+        <div class="anime-list__spinkit"
+             v-if="loading"
+        >
             <spinkit></spinkit>
         </div>
 

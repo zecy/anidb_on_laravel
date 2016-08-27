@@ -24,26 +24,6 @@
         width: 100%;
     }
 
-    .paginavitor {
-        width: auto;
-        margin: auto;
-        text-align: center;
-    }
-
-    .paginavitor__page {
-        text-align: center;
-        padding:0 5px;
-    }
-
-    .paginavitor__page__btn {
-        font-size: 1.4rem;
-        padding: 0 0.5em;
-    }
-
-    .paginavitor__page.flex-cell {
-        flex-shrink: 1;
-        flex-basis: auto;
-    }
 </style>
 <template id="anime-list">
     <div class="anime-list flex-grid">
@@ -66,55 +46,12 @@
             <p class="title">@{{ anime.title_zh_cn }}</p>
         </div>
 
-        <ul class="paginavitor flex-grid">
-            <li class="paginavitor__page flex-cell"
-            >
-                <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="getAll(1)"
-                        v-bind:disabled="currentPage < 4"
-                >
-                    <span class="glyphicon glyphicon-step-backward"></span>
-                    1
-                    </button>
-            </li>
-            <li class="paginavitor__page flex-cell">
-                <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="getAll(currentPage -= 1)"
-                        v-bind:disabled="currentPage === 1"
-                >
-                    <span class="glyphicon glyphicon-triangle-left"></span>
-                </button>
-            </li>
-            <li class="paginavitor__page flex-cell"
-                v-for="page in pages"
-                v-on:click="currentPage = page"
-            >
-                <button class="btn btn-xs paginavitor__page__btn"
-                        v-bind:class="page === currentPage ? 'btn-primary' : 'btn-default'"
-                        v-on:click="getAll(page)"
-                >
-                    @{{ page }}
-                </button>
-            </li>
-            <li class="paginavitor__page flex-cell">
-                <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="getAll(currentPage += 1)"
-                        v-bind:disabled="currentPage === lastPage"
-                >
-                    <span class="glyphicon glyphicon-triangle-right"></span>
-                </button>
-            </li>
-            <li class="paginavitor__page flex-cell"
-            >
-                <button class="paginavitor__page__btn btn btn-xs btn-default"
-                        v-on:click="getAll(lastPage)"
-                        v-bind:disabled="currentPage > 8"
-                >
-                    @{{ lastPage }}
-                    <span class="glyphicon glyphicon-step-forward"></span>
-                </button>
-            </li>
-        </ul>
+        <div style="width: 100%;">
+            <paginavigator
+                    :last_page="lastPage"
+                    :current_page.sync="currentPage"
+            ></paginavigator>
+        </div>
     </div>
 </template>
 <script>
@@ -157,8 +94,7 @@
                 'animeList':   [],
                 'useFilter':   false,
                 'loading':     true,
-                'pages':       [1],
-                'currentPage': 0,
+                'currentPage': 1,
                 'lastPage':    1
             }
         },
@@ -178,32 +114,7 @@
         },
         watch: {
             currentPage: function(val) {
-                const curPage = val;
-                const lastPage = this.lastPage;
-                let pages = [];
-
-                if(lastPage > 5 && curPage <= 2 ) {
-                    for(let i = 1; i <= 5; i++ ) {
-                        pages.push(i);
-                    }
-                } else if ( lastPage > 5 && 2 < curPage && curPage < ( lastPage -2  ) ) {
-                    pages[0] = curPage - 2;
-                    pages[1] = curPage - 1;
-                    pages[2] = curPage;
-                    pages[3] = curPage + 1;
-                    pages[4] = curPage + 2
-                } else if ( lastPage > 5 && curPage > ( lastPage - 3 ) ) {
-                    pages[0] = lastPage - 4;
-                    pages[1] = lastPage - 3;
-                    pages[2] = lastPage - 2;
-                    pages[3] = lastPage - 1;
-                    pages[4] = lastPage
-                } else {
-                    for(let i = 1; i <= lastPage; i++ ) {
-                        pages.push(i);
-                    }
-                }
-                this.pages = pages;
+                this.getAll(val);
             }
         },
         ready:    function () {
@@ -226,7 +137,7 @@
                     if (res.status === 200) {
                         this.animeList   = res.data.animes;
                         this.currentPage = res.data.current_page;
-                        this.lastPage  = res.data.last_page;
+                        this.lastPage    = res.data.last_page;
                         this.loading     = false;
                     }
                 })

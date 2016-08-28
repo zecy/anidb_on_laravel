@@ -9,6 +9,7 @@ class AnimeInfo extends Model
 /**
  * id
  * series_id
+ * abbr
  * title_ori
  * title_zh_cn
  * kur

@@ -31,7 +31,7 @@
         <li class="paginavigator__page flex-cell">
             <button class="paginavigator__page__btn btn btn-xs btn-default"
                     v-on:click="current_page = 1"
-                    v-bind:disabled="current_page < 4"
+                    v-bind:disabled="current_page === 1"
             >
                 <span class="glyphicon glyphicon-step-backward"></span>
                 1

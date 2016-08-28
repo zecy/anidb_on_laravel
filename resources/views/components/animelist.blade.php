@@ -51,7 +51,7 @@
              track-by="$index"
         >
             <a class="anime-img" :href="'/input/' + anime.abbr" about="_blank">
-                <img :src="'{{ asset('anime-image') }}/' + anime.abbr + '/thumb.png'">
+                <img v-bind:src="'{{ asset('anime-image') }}/' + (anime.has_thumb ? (anime.abbr + '/') : '') + 'thumb.png'">
             </a>
 
             <p class="title">@{{ anime.title_ori }}</p>

@@ -148,7 +148,7 @@
                 const page = p === undefined ? '' : ('?page=' + p);
                 this.$http.get('/manager/resource' + page).then(function (res) {
                     if (res.status === 200) {
-                        this.animeList   = res.data.animes;
+                        this.animeList   = res.data.data;
                         this.currentPage = res.data.current_page;
                         this.lastPage    = res.data.last_page;
                         this.loading     = false;

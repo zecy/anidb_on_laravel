@@ -4,3 +4,5 @@
 @include('components.vselect')
 @include('components.togglebutton')
 @include('components.paginavigator')
+@include('components.animelist-dialog')
+@include('components.processbar')

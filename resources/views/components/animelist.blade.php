@@ -4,24 +4,8 @@
         margin: 0 auto;
     }
 
-    .anime-list .flex-cell {
-        flex: 0 0 20%
-    }
-
     .anime-list__spinkit {
         width: 100%;
-    }
-
-    .anime-info {
-        height: 300px;
-        padding: 5px;
-    }
-
-    .anime-img {
-        display: block;
-        width: 100%;
-        height: 200px;
-        background-color: #ccc;
     }
 
     .anime-img img {
@@ -45,19 +29,10 @@
             <spinkit></spinkit>
         </div>
 
-        <div v-if="!loading"
-             class="anime-info flex-cell"
-             v-for="anime in animeList"
-             track-by="$index"
-        >
-            <a class="anime-img" :href="'/input/' + anime.abbr" about="_blank">
-                <img v-bind:src="'{{ asset('anime-image') }}/' + (anime.has_thumb ? (anime.abbr + '/') : '') + 'thumb.png'">
-            </a>
-
-            <p class="title">@{{ anime.title_ori }}</p>
-
-            <p class="title">@{{ anime.title_zh_cn }}</p>
-        </div>
+        <animelistdialog
+                v-if="!loading"
+                :anime_list="animeList"
+        ></animelistdialog>
 
         <div style="width: 100%;">
             <paginavigator

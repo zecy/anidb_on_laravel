@@ -21,6 +21,7 @@
     }
 
     .ps__bar-0 {
+        width: 25%;
         z-index: 4;
     }
 
@@ -29,6 +30,7 @@
     }
 
     .ps__bar-1 {
+        width: 50%;
         z-index: 3;
     }
 
@@ -37,6 +39,7 @@
     }
 
     .ps__bar-2 {
+        width: 75%;
         z-index: 2;
     }
 
@@ -49,6 +52,7 @@
         z-index: 1;
    }
 
+    .ps__bar-0:hover, .ps__bar-1:hover, .ps__bar-2:hover, .ps__bar-3:hover {
         background-color: deepskyblue;
     }
 
@@ -61,18 +65,21 @@
     <div class="process-setter">
         <div class="ps__box">
             <div class="ps__bar-0"
-                 v-bind:class="value === 0 ? 'ps__bar--unready' : ''"
+                 v-bind:class="state === 0 ? 'ps__bar--unready' : ''"
+                 v-on:click="setValue(0)"
             ></div>
             <div class="ps__bar-1"
-                 v-bind:class="value === 1 ? 'ps__bar--forpublished' : ''"
+                 v-bind:class="state === 1 ? 'ps__bar--forpublished' : ''"
+                 v-bind:style="bool ? 'display:none' : ''"
                  v-on:click="setValue(1)"
             ></div>
             <div class="ps__bar-2"
-                 v-bind:class="value === 2 ? 'ps__bar--forcounted' : ''"
+                 v-bind:class="state === 2 ? 'ps__bar--forcounted' : ''"
+                 v-bind:style="bool ? 'display:none' : ''"
                  v-on:click="setValue(2)"
             ></div>
             <div class="ps__bar-3"
-                 v-bind:class="value === 3 ? 'ps__bar--complete' : ''"
+                 v-bind:class="state === 3 ? 'ps__bar--complete' : ''"
                  v-on:click="setValue(3)"
             ></div>
         </div>
@@ -83,21 +90,42 @@
         template: '#process-setter',
         props: {
             'value': {
-                type:    Number,
-                default: 0,
                 twoWay:  true
             },
             'max':   {
                 type:    Number,
                 default: 3
+            },
+            'bool': {
+                type: Boolean,
+                default: false
+            }
+        },
+        data: function(){
+            return {
+                state: 0
+            }
+        },
+        computed: {
+            state: function(){
+                const val = this.value;
+                if (this.bool) {
+                    return val ? 3 : 0;
+                } else {
+                   return val
+                }
             }
         },
         methods: {
             setValue: function(newVal) {
-                if ( newVal !=0 && newVal === this.value) {
-                    this.value = 0
+                if(!this.bool) {
+                    this.value = newVal;
                 } else {
-                   this.value = newVal;
+                    if( newVal === 3 ) {
+                        this.value = true
+                    } else {
+                        this.value = false
+                    }
                 }
             }
         }

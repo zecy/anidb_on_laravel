@@ -1,7 +1,3 @@
-
-<searchanime :is_complete="basicData.id.value"
-></searchanime>
-
 <h2>基本信息</h2>
 <form id="maininfo" class="form form-horizontal">
     <fieldset disabled="@{{ processing }}">
@@ -60,11 +56,6 @@
                         ></togglebutton>
                     </div>
 
-                    <div class="toggle-button">
-                        <togglebutton :toggle.sync="basicData.isEnd.value"
-                                      content="完结"
-                        ></togglebutton>
-                    </div>
 
                     <div class="toggle-button">
                         <togglebutton :toggle.sync="basicData.isCounted.value"

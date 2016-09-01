@@ -219,7 +219,7 @@ class AnimeInput extends staffController
             'premiereMedia' => ['label' => '首播媒体', 'value' => $animeBasicData['premiere_media']],
             'isSequel'      => ['label' => '是否续作', 'value' => $animeBasicData['is_sequel']],
             'sequelComment' => ['label' => '备注', 'value' => $animeBasicData['sequel_comment']],
-            'lifcycle'      => ['label' => '出品周期', 'value' => $animeBasicData['lifecycle']],
+            'lifecycle'     => ['label' => '出品周期', 'value' => $animeBasicData['lifecycle']],
             'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['is_counted']],
             'oa_year'       => ['value' => $animeBasicData['oa_year']],
             'oa_season'     => ['value' => $animeBasicData['oa_season']],

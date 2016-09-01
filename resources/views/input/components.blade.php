@@ -5,3 +5,5 @@
 @include('components.components')
 @include('components.vselect')
 @include('components.togglebutton')
+@include('components.anime-data-states')
+@include('components.process-setter')

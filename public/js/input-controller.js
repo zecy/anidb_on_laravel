@@ -822,7 +822,7 @@ var basicDataTmp = {
     ],
     'isSequel':      {'label': '是否续作', 'value': false},
     'sequelComment': {'label': '备注', 'value': ''},
-    'isEnd':         {'label': '是否完结', 'value': true},
+    'lifecycle':     {'label': '出品周期', 'value': 'ended'},
     'isCounted':     {'label': '是否纳入统计', 'value': true},
     'story':         {'label': '故事', 'value': ''},
     'description':   {'label': '介绍', 'value': ''},

@@ -141,12 +141,13 @@
                 </li>
                 <li>
                     <label>作品简介</label>
-{{--                    <div class="ads__processbar">
+                    <div class="ads__processbar">
                         <processsetter
-                                :value.sync="data_states.has_description ? 3 : 0"
+                                :value.sync="data_states.has_description"
+                                :bool="true"
                                 :max="3"
                         ></processsetter>
-                    </div>--}}
+                    </div>
                 </li>
                 <li>
                     <label>STAFF</label>
@@ -160,19 +161,21 @@
                 <li>
                     <label>缩略图</label>
                     <div class="ads__processbar">
-{{--                        <processsetter
-                                :value.sync="data_states.has_thumb ? 3 : 0"
+                        <processsetter
+                                :value.sync="data_states.has_thumb"
+                                :bool="true"
                                 :max="3"
-                        ></processsetter>--}}
+                        ></processsetter>
                     </div>
                 </li>
                 <li>
                     <label>宣传画</label>
                     <div class="ads__processbar">
-{{--                        <processsetter
-                                :value.sync="data_states.has_poster ? 3 : 0"
+                        <processsetter
+                                :value.sync="data_states.has_poster"
+                                :bool="true"
                                 :max="3"
-                        ></processsetter>--}}
+                        ></processsetter>
                     </div>
                 </li>
                 <li>

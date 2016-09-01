@@ -29,13 +29,18 @@
     }
 
     .ads__info > ul {
-        height: 500px;
-        column-count: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
     }
 
     .ads__info li {
         font-size: 1.2em;
+        flex:0 0 10%;
         display: flex;
+        flex-direction: row;
+        align-items: center;
         padding: 5px 0;
     }
 
@@ -46,6 +51,7 @@
     }
 
     .ads__processbar {
+        height: 100%;
         flex: 0 0 50%;
     }
 </style>

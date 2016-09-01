@@ -3,7 +3,6 @@
  * Use For Vue.JS
  */
 
-
 /**
  * 格式化内容
  *
@@ -832,6 +831,28 @@ var basicDataTmp = {
     'oa_time':       {'label': '播放时段', 'value': 'midnight'}
 };
 
+var dataStatesTmp = {
+    'id':              0,
+    's_series':        0,
+    's_title':         0,
+    's_ori_works':     0,
+    's_url':           0,
+    's_eps':           0,
+    's_duration':      0,
+    's_time_format':   0,
+    's_media':         0,
+    's_time':          0,
+    'has_story':       false,
+    'has_description': false,
+    's_staff':         0,
+    'has_thumb':       false,
+    'has_poster':      false,
+    's_op_themes':     0,
+    's_ed_themes':     0,
+    's_insert_songs':  0,
+    's_cv':            0
+};
+
 var staffMembersTmp = [{
     'id':                 0,
     'pid':                0,
@@ -879,6 +900,7 @@ var vue = new Vue({
         'processing':   false,
         'scrolled':     0,
         'basicData':    JSON.parse(JSON.stringify(basicDataTmp)),
+        'dataStates':   JSON.parse(JSON.stringify(dataStatesTmp)),
         'staffMembers': JSON.parse(JSON.stringify(staffMembersTmp)),
         'castMembers':  JSON.parse(JSON.stringify(castMembersTmp)),
         'onair':        JSON.parse(JSON.stringify(onairTmp)),
@@ -1028,14 +1050,16 @@ var vue = new Vue({
 
             let inject = function (r, self) {
                 const bD = r.data.basicData;
+                const dS = r.data.dataStates;
                 const sM = r.data.staffMembers;
                 const cM = r.data.castMembers;
                 const oa = r.data.onairs;
 
                 let basicData    = bD.id.value != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
-                let staffMembers = sM.length != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
-                let castMembers  = cM.length != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
-                let onairs       = oa.length != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+                let dataStates   = dS.id.value != 0 ? dS : JSON.parse(JSON.stringify(dataStatesTmp));
+                let staffMembers = sM.length   != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
+                let castMembers  = cM.length   != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
+                let onairs       = oa.length   != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
 
                 //当 oriWorks 未有数据时, 重置 oriWorks.
                 if (basicData.oriWorks.length === 0) {
@@ -1043,6 +1067,7 @@ var vue = new Vue({
                 }
 
                 self.$set('basicData', basicData);
+                self.$set('dataStates', dataStates);
                 self.$set('staffMembers', staffMembers);
                 self.$set('castMembers', castMembers);
                 self.$set('onair', onairs);

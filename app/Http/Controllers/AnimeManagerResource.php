@@ -20,9 +20,30 @@ class AnimeManagerResource extends Controller
                 'abbr',
                 'title_ori',
                 'title_zh_cn',
+                'hp',
                 'oa_date',
                 'oa_time',
-                'has_thumb'
+                'oa_year',
+                'oa_season',
+                'oa_timeslot',
+                'lifecycle',
+                's_ori_works',
+                's_url',
+                's_eps',
+                's_duration',
+                's_time_format',
+                's_media',
+                's_date',
+                's_time',
+                'has_story',
+                'has_description',
+                's_staff',
+                'has_thumb',
+                'has_poster',
+                's_op_themes',
+                's_ed_themes',
+                's_insert_songs',
+                's_cv'
             ));
 
         return \Response::json($animes);

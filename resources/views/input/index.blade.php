@@ -16,6 +16,16 @@
             const anime_id = {{ $animeID }}
         </script>
 
+        {{-- 搜索组件 --}}
+        <searchanime :is_complete="basicData.id.value"></searchanime>
+
+        {{-- 信息情况 --}}
+        <h2>信息情况</h2>
+        <animedatastates
+                :data_states.sync="dataStates"
+                :abbr="basicData.abbr.value"
+        ></animedatastates>
+
         {{-- BasicData --}}
         @include('input.basicdata')
 

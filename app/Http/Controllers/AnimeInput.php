@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AnimeBasicData;
+use App\AnimeInfo;
 use App\AnimeLinks;
 use App\AnimeOnair;
 use App\AnimeTitles;
@@ -194,7 +195,7 @@ class AnimeInput extends staffController
      */
     public function show ($id)
     {
-        $animeBasicData = AnimeBasicData::where('anime_id', $id)->get()->toArray()[0];
+        $animeBasicData = AnimeInfo::find($id)->toArray();
         $animeLinks = AnimeLinks::where('anime_id', $id)->get()->toArray();
         $animeTitles = AnimeTitles::where('anime_id', $id)
             ->get(array(
@@ -209,28 +210,49 @@ class AnimeInput extends staffController
         $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)->orderBy('ori_id')->get()->toArray();
 
         $basicData = [
-            'id'            => ['label' => '动画ID', 'value' => $animeBasicData['anime_id']],
-            'seriesID'      => ['label' => '系列ID', 'value' => $animeBasicData['anime_series_id']],
+            'id'            => ['label' => '动画ID', 'value' => $animeBasicData['id']],
+            'seriesID'      => ['label' => '系列ID', 'value' => $animeBasicData['series_id']],
             'seriesTitle'   => ['label' => '系列ID', 'value' => ''],
-            'abbr'          => ['label' => '简称', 'value' => $animeBasicData['anime_abbr']],
-            'kur'           => ['label' => '长度', 'value' => $animeBasicData['anime_kur']],
-            'duration'      => ['label' => '时间规格', 'value' => $animeBasicData['anime_duration_format']],
-            'premiereMedia' => ['label' => '首播媒体', 'value' => $animeBasicData['anime_premiere_media']],
-            'isSequel'      => ['label' => '是否续作', 'value' => $animeBasicData['anime_sequel']],
-            'sequelComment' => ['label' => '备注', 'value' => $animeBasicData['anime_sequel_comment']],
-            //TODO: 改为 anime_lifecycle
-//            'isEnd'         => ['label' => '是否完结', 'value' => $animeBasicData['anime_end']],
-            'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['anime_counted']],
-            'oa_year'       => ['value' => $animeBasicData['anime_oa_year']],
-            'oa_season'     => ['value' => $animeBasicData['anime_oa_season']],
-            'oa_time'       => ['value' => $animeBasicData['anime_oa_time']],
-            'eps_oa'        => ['value' => $animeBasicData['anime_eps_oa']],
-            'eps_soft'      => ['value' => $animeBasicData['anime_eps_soft']],
+            'abbr'          => ['label' => '简称', 'value' => $animeBasicData['abbr']],
+            'kur'           => ['label' => '长度', 'value' => $animeBasicData['kur']],
+            'duration'      => ['label' => '时间规格', 'value' => $animeBasicData['duration_format']],
+            'premiereMedia' => ['label' => '首播媒体', 'value' => $animeBasicData['premiere_media']],
+            'isSequel'      => ['label' => '是否续作', 'value' => $animeBasicData['is_sequel']],
+            'sequelComment' => ['label' => '备注', 'value' => $animeBasicData['sequel_comment']],
+            'lifcycle'      => ['label' => '出品周期', 'value' => $animeBasicData['lifecycle']],
+            'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['is_counted']],
+            'oa_year'       => ['value' => $animeBasicData['oa_year']],
+            'oa_season'     => ['value' => $animeBasicData['oa_season']],
+            'oa_time'       => ['value' => $animeBasicData['oa_time']],
+            'eps_oa'        => ['value' => $animeBasicData['eps_oa']],
+            'eps_soft'      => ['value' => $animeBasicData['eps_soft']],
             'story'         => ['label' => '故事', 'value' => ''],
-            'description'   => ['label' => '介绍', 'value' => $animeBasicData['anime_description']],
+            'description'   => ['label' => '介绍', 'value' => $animeBasicData['description']],
             'title'         => [],
             'links'         => [],
             'oriWorks'      => []
+        ];
+
+        $dataStates = [
+            'id'              => $animeBasicData['id'],
+            's_series'        => $animeBasicData['s_series'],
+            's_title'         => $animeBasicData['s_title'],
+            's_ori_works'     => $animeBasicData['s_ori_works'],
+            's_url'           => $animeBasicData['s_url'],
+            's_eps'           => $animeBasicData['s_eps'],
+            's_duration'      => $animeBasicData['s_duration'],
+            's_time_format'   => $animeBasicData['s_time_format'],
+            's_media'         => $animeBasicData['s_media'],
+            's_time'          => $animeBasicData['s_time'],
+            'has_story'       => $animeBasicData['has_story'],
+            'has_description' => $animeBasicData['has_description'],
+            's_staff'         => $animeBasicData['s_staff'],
+            'has_thumb'       => $animeBasicData['has_thumb'],
+            'has_poster'      => $animeBasicData['has_poster'],
+            's_op_themes'     => $animeBasicData['s_op_themes'],
+            's_ed_themes'     => $animeBasicData['s_ed_themes'],
+            's_insert_songs'  => $animeBasicData['s_insert_songs'],
+            's_cv'            => $animeBasicData['s_cv']
         ];
 
         foreach ($animeTitles as $title) {
@@ -431,6 +453,7 @@ class AnimeInput extends staffController
         return \Response::json([
             'multiple'     => 0,
             'basicData'    => $basicData,
+            'dataStates'   => $dataStates,
             'staffMembers' => $staffMembers,
             'castMembers'  => $castMembers,
             'onairs'       => $onairs

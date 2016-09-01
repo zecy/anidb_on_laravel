@@ -45,7 +45,20 @@
 <script>
     Vue.component('processbar', {
         template: '#process-bar',
-        props:['value', 'max', 'show_content'],
+        props:{
+            'value' : {
+                type: Number,
+                default: 0
+            },
+            'max' : {
+                type: Number,
+                default: 1
+            },
+            'show_content': {
+                type: Boolean,
+                default: false
+            }
+        },
         data: function(){
             return {
                 percentage: '',

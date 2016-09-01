@@ -124,9 +124,6 @@
                 <li>
                     <ul class="anime-info-status">
                         <li>
-                            <label>基本信息</label>
-                        </li>
-                        <li>
                             <label>简&emsp;&emsp;介</label>
                             <div class="anime-info-status__process-bar">
                                 <processbar
@@ -154,7 +151,31 @@
                             </div>
                         </li>
                         <li>
-                            <label>OP/ED</label>
+                            <label>OP</label>
+                            <div class="anime-info-status__process-bar">
+                                <processbar
+                                        :value="anime.s_op_themes"
+                                        :max="3"
+                                ></processbar>
+                            </div>
+                        </li>
+                        <li>
+                            <label>ED</label>
+                            <div class="anime-info-status__process-bar">
+                                <processbar
+                                        :value="anime.s_ed_themes"
+                                        :max="3"
+                                ></processbar>
+                            </div>
+                        </li>
+                        <li>
+                            <label>插曲 </label>
+                            <div class="anime-info-status__process-bar">
+                                <processbar
+                                        :value="anime.s_insert_songs"
+                                        :max="3"
+                                ></processbar>
+                            </div>
                         </li>
                         <li>
                             <label>POSTER</label>

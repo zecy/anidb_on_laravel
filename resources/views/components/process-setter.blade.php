@@ -21,7 +21,6 @@
     }
 
     .ps__bar-0 {
-        width: 5%;
         z-index: 4;
     }
 
@@ -30,7 +29,6 @@
     }
 
     .ps__bar-1 {
-        width: 33.333333%;
         z-index: 3;
     }
 
@@ -39,7 +37,6 @@
     }
 
     .ps__bar-2 {
-        width: 66.666666%;
         z-index: 2;
     }
 
@@ -52,7 +49,6 @@
         z-index: 1;
    }
 
-    .ps__bar-1:hover, .ps__bar-2:hover, .ps__bar-3:hover {
         background-color: deepskyblue;
     }
 

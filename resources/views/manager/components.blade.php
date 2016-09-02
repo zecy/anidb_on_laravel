@@ -6,3 +6,4 @@
 @include('components.paginavigator')
 @include('components.animelist-dialog')
 @include('components.processbar')
+@include('components.anime-list-filter')

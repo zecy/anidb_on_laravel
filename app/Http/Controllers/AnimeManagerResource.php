@@ -9,48 +9,69 @@ use App\AnimeTitles;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use PhpParser\Node\Expr\Array_;
 
 class AnimeManagerResource extends Controller
 {
+    public function infoColumn() {
+        return [
+           'abbr',
+           'title_ori',
+           'title_zh_cn',
+           'hp',
+           'oa_date',
+           'oa_time',
+           'oa_year',
+           'oa_season',
+           'oa_timeslot',
+           'lifecycle',
+           's_ori_works',
+           's_url',
+           's_eps',
+           's_duration',
+           's_time_format',
+           's_media',
+           's_date',
+           's_time',
+           'has_story',
+           'has_description',
+           's_staff',
+           'has_thumb',
+           'has_poster',
+           's_op_themes',
+           's_ed_themes',
+           's_insert_songs',
+           's_cv'
+       ];
+    }
     public function index() {
 
         $animes = AnimeInfo::orderBy('oa_date')
             ->orderBy('oa_time')
-            ->paginate(20, array(
-                'abbr',
-                'title_ori',
-                'title_zh_cn',
-                'hp',
-                'oa_date',
-                'oa_time',
-                'oa_year',
-                'oa_season',
-                'oa_timeslot',
-                'lifecycle',
-                's_ori_works',
-                's_url',
-                's_eps',
-                's_duration',
-                's_time_format',
-                's_media',
-                's_date',
-                's_time',
-                'has_story',
-                'has_description',
-                's_staff',
-                'has_thumb',
-                'has_poster',
-                's_op_themes',
-                's_ed_themes',
-                's_insert_songs',
-                's_cv'
-            ));
+            ->paginate(20, $this->infoColumn());
 
         return \Response::json($animes);
     }
 
     public function filt(Request $request) {
-        dd($request);
+        $filter = $request['data'];
+
+        $startYear = $filter['startYear'];
+        $startSeason = $filter['startSeason'];
+        $endYear = $filter['endYear'];
+        $endSeason = $filter['endSeason'];
+        $lifecycle = $filter['lifecycle'];
+        $timeslot = $filter['timeslot'];
+
+        $animes = AnimeInfo::orderBy('oa_date')
+            ->orderBy('oa_time')
+            ->whereBetween('oa_year', [$startYear, $endYear])
+            ->whereBetween('oa_season', [$startSeason, $endSeason])
+            ->where('lifecycle', $lifecycle)
+            ->where('oa_timeslot', $timeslot)
+            ->paginate(20, $this->infoColumn());
+
+        return \Response::json($animes);
     }
 
     public function store(Request $request) {

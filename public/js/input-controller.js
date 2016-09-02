@@ -498,7 +498,21 @@ Vue.component('createeditbutton', {
             const len = newVal.length;
             const pos = this.pos;
 
-            if (pos != 'basicData') {
+            if( pos === 'basicData') {
+                if (newVal.id.value != 0 ) {
+                    this.processing_msg = '录入成功！正在返回';
+                    setTimeout(function () {
+                        this.btnProcessing = false
+                    }.bind(this), 1000);// 不使用 bind 的话 this 会被识别为 window
+                }
+            } else if ( pos === 'states') {
+                if (newVal.anime_id != 0 ) {
+                    this.processing_msg = '录入成功！正在返回';
+                    setTimeout(function () {
+                        this.btnProcessing = false
+                    }.bind(this), 1000);// 不使用 bind 的话 this 会被识别为 window
+                }
+            } else  {
                 if (newVal[len - 1].id != 0) {
                     this.processing_msg = '成功录入 ' + len + ' 条数据！正在返回';
                     setTimeout(function () {
@@ -514,13 +528,6 @@ Vue.component('createeditbutton', {
                                 vue.onairSource = "";
                         }
                     }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
-                }
-            } else {
-                if (newVal.id.value != 0 || newVal.id != 0) {
-                    this.processing_msg = '录入成功！正在返回';
-                    setTimeout(function () {
-                        this.btnProcessing = false
-                    }.bind(this), 1000);// 不使用 bind 的话 this 会被识别为 window
                 }
             }
         }
@@ -934,6 +941,14 @@ var vue = new Vue({
                         }
                     });
                     break;
+                case 'basicData':
+                    this.$http.post('input/states', {data: this.dataStates}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(this.basicData.id.value);
+                            this.processing = false;
+                        }
+                    });
+                    break;
                 case 'staff':
                     this.$http.post('input/staff', {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
@@ -979,9 +994,17 @@ var vue = new Vue({
                         link.orderIndex = j;
                     }
 
-                    this.$http.put('input/' + animeID, {data: this.basicData}).then(function (r) {
+                    this.$http.put('/input/' + animeID, {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(animeID);
+                            this.processing = false;
+                        }
+                    });
+                    break;
+                case 'states':
+                    this.$http.put('/input/states/' + animeID, {data: this.dataStates}).then(function (r) {
+                        if (r.status == 200) {
+                            this.showAnime(r.data.animeID);
                             this.processing = false;
                         }
                     });
@@ -1000,7 +1023,7 @@ var vue = new Vue({
                         }
                     }
 
-                    this.$http.put('input/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
+                    this.$http.put('/input/staff/' + animeID, {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(r.data.animeID);
                             this.processing = false;
@@ -1012,7 +1035,7 @@ var vue = new Vue({
                         let cast        = this.castMembers[i];
                         cast.orderIndex = i;
                     }
-                    this.$http.put('input/cast/' + animeID, {data: this.castMembers}).then(function (r) {
+                    this.$http.put('/input/cast/' + animeID, {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) {
                             //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
@@ -1025,7 +1048,7 @@ var vue = new Vue({
                         let oa        = this.onair[i];
                         oa.orderIndex = i;
                     }
-                    this.$http.put('input/onair/' + animeID, {data: this.onair}).then(function (r) {
+                    this.$http.put('/input/onair/' + animeID, {data: this.onair}).then(function (r) {
                         if (r.status == 200) {
                             //alert('更新成功!!');
                             this.showAnime(r.data.animeID);
@@ -1058,11 +1081,11 @@ var vue = new Vue({
                 const cM = r.data.castMembers;
                 const oa = r.data.onairs;
 
-                let basicData    = bD.id.value != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
-                let dataStates   = dS.id.value != 0 ? dS : JSON.parse(JSON.stringify(dataStatesTmp));
-                let staffMembers = sM.length   != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
-                let castMembers  = cM.length   != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
-                let onairs       = oa.length   != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+                let basicData    = bD.id.value        != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
+                let dataStates   = dS.anime_id.value  != 0 ? dS : JSON.parse(JSON.stringify(dataStatesTmp));
+                let staffMembers = sM.length          != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
+                let castMembers  = cM.length          != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
+                let onairs       = oa.length          != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
 
                 //当 oriWorks 未有数据时, 重置 oriWorks.
                 if (basicData.oriWorks.length === 0) {

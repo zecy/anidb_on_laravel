@@ -243,6 +243,7 @@ class AnimeInput extends staffController
             's_duration'      => $animeBasicData['s_duration'],
             's_time_format'   => $animeBasicData['s_time_format'],
             's_media'         => $animeBasicData['s_media'],
+            's_date'          => $animeBasicData['s_date'],
             's_time'          => $animeBasicData['s_time'],
             'has_story'       => $animeBasicData['has_story'],
             'has_description' => $animeBasicData['has_description'],

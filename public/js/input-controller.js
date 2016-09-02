@@ -480,6 +480,8 @@ Vue.component('createeditbutton', {
         msg: function () {
             const pos = this.pos;
             switch (pos) {
+                case 'states':
+                    return '统计';
                 case 'basicData':
                     return '动画';
                 case 'staff':
@@ -514,7 +516,7 @@ Vue.component('createeditbutton', {
                     }.bind(this), 2000);// 不使用 bind 的话 this 会被识别为 window
                 }
             } else {
-                if (newVal.id.value != 0) {
+                if (newVal.id.value != 0 || newVal.id != 0) {
                     this.processing_msg = '录入成功！正在返回';
                     setTimeout(function () {
                         this.btnProcessing = false
@@ -841,6 +843,7 @@ var dataStatesTmp = {
     's_duration':      0,
     's_time_format':   0,
     's_media':         0,
+    's_date':          0,
     's_time':          0,
     'has_story':       false,
     'has_description': false,

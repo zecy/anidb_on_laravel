@@ -137,6 +137,15 @@
                     </div>
                 </li>
                 <li>
+                    <label>播出日期</label>
+                    <div class="ads__processbar">
+                        <processsetter
+                                :value.sync="data_states.s_date"
+                                :max="3"
+                        ></processsetter>
+                    </div>
+                </li>
+                <li>
                     <label>播出时间</label>
                     <div class="ads__processbar">
                         <processsetter
@@ -223,6 +232,15 @@
             </ul>
         </div>
     </div>
+
+    <createeditbutton
+            :create_condition="data_states.id === 0"
+            :edit_condition="data_states.id != 0"
+            pos="states"
+            :anime_id="data_states.id"
+            :is_complete.sync="data_states"
+    ></createeditbutton>
+
 </template>
 <script>
     Vue.component('animedatastates', {

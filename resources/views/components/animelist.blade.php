@@ -11,10 +11,29 @@
     .anime-img img {
         width: 100%;
     }
+    
+    .no-anime-waring {
+        width: 100%;
+        background: rgba(205, 92, 92, .05);
+        margin: 30px auto;
+        text-align: center;
+        border-radius: 6px;
+        padding: 20px;
+        border: 3px solid indianred;
+        color: indianred;
+        font-size: 24px;
+    }
 
 </style>
 <template id="anime-list">
     <div class="anime-list flex-grid">
+
+        <animelistfilter
+                :anime_list.sync="animeList"
+                :filters.sync="filters"
+                :loading="loading"
+                :use_filter.sync="useFilter"
+        ></animelistfilter>
 
         <div style="width: 100%;">
             <paginavigator
@@ -29,10 +48,18 @@
             <spinkit></spinkit>
         </div>
 
-        <animelistdialog
-                v-if="!loading"
-                :anime_list="animeList"
-        ></animelistdialog>
+        <div v-if="!loading" style="width: 100%">
+            <animelistdialog
+                    v-if="!listEmpty"
+                    :anime_list="animeList"
+            ></animelistdialog>
+
+            <div v-if="listEmpty"
+                 class="no-anime-waring"
+            >
+                没有相关动画
+            </div>
+        </div>
 
         <div style="width: 100%;">
             <paginavigator
@@ -80,42 +107,37 @@
         data:     function () {
             return {
                 'animeList':   [],
+                'listEmpty':   true,
+                'filters':     {
+                    'startYear':   2016,
+                    'startSeason': 1,
+                    'endYear':     2016,
+                    'endSeason':   10,
+                    'lifecycle':   'ended',
+                    'timeslot':    'midnight'
+                },
                 'useFilter':   false,
                 'loading':     true,
                 'currentPage': 1,
                 'lastPage':    1
             }
         },
-        computed: {
-            useFilter: function () {
-                if (this.after_date === '' &&
-                        this.before_date === '' &&
-                        this.time === 'all' &&
-                        this.is_end === 0 &&
-                        this.is_complete === 0
-                ) {
-                    return false
+        watch: {
+            currentPage: function(val) {
+                if(!this.useFilter) {
+                    this.getAll(val);
                 } else {
-                    return true
+                    this.someAnime(val);
+                }
+            },
+            useFilter: function(bool) {
+                if(bool) {
+                    this.someAnime();
                 }
             }
         },
-        watch: {
-            currentPage: function(val) {
-                this.getAll(val);
-            }
-        },
         ready:    function () {
-            if (!this.useFilter) {
-                this.getAll();
-            } else {
-                const afterDate   = this.after_date;
-                const beforeDate  = this.before_date;
-                const time        = this.time;
-                const isEnd       = this.is_end;
-                const isCompelete = this.is_complete;
-                this.animeList    = this.someAnime(afterDate, beforeDate, time, isEnd, isCompelete);
-            }
+            this.getAll();
         },
         methods:  {
             getAll:       function (p) {
@@ -126,24 +148,29 @@
                         this.animeList   = res.data.data;
                         this.currentPage = res.data.current_page;
                         this.lastPage    = res.data.last_page;
+                        this.listEmpty   = false;
                         this.loading     = false;
                     }
                 })
             },
-            someAnime: function (ad, bd, ti, ie, ic) {
-                const conditions = {
-                    'after_date':  ad,
-                    'before_date': bd,
-                    'time':        ti,
-                    'is_end':      ie,
-                    'is_complete': ic
-                };
-                console.log(conditions);
-                /*                this.$http.post('/manager/resource/filt?=' + conditions).then(function (res) {
-                 if (res.status === 200) {
-                 return res.data;
-                 }
-                 });*/
+            someAnime: function (p) {
+                this.loading = true;
+                const page = p === undefined ? '' : ('?page=' + p );
+                this.$http.post('manager/resource/filt' + page, {data: this.filters}).then(function (r) {
+                    if (r.status == 200) {
+                        if(r.data.data.length != 0) {
+                            this.animeList   = r.data.data;
+                            this.currentPage = r.data.current_page;
+                            this.lastPage    = r.data.last_page;
+                            this.listEmpty   = false;
+                            this.loading     = false;
+                        } else {
+                            this.listEmpty   = true;
+                            this.loading     = false;
+                            this.useFilter   = false;
+                        }
+                    }
+                });
             }
         }
     });

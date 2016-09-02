@@ -234,7 +234,7 @@ class AnimeInput extends staffController
         ];
 
         $dataStates = [
-            'id'              => $animeBasicData['id'],
+            'anime_id'        => $animeBasicData['id'],
             's_series'        => $animeBasicData['s_series'],
             's_title'         => $animeBasicData['s_title'],
             's_ori_works'     => $animeBasicData['s_ori_works'],
@@ -506,8 +506,7 @@ class AnimeInput extends staffController
                 $basicData->anime_premiere_media = $data['premiereMedia']['value'];
                 $basicData->anime_sequel = $data['isSequel']['value'];
                 $basicData->anime_duration_format = $data['duration']['value'];
-                // TODO: 改为 anime_lifecycle
-//                $basicData->anime_end = $data['isEnd']['value'];
+                $basicData->anime_lifecycle = $data['lifecycle']['value'];
                 $basicData->anime_description = $data['description']['value'];
                 $basicData->anime_counted = $data['isCounted']['value'];
                 $basicData->anime_oa_year = $data['oa_year']['value'];

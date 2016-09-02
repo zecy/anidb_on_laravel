@@ -20,6 +20,14 @@ Route::get('input/{any?}', 'AnimeInput@showAbbr');
 
 Route::get('input', 'AnimeInput@index');
 
+Route::resource('input/states', 'AnimeDataStateController');
+
+Route::resource('input/staff', 'staffController');
+
+Route::resource('input/cast', 'castController');
+
+Route::resource('input/onair', 'onairController');
+
 Route::post('input', 'AnimeInput@store');
 
 Route::put('input/{request}', 'AnimeInput@update');
@@ -28,11 +36,6 @@ Route::DELETE('input/title/{id}', 'titleController@destroy');
 
 Route::DELETE('input/link/{id}', 'linkController@destroy');
 
-Route::resource('input/staff', 'staffController');
-
-Route::resource('input/cast', 'castController');
-
-Route::resource('onair/input', 'onairController');
 
 // 管理页面
 //// 操作数据

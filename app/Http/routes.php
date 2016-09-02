@@ -39,12 +39,12 @@ Route::DELETE('input/link/{id}', 'linkController@destroy');
 
 // 管理页面
 //// 操作数据
-Route::post('manager/resource/filt?={conditon}', 'AnimeMangerResource@filt');
+Route::post('manager/resource/filt', 'AnimeManagerResource@filt');
 Route::resource('manager/resource', 'AnimeManagerResource');
 
 //// 显示页面
-Route::get('manager/{any?}', 'AnimeManagerPage@index');
 Route::get('manager/import', 'AnimeManagerPage@edit');
+Route::get('manager/{any?}', 'AnimeManagerPage@index');
 
 
 /*

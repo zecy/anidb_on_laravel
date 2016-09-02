@@ -19,8 +19,8 @@
         {{-- 搜索组件 --}}
         <searchanime :is_complete="basicData.id.value"></searchanime>
 
-        {{-- 信息情况 --}}
-        <h2>信息情况</h2>
+        {{-- 信息统计 --}}
+        <h2>信息统计</h2>
         <animedatastates
                 :data_states.sync="dataStates"
                 :abbr="basicData.abbr.value"

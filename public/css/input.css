@@ -315,22 +315,6 @@
     float: left;
 }
 
-#maininfo input {
-    background-color: transparent;
-    border: 1px solid #ccc;
-    height:30px;
-    outline: none;
-    width: 100%;
-}
-
-#maininfo input:focus {
-    border: 1px solid dodgerblue;
-}
-
-#maininfo input:hover, #maininfo select:hover {
-    border:1px solid deepskyblue;
-}
-
 #maininfo label {
     width         : 70px;
     color         : #333;

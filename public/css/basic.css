@@ -60,6 +60,23 @@ textarea, textarea:active, textarea:focus
     outline: none !important; /* 去除 Chrome 默认的蓝色描边 */
 }
 
+input {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    height:30px;
+    outline: none;
+    width: 100%;
+}
+
+input:focus {
+    border: 1px solid dodgerblue;
+}
+
+input:hover, select:hover {
+    border:1px solid deepskyblue;
+}
+
+
 form {
     position: relative;
 }

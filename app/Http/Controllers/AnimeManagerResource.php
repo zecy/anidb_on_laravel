@@ -69,7 +69,10 @@ class AnimeManagerResource extends Controller
             ->whereBetween('oa_season', [$startSeason, $endSeason])
             ->where('lifecycle', $lifecycle)
             ->where('oa_timeslot', $timeslot)
-            ->paginate(20, $this->infoColumn());
+            ->paginate(20, $this->infoColumn())
+            ->toArray();
+
+        $animes['total_all'] = AnimeInfo::count();
 
         return \Response::json($animes);
     }

@@ -53,7 +53,7 @@
                     <div style="width: 100px; margin-right: 5px;">
                         <vselect
                                 :vs_value.sync="basicData.lifecycle.value"
-                                :vs_options="[{ label: '策划中', value : 'planning'},{'label': '动画化决定', value: 'decided'},{ label: '即将播出', value : 'comming'},{ label: '播出中', value : 'airing'},{ label: '完结', value : 'ended'}]"
+                                :vs_options="[{ label: '策划中', value : 'planning'},{'label': '动画化决定', value: 'decided'},{ label: '即将播出', value : 'comming'},{ label: '播出中', value : 'airing'},{ label: '已完结', value : 'ended'}]"
                                 :multiple="false"
                                 vs_placeholder="出品周期"
                         ></vselect>

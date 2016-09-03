@@ -4,6 +4,9 @@
         margin: 10px auto;
         display: flex;
         padding: 5px;
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        background-color: #fefefe;
     }
     
     .anime-list-filter button {

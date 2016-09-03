@@ -33,6 +33,14 @@
         width: 100%;
         margin: 20px;
     }
+
+    .anime-list__states {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 1.5em;
+    }
+
 </style>
 <template id="anime-list">
     <div class="anime-list flex-grid">
@@ -46,7 +54,10 @@
             ></animelistfilter>
         </div>
 
-        <div style="width: 100%;">
+        <div class="anime-list__states">
+            共 @{{ allAnimesCount }} 部动画，显示 @{{ animesCount }} 部
+        </div>
+
         <div class="anime-list__page">
             <paginavigator
                     :last_page="lastPage"
@@ -118,9 +129,11 @@
         },
         data:     function () {
             return {
-                'animeList':   [],
-                'listEmpty':   true,
-                'filters':     {
+                'animeList':      [],
+                'allAnimesCount': 0,
+                'animesCount':    0,
+                'listEmpty':      true,
+                'filters':        {
                     'startYear':   2016,
                     'startSeason': 1,
                     'endYear':     2016,
@@ -128,10 +141,10 @@
                     'lifecycle':   'ended',
                     'timeslot':    'midnight'
                 },
-                'useFilter':   false,
-                'loading':     true,
-                'currentPage': 1,
-                'lastPage':    1
+                'useFilter':      false,
+                'loading':        true,
+                'currentPage':    1,
+                'lastPage':       1
             }
         },
         watch: {
@@ -157,11 +170,13 @@
                 const page = p === undefined ? '' : ('?page=' + p);
                 this.$http.get('/manager/resource' + page).then(function (res) {
                     if (res.status === 200) {
-                        this.animeList   = res.data.data;
-                        this.currentPage = res.data.current_page;
-                        this.lastPage    = res.data.last_page;
-                        this.listEmpty   = false;
-                        this.loading     = false;
+                        this.animeList      = res.data.data;
+                        this.allAnimesCount = res.data.total;
+                        this.animesCount    = res.data.total;
+                        this.currentPage    = res.data.current_page;
+                        this.lastPage       = res.data.last_page;
+                        this.listEmpty      = false;
+                        this.loading        = false;
                     }
                 })
             },
@@ -171,11 +186,13 @@
                 this.$http.post('manager/resource/filt' + page, {data: this.filters}).then(function (r) {
                     if (r.status == 200) {
                         if(r.data.data.length != 0) {
-                            this.animeList   = r.data.data;
-                            this.currentPage = r.data.current_page;
-                            this.lastPage    = r.data.last_page;
-                            this.listEmpty   = false;
-                            this.loading     = false;
+                            this.animeList      = r.data.data;
+                            this.currentPage    = r.data.current_page;
+                            this.lastPage       = r.data.last_page;
+                            this.allAnimesCount = r.data.total_all;
+                            this.animesCount    = r.data.total;
+                            this.listEmpty      = false;
+                            this.loading        = false;
                         } else {
                             this.listEmpty   = true;
                             this.loading     = false;

@@ -24,6 +24,10 @@
         font-size: 24px;
     }
 
+    .anime-list__filter {
+        width: 100%;
+        margin-top: 20px;
+    }
 </style>
 <template id="anime-list">
     <div class="anime-list flex-grid">

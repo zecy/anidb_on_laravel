@@ -208,7 +208,10 @@ class AnimeInput extends staffController
                 'description',
                 'order_index'
             ))->toArray();
-        $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)->orderBy('ori_id')->get()->toArray();
+        $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)
+            ->orderBy('ori_pid')
+            ->orderBy('ori_id')
+            ->get()->toArray();
 
         $basicData = [
             'id'            => ['label' => '动画ID', 'value' => $animeBasicData['id']],

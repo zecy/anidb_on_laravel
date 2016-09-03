@@ -124,7 +124,34 @@
                 <li>
                     <ul class="anime-info-status">
                         <li>
-                            <label>简&emsp;&emsp;介</label>
+                            <label>原作类型</label>
+                            <div class="anime-info-status__process-bar">
+                                <processbar
+                                        :value="anime.s_ori_works"
+                                        :max="3"
+                                ></processbar>
+                            </div>
+                        </li>
+                        <li>
+                            <label>时间规整</label>
+                            <div class="anime-info-status__process-bar">
+                                <processbar
+                                        :value="anime.s_time_format"
+                                        :max="3"
+                                ></processbar>
+                            </div>
+                        </li>
+                        <li>
+                            <label>集&#x3000;&#x3000;数</label>
+                            <div class="anime-info-status__process-bar">
+                                <processbar
+                                        :value="anime.s_eps"
+                                        :max="3"
+                                ></processbar>
+                            </div>
+                        </li>
+                        <li>
+                            <label>简&#x3000;&#x3000;介</label>
                             <div class="anime-info-status__process-bar">
                                 <processbar
                                         :value="anime.has_descritpion ? 3 : 0"
@@ -133,7 +160,7 @@
                             </div>
                         </li>
                         <li>
-                            <label>STAFF</label>
+                            <label>S&#x2006;T&#x2006;A&#x2006;F&#x2006;F</label>
                             <div class="anime-info-status__process-bar">
                                 <processbar
                                         :value="anime.s_staff"
@@ -142,37 +169,10 @@
                             </div>
                         </li>
                         <li>
-                            <label>CAST</label>
+                            <label>&ensp;C&ensp;A&ensp;S&ensp;T</label>
                             <div class="anime-info-status__process-bar">
                                 <processbar
                                         :value="anime.s_cv"
-                                        :max="3"
-                                ></processbar>
-                            </div>
-                        </li>
-                        <li>
-                            <label>OP</label>
-                            <div class="anime-info-status__process-bar">
-                                <processbar
-                                        :value="anime.s_op_themes"
-                                        :max="3"
-                                ></processbar>
-                            </div>
-                        </li>
-                        <li>
-                            <label>ED</label>
-                            <div class="anime-info-status__process-bar">
-                                <processbar
-                                        :value="anime.s_ed_themes"
-                                        :max="3"
-                                ></processbar>
-                            </div>
-                        </li>
-                        <li>
-                            <label>插曲 </label>
-                            <div class="anime-info-status__process-bar">
-                                <processbar
-                                        :value="anime.s_insert_songs"
                                         :max="3"
                                 ></processbar>
                             </div>

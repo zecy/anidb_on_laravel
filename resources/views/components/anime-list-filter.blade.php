@@ -1,7 +1,7 @@
 <style>
     .anime-list-filter {
         width: 100%;
-        margin: 10px auto;
+        margin: 0 auto;
         display: flex;
         padding: 5px;
         border: 1px solid #aaa;

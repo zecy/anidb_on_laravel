@@ -293,12 +293,6 @@
                         const item     = options[i];
                         const optValue = item[valueLabel];
 
-                        console.group('getLabel');
-                        console.log('optIsValue: ' + this.opt_is_value);
-                        console.log('vs_value: ' + this.opt_is_value ? value[valueLabel] : value);
-                        console.log('optValue: ' + optValue);
-                        console.groupEnd();
-
                         if (rawValue === optValue) {
                             res = item[keyLabel];
                             break;

@@ -32,12 +32,14 @@
 <template id="anime-list">
     <div class="anime-list flex-grid">
 
-        <animelistfilter
-                :anime_list.sync="animeList"
-                :filters.sync="filters"
-                :loading="loading"
-                :use_filter.sync="useFilter"
-        ></animelistfilter>
+        <div class="anime-list__filter">
+            <animelistfilter
+                    :anime_list.sync="animeList"
+                    :filters.sync="filters"
+                    :loading="loading"
+                    :use_filter.sync="useFilter"
+            ></animelistfilter>
+        </div>
 
         <div style="width: 100%;">
             <paginavigator

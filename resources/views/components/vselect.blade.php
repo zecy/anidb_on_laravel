@@ -187,13 +187,13 @@
                 const val = this.vs_value;
                 for (let i = 0; i < arr.length; i++) {
                     if (this.optIsValue) {
-                        if (val[this.valueLabel] === arr[i][this.valueLabel]) {
+                        if (val != undefined && val[this.valueLabel] === arr[i][this.valueLabel]) {
                             arr[i].selected = true
                         } else {
                             arr[i].selected = false
                         }
                     } else {
-                        if (val === arr[i][this.valueLabel]) {
+                        if (val != undefined && val === arr[i][this.valueLabel]) {
                             arr[i].selected = true
                         } else {
                             arr[i].selected = false
@@ -283,15 +283,22 @@
                 const options    = this.options;
                 const valueLabel = this.valueLabel;
                 const keyLabel   = this.keyLabel;
-                const optIsValue = this.opt_is_value;
-                const rawValue   = optIsValue ? value[valueLabel] : value;
 
                 if (value === undefined || value === '') {
                     res = this.vs_placeholder;
                 } else {
                     for (let i = 0; i < options.length; i++) {
+                        const optIsValue = this.opt_is_value;
+                        const rawValue   = optIsValue ? value[valueLabel] : value;
                         const item     = options[i];
                         const optValue = item[valueLabel];
+
+                        console.group('getLabel');
+                        console.log('optIsValue: ' + this.opt_is_value);
+                        console.log('vs_value: ' + this.opt_is_value ? value[valueLabel] : value);
+                        console.log('optValue: ' + optValue);
+                        console.groupEnd();
+
                         if (rawValue === optValue) {
                             res = item[keyLabel];
                             break;

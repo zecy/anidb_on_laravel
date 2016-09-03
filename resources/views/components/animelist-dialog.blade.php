@@ -250,7 +250,7 @@
             showTimeslot: function(timeslot) {
                 return {
                     'morning': '晨间档',
-                    'daily': '日间档',
+                    'daytime': '日间档',
                     'prime': '黄金档',
                     'midnight': '深夜档'
                 }[timeslot]

@@ -224,7 +224,7 @@ class AnimeInput extends staffController
             'isCounted'     => ['label' => '是否纳入统计', 'value' => $animeBasicData['is_counted']],
             'oa_year'       => ['value' => $animeBasicData['oa_year']],
             'oa_season'     => ['value' => $animeBasicData['oa_season']],
-            'oa_time'       => ['value' => $animeBasicData['oa_time']],
+            'oa_timeslot'   => ['value' => $animeBasicData['oa_timeslot']],
             'eps_oa'        => ['value' => $animeBasicData['eps_oa']],
             'eps_soft'      => ['value' => $animeBasicData['eps_soft']],
             'story'         => ['label' => '故事', 'value' => ''],

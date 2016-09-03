@@ -92,20 +92,22 @@ class AnimeInput extends staffController
     {
         if (is_array($arr)) {
             foreach ($arr as $child) {
-                if ($this->isAssoc($child)) {
-                    $origenre = AnimeOriginalWork::create(
-                        [
-                            'anime_id'          => $ID,
-                            'ori_id'            => $child['ori_id'],
-                            'ori_pid'           => $child['ori_pid'],
-                            'lv'                => $child['ori_level'] - 1,
-                            'haschild'          => $child['haschild'],
-                            'multiple_children' => $child['multiple_children'],
-                            'multiple_selected' => $child['multiple_selected']
-                        ]
-                    );
-                } else {
-                    $this->createOriWorks($ID, $child);
+                if(!empty($child)){
+                    if ($this->isAssoc($child)) {
+                        $origenre = AnimeOriginalWork::create(
+                            [
+                                'anime_id'          => $ID,
+                                'ori_id'            => $child['ori_id'],
+                                'ori_pid'           => $child['ori_pid'],
+                                'lv'                => $child['ori_level'] - 1,
+                                'haschild'          => $child['haschild'],
+                                'multiple_children' => $child['multiple_children'],
+                                'multiple_selected' => $child['multiple_selected']
+                            ]
+                        );
+                    } else {
+                        $this->createOriWorks($ID, $child);
+                    }
                 }
             }
         }

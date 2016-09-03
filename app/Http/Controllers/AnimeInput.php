@@ -515,6 +515,7 @@ class AnimeInput extends staffController
                 $basicData->anime_counted = $data['isCounted']['value'];
                 $basicData->anime_oa_year = $data['oa_year']['value'];
                 $basicData->anime_oa_season = $data['oa_season']['value'];
+                $basicData->anime_oa_timeslot = $data['oa_timeslot']['value'];
                 $basicData->anime_eps_oa = $data['eps_oa']['value'];
                 $basicData->anime_eps_soft = $data['eps_soft']['value'];
 

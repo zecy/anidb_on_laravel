@@ -28,6 +28,11 @@
         width: 100%;
         margin-top: 20px;
     }
+
+    .anime-list__page {
+        width: 100%;
+        margin: 20px;
+    }
 </style>
 <template id="anime-list">
     <div class="anime-list flex-grid">
@@ -42,6 +47,7 @@
         </div>
 
         <div style="width: 100%;">
+        <div class="anime-list__page">
             <paginavigator
                     :last_page="lastPage"
                     :current_page.sync="currentPage"
@@ -67,7 +73,7 @@
             </div>
         </div>
 
-        <div style="width: 100%;">
+        <div class="anime-list__page">
             <paginavigator
                     :last_page="lastPage"
                     :current_page.sync="currentPage"

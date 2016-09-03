@@ -216,14 +216,13 @@
 
                     <div style="width: 270px">
                         <div class="toggle-button"
-                             v-for="time in [{'label':'晨间档', 'value':'morning'},{'label':'日间档', 'value':'daytime'},{'label':'黄金档', 'value':'prime'},{'label':'深夜档', 'value':'midnight'}]">
+                             v-for="timeslot in [{'label':'晨间档', 'value':'morning'},{'label':'日间档', 'value':'daytime'},{'label':'黄金档', 'value':'prime'},{'label':'深夜档', 'value':'midnight'}]">
                             <button class="btn btn-xs"
                                     type="button"
-                                    v-on:click="basicData.oa_time.value = time.value"
-                                    v-bind:class="basicData.oa_time.value === time.value ? 'btn-primary' : 'btn-default'"
+                                    v-on:click="basicData.oa_timeslot.value = timeslot.value"
+                                    v-bind:class="basicData.oa_timeslot.value === timeslot.value ? 'btn-primary' : 'btn-default'"
                             >
-                                <span>@{{ time.label }}</span>
-                                <input type="radio" value="@{{ time.value }}" v-model="basicData.oa_time.value" class="hidden">
+                                <span>@{{ timeslot.label }}</span>
                             </button>
                         </div>
                     </div>

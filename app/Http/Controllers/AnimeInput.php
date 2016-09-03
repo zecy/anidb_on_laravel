@@ -138,7 +138,7 @@ class AnimeInput extends staffController
                 'anime_lifecycle'       => $data['lifecycle']['value'],
                 'anime_oa_year'         => $data['oa_year']['value'],
                 'anime_oa_season'       => $data['oa_season']['value'],
-                'anime_oa_time'         => $data['oa_time']['value'],
+                'anime_oa_timeslot'     => $data['oa_timeslot']['value'],
                 'anime_eps_oa'          => $data['eps_oa']['value'],
                 'anime_eps_soft'        => $data['eps_soft']['value'],
                 //'anime_description'     => $data['description']['value'],

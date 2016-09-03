@@ -133,8 +133,6 @@ class AnimeInput extends staffController
                 'anime_premiere_media'  => $data['premiereMedia']['value'],
                 'anime_sequel'          => $data['isSequel']['value'],
                 'anime_duration_format' => $data['duration']['value'],
-                // TODO: 改为 anime_lifecycle
-                'anime_end'             => false,
                 'anime_lifecycle'       => $data['lifecycle']['value'],
                 'anime_oa_year'         => $data['oa_year']['value'],
                 'anime_oa_season'       => $data['oa_season']['value'],

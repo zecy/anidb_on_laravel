@@ -193,6 +193,7 @@
                             this.animesCount    = r.data.total;
                             this.listEmpty      = false;
                             this.loading        = false;
+                            this.useFilter      = false;
                         } else {
                             this.listEmpty   = true;
                             this.loading     = false;

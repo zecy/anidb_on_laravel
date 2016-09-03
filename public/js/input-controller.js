@@ -820,9 +820,9 @@ var basicDataTmp = {
     'eps_soft':      {'label': '集数', 'value': 0},
     'duration':      {'label': '时间规格', 'value': 'general'},
     'oriWorks':      [
-        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
-        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
-        [{'id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+        [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+        [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+        [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
         [[]]
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},

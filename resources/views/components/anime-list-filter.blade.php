@@ -98,6 +98,7 @@
                             :vs_value.sync="filters.timeslot"
                             :vs_options="timeslots"
                             :multipe="false"
+                            vs_placeholder="全部"
                     ></vselect>
                 </div>
             </div>
@@ -109,6 +110,7 @@
                             :vs_value.sync="filters.lifecycle"
                             :vs_options="lifecycle"
                             :multipe="false"
+                            vs_placeholder="全部"
                     ></vselect>
                 </div>
             </div>
@@ -122,18 +124,21 @@
         data: function(){
             return {
                 'seasons': [
+                    {'label': '全部', 'value': ''},
                     {'label': '冬', 'value': 1},
                     {'label': '春', 'value': 4},
                     {'label': '夏', 'value': 7},
                     {'label': '秋', 'value': 10}
                 ],
                 'timeslots': [
+                    {'label': '全部', 'value': ''},
                     {'label':'晨间档', 'value':'morning'},
                     {'label':'日间档', 'value':'daytime'},
                     {'label':'黄金档', 'value':'prime'},
                     {'label':'深夜档', 'value':'midnight'}
                 ],
                 'lifecycle': [
+                    {'label': '全部', 'value': ''},
                     {'label': '策划中', 'value': 'planning'},
                     {'label': '动画化决定', 'value': 'decided'},
                     {'label': '即将播出', 'value': 'comming' },

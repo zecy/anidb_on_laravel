@@ -72,9 +72,11 @@ var strTrim = function (s) {
  * 友利奈緒 - 佐倉綾音
  *
  * */
-var staffAndCastFormat = function (str) {
+var staffAndCastFormat = function (s) {
 
     var otherSeparator, oddEven, fromSource, wikiCV;
+
+    const str = strTrim(s);
 
     otherSeparator = function (str) {
         str = str.replace(/[\t :：・]+/g, ' - ');

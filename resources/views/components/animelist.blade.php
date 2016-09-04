@@ -146,11 +146,6 @@
                 } else {
                     this.someAnime(val);
                 }
-            },
-            useFilter: function(bool) {
-                if(bool) {
-                    this.someAnime();
-                }
             }
         },
         ready:    function () {

@@ -24,9 +24,20 @@
         font-size: 24px;
     }
 
-    .anime-list__filter {
+    .anime-list__filter-bar {
+        display: flex;
         width: 100%;
         margin-top: 20px;
+        align-items: center;
+    }
+
+    .anime-list__filter {
+        flex: 0 0 92%;
+    }
+
+    .anime-list__filter-btn {
+        text-align: center;
+        flex: 0 0 8%;
     }
 
     .anime-list__page {
@@ -45,14 +56,27 @@
 <template id="anime-list">
     <div class="anime-list flex-grid">
 
-        <div class="anime-list__filter">
-            <animelistfilter
-                    :anime_list.sync="animeList"
-                    :filters.sync="filters"
-                    :loading="loading"
-                    :use_filter.sync="useFilter"
-            ></animelistfilter>
+        <div class="anime-list__filter-bar">
+            <fieldset class="anime-list__filter"
+                      v-bind:disabled="loading"
+            >
+                <animelistfilter
+                        :anime_list.sync="animeList"
+                        :filters.sync="filters"
+                ></animelistfilter>
+            </fieldset>
+
+            <div class="anime-list__filter-btn">
+                <button type="button"
+                        class="btn btn-sm btn-success"
+                        v-bind:disabled="loading"
+                        v-on:click="someAnime()"
+                >
+                    过滤
+                </button>
+            </div>
         </div>
+
 
         <div class="anime-list__states">
             共 @{{ allAnimesCount }} 部动画，显示 @{{ animesCount }} 部
@@ -167,6 +191,7 @@
         methods:  {
             getAll:       function (p) {
                 this.loading = true;
+                this.useFilter = false;
                 const page = p === undefined ? '' : ('?page=' + p);
                 this.$http.get('/manager/resource' + page).then(function (res) {
                     if (res.status === 200) {
@@ -182,6 +207,7 @@
             },
             someAnime: function (p) {
                 this.loading = true;
+                this.useFilter = true;
                 const page = p === undefined ? '' : ('?page=' + p );
                 this.$http.post('manager/resource/filt' + page, {data: this.filters}).then(function (r) {
                     if (r.status == 200) {
@@ -193,11 +219,9 @@
                             this.animesCount    = r.data.total;
                             this.listEmpty      = false;
                             this.loading        = false;
-                            this.useFilter      = false;
                         } else {
                             this.listEmpty   = true;
                             this.loading     = false;
-                            this.useFilter   = false;
                         }
                     }
                 });

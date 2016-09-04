@@ -63,67 +63,62 @@
 </style>
 
 <template id="anime-list-filter">
-    <div class="anime-list-filter">
-        <div class="alf__item alf__datetime">
-            <label>首播时间</label>
-            <div class="alf__year">
-                <input type="text" v-model="filters.startYear">
+        <div class="anime-list-filter">
+            <div class="alf__item alf__datetime">
+                <label>首播时间</label>
+
+                <div class="alf__year">
+                    <input type="text" v-model="filters.startYear">
+                </div>
+                <div class="alf__season">
+                    <vselect
+                            :vs_value.sync="filters.startSeason"
+                            :vs_options="seasons"
+                            :multipe="false"
+                    ></vselect>
+                </div>
+                <span>〜</span>
+
+                <div class="alf__year">
+                    <input type="text" v-model="filters.endYear">
+                </div>
+                <div class="alf__season">
+                    <vselect
+                            :vs_value.sync="filters.endSeason"
+                            :vs_options="seasons"
+                            :multipe="false"
+                    ></vselect>
+                </div>
             </div>
-            <div class="alf__season">
-                <vselect
-                        :vs_value.sync="filters.startSeason"
-                        :vs_options="seasons"
-                        :multipe="false"
-                ></vselect>
+            <div class="alf__item">
+                <label>播出时段</label>
+
+                <div class="alf__timeslot">
+                    <vselect
+                            :vs_value.sync="filters.timeslot"
+                            :vs_options="timeslots"
+                            :multipe="false"
+                    ></vselect>
+                </div>
             </div>
-            <span>〜</span>
-            <div class="alf__year">
-                <input type="text" v-model="filters.endYear">
-            </div>
-            <div class="alf__season">
-                <vselect
-                        :vs_value.sync="filters.endSeason"
-                        :vs_options="seasons"
-                        :multipe="false"
-                ></vselect>
+            <div class="alf__item">
+                <label>出品周期</label>
+
+                <div class="alf__lifecycle">
+                    <vselect
+                            :vs_value.sync="filters.lifecycle"
+                            :vs_options="lifecycle"
+                            :multipe="false"
+                    ></vselect>
+                </div>
             </div>
         </div>
-        <div class="alf__item">
-            <label>播出时段</label>
-            <div class="alf__timeslot">
-                <vselect
-                        :vs_value.sync="filters.timeslot"
-                        :vs_options="timeslots"
-                        :multipe="false"
-                ></vselect>
-            </div>
-        </div>
-        <div class="alf__item">
-            <label>出品周期</label>
-            <div class="alf__lifecycle">
-                <vselect
-                        :vs_value.sync="filters.lifecycle"
-                        :vs_options="lifecycle"
-                        :multipe="false"
-                ></vselect>
-            </div>
-        </div>
-        <div class="alf__item">
-            <button class="btn btn-sm btn-success"
-                    type="button"
-                    v-bind:disabled="loading"
-                    v-on:click="filt"
-            >
-                过滤
-            </button>
-        </div>
-    </div>
 </template>
 
 <script>
     Vue.component('animelistfilter', {
         template: '#anime-list-filter',
-        props: ['anime_list', 'loading', 'filters', 'use_filter'],
+        props: ['anime_list',  'filters'],
         data: function(){
             return {
                 'seasons': [
@@ -145,11 +140,6 @@
                     {'label': '播出中', 'value': 'airing'},
                     {'label': '完结', 'value': 'ended'}
                 ]
-            }
-        },
-        methods: {
-            filt: function() {
-                this.use_filter = true;
             }
         }
     })

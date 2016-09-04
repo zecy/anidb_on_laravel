@@ -93,7 +93,7 @@ class AnimeInput extends staffController
         if (is_array($arr)) {
             foreach ($arr as $child) {
                 if(!empty($child)){
-                    if ($this->isAssoc($child)) {
+                    if ($this->isAssoc($child) && $child['ori_id'] != 0) {
                         $origenre = AnimeOriginalWork::create(
                             [
                                 'anime_id'          => $ID,

@@ -135,6 +135,7 @@ var staffAndCastFormat = function (s) {
     return {
         'otherSeparator': otherSeparator(str),
         'oddEven':        oddEven(str),
+        'colCombine':     colCombine(str),
         'fromSource':     fromSource(str),
         'wikiCV':         wikiCV(str)
     }
@@ -719,6 +720,9 @@ Vue.component('textformat', {
                     break;
                 case 'oddEven':
                     res = str.oddEven;
+                    break;
+                case 'colCombine':
+                    res = str.colCombine;
                     break;
                 case 'cleanHTML':
                     res = str.fromSource;

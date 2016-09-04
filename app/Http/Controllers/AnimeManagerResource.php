@@ -63,12 +63,21 @@ class AnimeManagerResource extends Controller
         $lifecycle = $filter['lifecycle'];
         $timeslot = $filter['timeslot'];
 
+        $conditions =  [];
+
+        if($lifecycle != '') {
+            $conditions['lifecycle'] = $lifecycle;
+        }
+
+        if($timeslot != '') {
+            $conditions['oa_timeslot'] = $timeslot;
+        }
+
         $animes = AnimeInfo::orderBy('oa_date')
             ->orderBy('oa_time')
             ->whereBetween('oa_year', [$startYear, $endYear])
             ->whereBetween('oa_season', [$startSeason, $endSeason])
-            ->where('lifecycle', $lifecycle)
-            ->where('oa_timeslot', $timeslot)
+            ->where($conditions)
             ->paginate(20, $this->infoColumn())
             ->toArray();
 

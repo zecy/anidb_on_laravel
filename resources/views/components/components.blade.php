@@ -290,6 +290,13 @@
         </div>
         <div>
             <button class="btn"
+                    v-on:click="format(text, pos, 'colCombine')"
+            >
+                两列合并
+            </button>
+        </div>
+        <div>
+            <button class="btn"
                     v-on:click="format(text, pos, 'wikiCV')"
                     v-if="pos == 'cast'"
             >

@@ -148,9 +148,6 @@
                 }
             }
         },
-        ready:    function () {
-            this.getAll();
-        },
         methods:  {
             getAll:       function (p) {
                 this.loading = true;

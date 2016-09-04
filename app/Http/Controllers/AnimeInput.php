@@ -539,7 +539,7 @@ class AnimeInput extends staffController
                     } else {
                         $theTitle = AnimeTitles::create(
                             [
-                                'id'          => $id,
+                                'anime_id'          => $id,
                                 'title'       => $title['value'],
                                 'lang'        => $title['lang'],
                                 'description' => $title['comment'],

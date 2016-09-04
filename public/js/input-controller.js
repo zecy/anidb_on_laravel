@@ -934,7 +934,7 @@ var vue = new Vue({
 
             switch (pos) {
                 case 'basicData':
-                    this.$http.post('input', {data: this.basicData}).then(function (r) {
+                    this.$http.post('/input', {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(r.data.id);
                             this.processing = false;
@@ -942,7 +942,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'basicData':
-                    this.$http.post('input/states', {data: this.dataStates}).then(function (r) {
+                    this.$http.post('/input/states', {data: this.dataStates}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;
@@ -950,7 +950,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'staff':
-                    this.$http.post('input/staff', {data: this.staffMembers}).then(function (r) {
+                    this.$http.post('/input/staff', {data: this.staffMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;
@@ -958,7 +958,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'cast':
-                    this.$http.post('input/cast', {data: this.castMembers}).then(function (r) {
+                    this.$http.post('/input/cast', {data: this.castMembers}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;
@@ -966,7 +966,7 @@ var vue = new Vue({
                     });
                     break;
                 case 'onair':
-                    this.$http.post('input/onair', {data: this.onair}).then(function (r) {
+                    this.$http.post('/input/onair', {data: this.onair}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);
                             this.processing = false;

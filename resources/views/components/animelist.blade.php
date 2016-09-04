@@ -119,38 +119,6 @@
 <script>
     var anime_list = Vue.extend({
         template: '#anime-list',
-        props:    {
-            'after_date':  {
-                // 统计晚于这个日期播出的作品(含)
-                // 格式: yyyy-mm-dd
-                type:    String,
-                default: ''
-            },  // 统计晚于这个日期播出的作品(含)
-            'before_date': {
-                // 统计早这个日期播出的作品(含)
-                // 格式: yyyy-mm-dd
-                type:    String,
-                default: ''
-            },  // 统计早这个日期播出的作品(含)
-            'time':        {
-                // 作品播出的时段
-                // 分 all, daily, morning, prime, midnight
-                type:    String,
-                default: 'all'
-            }, // 作品播出的时段
-            'is_end':      {
-                // 统计的作品是否已经结束
-                // true: 1, false: -1, all: 0
-                type:    Number,
-                default: 0
-            }, // 统计的作品是否已经结束
-            'is_complete': {
-                // 作品信息是否已经录入完全
-                // true: 1, false: -1, all: 0
-                type:    Number,
-                default: 0
-            } // 作品信息是否已经录入完全
-        },
         data:     function () {
             return {
                 'animeList':      [],

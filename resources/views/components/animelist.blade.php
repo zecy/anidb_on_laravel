@@ -130,8 +130,8 @@
                     'startSeason': 1,
                     'endYear':     2016,
                     'endSeason':   10,
-                    'lifecycle':   'ended',
-                    'timeslot':    'midnight'
+                    'lifecycle':   '',
+                    'timeslot':    ''
                 },
                 'useFilter':      false,
                 'loading':        true,

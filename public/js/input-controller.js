@@ -9,6 +9,13 @@
  */
 
 /**
+* 字符串删除空格
+* */
+var strTrim = function (s) {
+    return s.replace(/[ 　]+/g, '');
+};
+
+/**
  * 格式化 Staff & Cast 内容
  *
  * 目标文本形式:

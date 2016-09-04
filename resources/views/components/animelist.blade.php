@@ -169,7 +169,7 @@
                 this.loading = true;
                 this.useFilter = true;
                 const page = p === undefined ? '' : ('?page=' + p );
-                this.$http.post('manager/resource/filt' + page, {data: this.filters}).then(function (r) {
+                this.$http.post('/manager/resource/filt' + page, {data: this.filters}).then(function (r) {
                     if (r.status == 200) {
                         if(r.data.data.length != 0) {
                             this.animeList      = r.data.data;

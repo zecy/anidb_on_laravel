@@ -133,7 +133,7 @@
                             </div>
                         </li>
                         <li>
-                            <label>时间规整</label>
+                            <label>时间规格</label>
                             <div class="anime-info-status__process-bar">
                                 <processbar
                                         :value="anime.s_time_format"

@@ -1,7 +1,9 @@
 <style>
     .anime-list {
-        width: 750px;
+        max-width: 1875px;
+        min-width: 750px;
         margin: 0 auto;
+        width: 100%;
     }
 
     .anime-list__spinkit {
@@ -26,8 +28,8 @@
 
     .anime-list__filter-bar {
         display: flex;
-        width: 100%;
-        margin-top: 20px;
+        width: 750px;
+        margin: 20px auto 0 auto;
         align-items: center;
     }
 

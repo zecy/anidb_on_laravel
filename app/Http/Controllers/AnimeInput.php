@@ -38,7 +38,11 @@ class AnimeInput extends staffController
             ->get(array('content as value', 'comment as label'))
             ->toJson();
 
-        $oriWorks = AnimeOriginalWorkSupport::orderBy('ori_id')->get()->toJson();
+        $oriWorks = AnimeOriginalWorkSupport::orderBy('ori_id')
+            ->orderBy('ori_pid')
+            ->orderBy('order_index')
+            ->get()
+            ->toJson();
 
         return [
             'transLangs'          => $transLangs,

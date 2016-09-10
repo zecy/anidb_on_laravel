@@ -6,7 +6,7 @@
     }
 
     .anime-card {
-        flex: 0 0 calc(50% - 5px);
+        flex: 0 0 370px;
         display: flex;
         border: 1px solid #ccc;
         margin: 2.5px;

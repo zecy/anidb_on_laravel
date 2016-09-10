@@ -47,7 +47,7 @@ class AnimeInput extends staffController
         return [
             'transLangs'          => $transLangs,
             'links'               => $links,
-            'premiereMedia'      => $premiereMedia,
+            'premiereMedia'       => $premiereMedia,
             'animeDurationFormat' => $animeDurationFormat,
             'oriWorks'            => $oriWorks
         ];

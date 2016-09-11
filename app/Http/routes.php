@@ -22,6 +22,8 @@ Route::get('input', 'AnimeInput@index');
 
 Route::resource('input/states', 'AnimeDataStateController');
 
+Route::post('input/stafftrans', 'staffController@staffTrans');
+
 Route::resource('input/staff', 'staffController');
 
 Route::resource('input/cast', 'castController');

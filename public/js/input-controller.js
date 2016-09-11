@@ -94,12 +94,12 @@ var staffAndCastFormat = function (s) {
         return res.join('\n')
     };
 
-    colCombine = function(str) {
-        const res = [];
-        const lines = str.split('\n');
-        const keylen   = (lines.length)/2;
+    colCombine = function (str) {
+        const res    = [];
+        const lines  = str.split('\n');
+        const keylen = (lines.length) / 2;
 
-        for(let i = 0; i < keylen; i++) {
+        for (let i = 0; i < keylen; i++) {
             const key   = lines[i];
             const value = lines[i + keylen];
             res.push(key + ' - ' + value);

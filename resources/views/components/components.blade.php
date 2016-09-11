@@ -358,6 +358,11 @@
                <span class="glyphicon glyphicon-chevron-up"></span>
            </button>
        </a>
+       <a href="#basic-data">
+           <button type="button" class="btn btn-primary">
+               B
+           </button>
+       </a>
        <a href="#staff">
            <button type="button" class="btn btn-primary">
                S

@@ -1,4 +1,4 @@
-<h2>基本信息</h2>
+<h2 id="basic-data">基本信息</h2>
 <form id="maininfo" class="form form-horizontal">
     <fieldset disabled="@{{ processing }}">
         <table>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AnimeStaff;
 use App\Http\Controllers\AnimeInput;
+use App\StaffTranslate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,6 +64,32 @@ class staffController extends Controller
                 }
             }
         }
+    }
+
+    public function staffTrans(Request $request) {
+        $staffItems = $request->all()['data'];
+
+        $res = [];
+
+        foreach ($staffItems as $staffItem) {
+
+            $trans = StaffTranslate::where('ori', $staffItem[0])
+                ->first(array(
+                    'trans',
+                    'is_important'
+                ));
+
+            $hasTrans = empty($trans);
+
+            $res[] = [
+                'ori'         => $staffItem[0],
+                'zhcn'        => $hasTrans ? '' : $trans['trans'],
+                'name'        => $staffItem[1],
+                'isImportant' => $hasTrans ? false : $trans['is_important']
+            ];
+        }
+
+        return \Response::json($res);
     }
 
     public function getStaffDB ($animeID, $pid) {

@@ -170,20 +170,19 @@ var staffAndCastFormat = function (s) {
  *   ]
  *
  **/
-var formatedTextToArray = function (str) {
+var formatedTextToArray = function (str, pos) {
 
-    var arr          = [];
-    var splitByLines = str.split("\n");
-    var separator    = "、";
+    let arr             = [];
+    const splitByLines  = str.split("\n");
+    const jobSeparator  = "・";
+    const nameSeparator = "、";
 
-    for (var i = 0; i < splitByLines.length; i++) {
+    for (let i = 0; i < splitByLines.length; i++) {
 
-        var jobName = [];
+        let keyValue = [];
 
         if (splitByLines[i].indexOf(" - ") != -1) {
-
-            jobName = splitByLines[i].split(" - ");
-
+            keyValue = splitByLines[i].split(" - ");
         } else {
             alert("** 格式有误，请进行检查 **" + "\
                 \n" + (i - 1) + " | " + splitByLines[i - 1] + "\
@@ -191,52 +190,62 @@ var formatedTextToArray = function (str) {
                 \n" + (i + 1) + " | " + splitByLines[i + 1]);
             return
         }
-        var isJobs  = "";
-        var isNames = "";
 
-        isJobs  = (jobName[0].indexOf(separator) != -1);
-        isNames = (jobName[1].indexOf(separator) != -1);
+        if (pos === 'staff') {
 
-        var jobs, names, jobNameArr = [];
-        var j, n                    = 0;
+            let jobName = keyValue;
 
-        /* 企划、出品 - 创通、SUNRISE */
-        if (isJobs && isNames) {
-            jobs  = jobName[0].split(separator);
-            names = jobName[1].split(separator);
-            for (j = 0; j < jobs.length; j++) {
+            let isJobs  = "";
+            let isNames = "";
+
+            isJobs  = (jobName[0].indexOf(jobSeparator) != -1);
+            isNames = (jobName[1].indexOf(nameSeparator) != -1);
+
+            let jobs, names, jobNameArr = [];
+            let j, n                    = 0;
+
+            /* 企划、出品 - 创通、SUNRISE */
+            if (isJobs && isNames) {
+                jobs  = jobName[0].split(jobSeparator);
+                names = jobName[1].split(nameSeparator);
+                for (j = 0; j < jobs.length; j++) {
+                    for (n = 0; n < names.length; n++) {
+                        jobNameArr = [jobs[j], names[n]];
+                        arr.push(jobNameArr);
+                    }
+                }
+            }
+            /* splitByLines[i] == "角色设定、总作画指导 - 千叶道德" */
+            else if (isJobs && !isNames) {
+                jobs = jobName[0].split(jobSeparator); // jobName[0] == ['角色设定、总作画指导']
+                                                       // jobs       == ['角色设定','总作画指导']
+                for (j = 0; j < jobs.length; j++) {
+                    jobNameArr = [jobs[j], jobName[1]];
+                    /**
+                     * jobNameArr[0] = jobs[0]    == '角色设定'
+                     * jobNameArr[1] = jobName[1] == '千叶道德'
+                     * jobNameArr    == ['角色设定','千叶道德']
+                     **/
+                    arr.push(jobNameArr); // arr = [...,['角色设定','千叶道德'],...]
+                }
+            }
+            /* 原作 - 矢立肇、富野由悠季 */
+            else if (!isJobs && isNames) {
+                names = jobName[1].split(nameSeparator);
                 for (n = 0; n < names.length; n++) {
-                    jobNameArr = [jobs[j], names[n]];
+                    jobNameArr = [jobName[0], names[n]];
                     arr.push(jobNameArr);
                 }
             }
-        }
-        /* splitByLines[i] == "角色设定、总作画指导 - 千叶道德" */
-        else if (isJobs && !isNames) {
-            jobs = jobName[0].split(separator); // jobName[0] == ['角色设定、总作画指导']
-                                                // jobs       == ['角色设定','总作画指导']
-            for (j = 0; j < jobs.length; j++) {
-                jobNameArr = [jobs[j], jobName[1]];
-                /**
-                 * jobNameArr[0] = jobs[0]    == '角色设定'
-                 * jobNameArr[1] = jobName[1] == '千叶道德'
-                 * jobNameArr    == ['角色设定','千叶道德']
-                 **/
-                arr.push(jobNameArr); // arr = [...,['角色设定','千叶道德'],...]
+            /* 监督 - 长井龙雪 */
+            else {
+                jobNameArr = [jobName[0], jobName[1]];
+                arr.push(jobNameArr)
             }
-        }
-        /* 原作 - 矢立肇、富野由悠季 */
-        else if (!isJobs && isNames) {
-            names = jobName[1].split(separator);
-            for (n = 0; n < names.length; n++) {
-                jobNameArr = [jobName[0], names[n]];
-                arr.push(jobNameArr);
-            }
-        }
-        /* 监督 - 长井龙雪 */
-        else {
-            jobNameArr = [jobName[0], jobName[1]];
-            arr.push(jobNameArr)
+        } else {
+            let charaCV = keyValue;
+            const charaCVArr = [charaCV[0], charaCV[1]];
+            arr.push(charaCVArr);
         }
     }
     return arr
@@ -1144,37 +1153,43 @@ var vue = new Vue({
 
                 case 'staff':
 
-                    items = formatedTextToArray(data);
+                    items = formatedTextToArray(data, pos);
 
-                    for (let i = 0; i < items.length; i++) {
-                        item = {
-                            'id':                 0,
-                            'animeID':            vue.basicData.id.value,
-                            'staffPostOri':       items[i][0],
-                            'staffPostZhCN':      '',
-                            'staffMemberName':    items[i][1],
-                            'staffBelongsToName': '',
-                            'isImportant':        false,
-                            'orderIndex':         i,
-                            'lv':                 0,
-                            'haschild':           false,
-                            'pid':                0,
-                            'child':              []
-                        };
+                    this.$http.post('/input/stafftrans', {data: items}).then(function (r) {
+                        if (r.status == 200) {
+                            items = r.data;
 
-                        res.push(item);
-                    }
+                            for (let i = 0; i < items.length; i++) {
+                                item = {
+                                    'id':                 0,
+                                    'animeID':            vue.basicData.id.value,
+                                    'staffPostOri':       items[i].ori,
+                                    'staffPostZhCN':      items[i].zhcn,
+                                    'staffMemberName':    items[i].name,
+                                    'staffBelongsToName': '',
+                                    'isImportant':        items[i].isImportant,
+                                    'orderIndex':         i,
+                                    'lv':                 0,
+                                    'haschild':           false,
+                                    'pid':                0,
+                                    'child':              []
+                                };
 
-                    if (vue.staffMembers[0].id == 0) {
-                        vue.staffMembers = res;
-                    } else {
-                        vue.staffMembers = vue.staffMembers.concat(res);
-                    }
+                                res.push(item);
+                            }
+
+                            if (vue.staffMembers[0].id == 0) {
+                                vue.staffMembers = res;
+                            } else {
+                                vue.staffMembers = vue.staffMembers.concat(res);
+                            }
+                        }
+                    });
 
                     break;
                 case 'cast':
 
-                    items = formatedTextToArray(data);
+                    items = formatedTextToArray(data, pos);
 
                     for (let j = 0; j < items.length; j++) {
                         item = {

@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('page_title')
-    数据录入
+    {{ $title }} - 数据录入
 @stop
 
 @section('css')

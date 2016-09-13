@@ -67,8 +67,9 @@ class AnimeInput extends staffController
         $premiereMedia          = $basicInfo['premiereMedia'];
         $animeDurationFormat    = $basicInfo['animeDurationFormat'];
         $oriWorks               = $basicInfo['oriWorks'];
+        $title                  = '新建动画';
 
-        return view('input.index', compact('animeID','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
+        return view('input.index', compact('animeID','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat', 'title'));
     }
 
     /**
@@ -482,10 +483,12 @@ class AnimeInput extends staffController
             $anime = AnimeBasicData::where('anime_abbr', $animeAbbr)->get(array('anime_id'))->toArray();
             if(!empty($anime)){
                 $animeID = $anime[0]['anime_id'];
+                $title   = AnimeInfo::find($animeID)->toArray()['title_ori'];
             } else {
                 $animeID = -1;
+                $title   = '新建动画';
             }
-            return view('input.index', compact('animeID','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat'));
+            return view('input.index', compact('animeID','transLangs', 'links', 'premiereMedia', 'oriWorks', 'animeDurationFormat', 'title'));
         } else {
             return $this->index();
         }

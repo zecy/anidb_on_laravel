@@ -202,6 +202,7 @@ class AnimeInput extends staffController
         $animeBasicData = AnimeInfo::find($id)->toArray();
         $animeLinks = AnimeLinks::where('anime_id', $id)->get()->toArray();
         $animeTitles = AnimeTitles::where('anime_id', $id)
+            ->orderBy('order_index')
             ->get(array(
                 'id',
                 'title',

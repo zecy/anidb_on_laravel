@@ -101,19 +101,19 @@
                     </div>
                 </li>
                 <li>
-                    <label>集&emsp;&emsp;数</label>
+                    <label>系列长度</label>
                     <div class="ads__processbar">
                         <processsetter
-                                :value.sync="data_states.s_eps"
+                                :value.sync="data_states.s_duration"
                                 :max="3"
                         ></processsetter>
                     </div>
                 </li>
                 <li>
-                    <label>系列长度</label>
+                    <label>集&emsp;&emsp;数</label>
                     <div class="ads__processbar">
                         <processsetter
-                                :value.sync="data_states.s_duration"
+                                :value.sync="data_states.s_eps"
                                 :max="3"
                         ></processsetter>
                     </div>

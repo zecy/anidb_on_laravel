@@ -845,9 +845,9 @@ var basicDataTmp = {
     'seriesID':      {'label': '系列ID', 'value': 0},
     'seriesTitle':   {'label': '系列ID', 'value': ''},
     'title':         [
-        {'id': 0, 'label': '原作标题', 'lang': 'original_work_title', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 0},
         {'id': 0, 'label': '官方标题', 'lang': 'jp', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 0},
-        {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': '', 'orderIndex': 0}
+        {'id': 0, 'label': '原作标题', 'lang': 'original_work_title', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 1},
+        {'id': 0, 'label': '译名', 'lang': 'zh-cn', 'isOfficial': false, 'value': '', 'comment': '', 'orderIndex': 2}
     ],
     'abbr':          {'label': '简称', 'value': ''},
     'kur':           {'label': '长度', 'value': 1},

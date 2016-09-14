@@ -249,11 +249,25 @@
                         ></vselect>
                     </div>
 
-                    <div style="width: 270px">
+                    <div class="anime-link-input"
+                         style="width: 270px"
+                    >
                         <input type="text"
                                v-model="link.value"
                                placeholder="网站地址"
                         >
+                        <div class="anime-link-btn"
+                             v-if="link.value != ''"
+                        >
+                            <a v-bind:href="link.value" target="_blank">
+                                <button
+                                        type="button"
+                                        class="btn btn-default"
+                                >
+                                    <span class="glyphicon glyphicon-new-window"></span>
+                                </button>
+                            </a>
+                        </div>
                     </div>
 
                     <div class="is-official" style="width: 24px">

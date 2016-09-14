@@ -404,6 +404,29 @@
     top:0;
 }
 
+.anime-link-input {
+    position: relative;
+}
+
+.anime-link-btn {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    margin-right: .5em;
+}
+
+.anime-link-btn button {
+    opacity: 0.5;
+    font-size: 12px;
+    padding: 1px 4px;
+    margin: 0;
+    line-height: 18px; 
+}
+
+.anime-link-btn button:hover {
+    opacity: 1
+}
+
 /* Ori Works */
 
 /* 不同层级版块横徘 */

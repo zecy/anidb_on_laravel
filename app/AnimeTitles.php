@@ -12,6 +12,7 @@ class AnimeTitles extends Model
                              'title',
                              'lang',
                              'is_official',
+                             'is_original',
                              'description',
                              'order_index'
     ];

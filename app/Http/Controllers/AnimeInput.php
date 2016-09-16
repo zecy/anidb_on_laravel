@@ -165,6 +165,7 @@ class AnimeInput extends staffController
                         'lang'        => $theTitle['lang'],
                         'description' => $theTitle['comment'],
                         'is_official' => $theTitle['isOfficial'],
+                        'is_original' => $theTitle['isOriginal'],
                         'order_index' => $theTitle['orderIndex']
                     ]
                 );
@@ -210,6 +211,7 @@ class AnimeInput extends staffController
                 'anime_id',
                 'lang',
                 'is_official',
+                'is_original',
                 'description',
                 'order_index'
             ))->toArray();
@@ -270,6 +272,7 @@ class AnimeInput extends staffController
                 'id'         => $title['id'],
                 'lang'       => $title['lang'],
                 'isOfficial' => $title['is_official'],
+                'isOriginal' => $title['is_original'],
                 'value'      => $title['title'],
                 'comment'    => $title['description'],
                 'orderIndex' => $title['order_index'],
@@ -539,6 +542,7 @@ class AnimeInput extends staffController
                         $theTitle->title = $title['value'];
                         $theTitle->lang = $title['lang'];
                         $theTitle->is_official = $title['isOfficial'];
+                        $theTitle->is_original = $title['isOriginal'];
                         $theTitle->description = $title['comment'];
                         $theTitle->order_index = $title['orderIndex'];
 
@@ -551,6 +555,7 @@ class AnimeInput extends staffController
                                 'lang'        => $title['lang'],
                                 'description' => $title['comment'],
                                 'is_official' => $title['isOfficial'],
+                                'is_original' => $title['isOriginal'],
                                 'order_index' => $title['orderIndex']
                             ]
                         );
@@ -629,6 +634,7 @@ class AnimeInput extends staffController
 
             foreach ($animeIDs as $animeID) {
                 $animeTitles = \App\AnimeTitles::where('anime_id', $animeID)
+                    ->where('is_original', false)
                     ->orderBy('order_index', 'asc')
                     ->get(array(
                         'anime_id',

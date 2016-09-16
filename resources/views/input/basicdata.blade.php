@@ -98,13 +98,19 @@
                                 vs_placeholder="请选择"
                         ></vselect>
                     </div>
+                    <div class="is-original" style="width: 24px">
+                        <togglebutton :toggle.sync="title.isOriginal"
+                                      :style="'glyphicon glyphicon-bookmark'"
+                                      :content=""
+                        ></togglebutton>
+                    </div>
                     <div class="is-official" style="width: 24px">
                         <togglebutton :toggle.sync="title.isOfficial"
                                       :style="'glyphicon glyphicon-ok'"
                                       :content=""
                         ></togglebutton>
                     </div>
-                    <div style="width: 170px">
+                    <div style="width: 140px">
                         <input v-model="title.comment" type="text" placeholder="备注">
                     </div>
                     <div style="width: 124px;margin:0">

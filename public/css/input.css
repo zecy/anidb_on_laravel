@@ -375,11 +375,15 @@
     top:1px;
 }
 
-.is-official {
+.is-official,
+.is-original
+ {
     line-height: 30px;
 }
 
-.is-official .btn-xs {
+.is-official .btn-xs,
+.is-original .btn-xs
+ {
     font-size: 12px!important;
     padding: 1px 4px!important;
     margin: 0 0 2px 0;
@@ -387,6 +391,10 @@
     position: relative;
     bottom:1px;
     left:1px;
+}
+
+.is-original .glyphicon-bookmark {
+    top:2px;
 }
 
 #maininfo .title-rowcontrol .btn-xs {

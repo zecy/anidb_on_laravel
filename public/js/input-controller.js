@@ -1244,11 +1244,11 @@ var vue = new Vue({
          */
         focusMove: function (id, index, e) {
 
-            var key = e.keyCode;
+            const key = e.keyCode;
 
-            var preIndex = Number(index) - 1;
+            const preIndex = Number(index) - 1;
 
-            var nextIndex = Number(index) + 1;
+            const nextIndex = Number(index) + 1;
 
             switch (key) {
                 // Down

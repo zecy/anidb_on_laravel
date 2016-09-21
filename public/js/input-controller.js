@@ -430,11 +430,18 @@ Vue.component('originalwork', {
             }
         }
     },
+    watch: {
+        'data[0]': function (newVal, oldVal) {
+            if (newVal != oldVal) {
+                this.data = this.oriChange(newVal);
+            }
+        }
+    },
     methods:  {
         oriChange: function (val) {
             let newOri             = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
             newOri[0]              = val;
-            vue.basicData.oriWorks = newOri;
+            return newOri;
         }
     }
 });

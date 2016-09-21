@@ -882,6 +882,7 @@ var basicDataTmp = {
 
 var dataStatesTmp = {
     'id':              0,
+    'anime_id':        0,
     's_series':        0,
     's_title':         0,
     's_ori_works':     0,

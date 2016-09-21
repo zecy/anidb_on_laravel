@@ -106,7 +106,8 @@ class AnimeInput extends staffController
                                 'lv'                => $child['ori_level'] - 1,
                                 'haschild'          => $child['haschild'],
                                 'multiple_children' => $child['multiple_children'],
-                                'multiple_selected' => $child['multiple_selected']
+                                'multiple_selected' => $child['multiple_selected'],
+                                'order_index'       => $child['order_index']
                             ]
                         );
                     } else {
@@ -220,9 +221,10 @@ class AnimeInput extends staffController
                 'description',
                 'order_index'
             ))->toArray();
+
         $animeOriWorks = AnimeOriginalWork::where('anime_id', $id)
-            ->orderBy('ori_pid')
-            ->orderBy('ori_id')
+            ->orderBy('lv')
+            ->orderBy('order_index')
             ->get()->toArray();
 
         $basicData = [

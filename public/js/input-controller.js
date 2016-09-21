@@ -1127,11 +1127,13 @@ var vue = new Vue({
                 const cM = r.data.castMembers;
                 const oa = r.data.onairs;
 
-                let basicData    = bD.id.value        != 0 ? bD : JSON.parse(JSON.stringify(basicDataTmp));
-                let dataStates   = dS.anime_id.value  != 0 ? dS : JSON.parse(JSON.stringify(dataStatesTmp));
-                let staffMembers = sM.length          != 0 ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
-                let castMembers  = cM.length          != 0 ? cM : JSON.parse(JSON.stringify(castMembersTmp));
-                let onairs       = oa.length          != 0 ? oa : JSON.parse(JSON.stringify(onairTmp));
+                let basicData    = bD.id.value        != 0     ? bD : JSON.parse(JSON.stringify(basicDataTmp));
+                let dataStates   = dS.id              != null  ? dS : JSON.parse(JSON.stringify(dataStatesTmp));
+                let staffMembers = sM.length          != 0     ? sM : JSON.parse(JSON.stringify(staffMembersTmp));
+                let castMembers  = cM.length          != 0     ? cM : JSON.parse(JSON.stringify(castMembersTmp));
+                let onairs       = oa.length          != 0     ? oa : JSON.parse(JSON.stringify(onairTmp));
+
+                dataStates.anime_id = basicData.id.value;
 
                 //当 oriWorks 未有数据时, 重置 oriWorks.
                 if (basicData.oriWorks.length === 0) {

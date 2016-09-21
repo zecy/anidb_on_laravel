@@ -867,7 +867,10 @@ var basicDataTmp = {
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
     'links':         [
-        {'id': 0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 0}
+        {'id': 0, 'class': 'hp', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 0},
+        {'id': 0, 'class': 'anime_twitter', 'isOfficial': true, 'value': '', 'comment': '', 'orderIndex': 1},
+        {'id': 0, 'class': 'jp_wiki', 'isOfficial': false, 'value': '', 'comment': '', 'orderIndex': 2},
+        {'id': 0, 'class': 'zh_wiki', 'isOfficial': false, 'value': '', 'comment': '', 'orderIndex': 3}
     ],
     'isSequel':      {'label': '是否续作', 'value': false},
     'sequelComment': {'label': '备注', 'value': ''},

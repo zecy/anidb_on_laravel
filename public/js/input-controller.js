@@ -858,7 +858,12 @@ var basicDataTmp = {
         [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
         [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
         [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
-        [[]]
+        [
+            [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+            [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+            [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}],
+            [{'ori_id': 0, 'haschild': false, 'multiple_children': false, 'multiple_selected': false}]
+        ]
     ],
     'premiereMedia': {'label': '首播媒体', 'value': 'tv'},
     'links':         [

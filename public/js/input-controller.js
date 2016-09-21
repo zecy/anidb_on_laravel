@@ -985,7 +985,7 @@ var vue = new Vue({
                         }
                     });
                     break;
-                case 'basicData':
+                case 'states':
                     this.$http.post('/input/states', {data: this.dataStates}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(this.basicData.id.value);

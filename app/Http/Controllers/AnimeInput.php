@@ -326,6 +326,10 @@ class AnimeInput extends staffController
                         $basicData['oriWorks'][$lv][$count][] = showOriWorks($work, $lv);
                     } elseif ($work['ori_pid'] == $parentWork['ori_id']) {
                         $basicData['oriWorks'][$lv][] = showOriWorks($work, $lv);
+                    } elseif ( $work['ori_pid'] != $parentWork['ori_id']) {
+                        if(count($basicData['oriWorks']) < $lv + 1) {
+                            $basicData['oriWorks'][$lv][] = 0;
+                        }
                     }
                     ++$count;
                 }

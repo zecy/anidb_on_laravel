@@ -250,6 +250,7 @@ class AnimeInput extends staffController
         ];
 
         $dataStates = [
+            'id'              => $animeBasicData['s_id'],
             'anime_id'        => $animeBasicData['id'],
             's_series'        => $animeBasicData['s_series'],
             's_title'         => $animeBasicData['s_title'],

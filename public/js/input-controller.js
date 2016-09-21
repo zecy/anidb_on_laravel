@@ -1033,6 +1033,8 @@ var vue = new Vue({
                         title.orderIndex = i;
                     }
 
+                    this.basicData.oriWorks = this.oriWorksInsertPrepare(this.basicData.oriWorks);
+
                     for (let j = 0; j < this.basicData.links.length; j++) {
                         let link        = this.basicData.links[j];
                         link.orderIndex = j;

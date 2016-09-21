@@ -333,7 +333,7 @@ class AnimeInput extends staffController
                     }
                     ++$count;
                 }
-            } else {
+            } elseif($lv==0) {
                 $basicData['oriWorks'][0][] = showOriWorks($work, $lv);
             }
         }

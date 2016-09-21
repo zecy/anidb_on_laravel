@@ -52,6 +52,7 @@
                 lv       : 当前层数, ori_level
                 index    : 用于结合 v-for 插入数组, $index
         --}}
+
         {{-- 第一级父项目 --}}
         <div v-if="pid===0" class="ori-lv0">
             <vselect
@@ -92,21 +93,21 @@
                          vs_label="ori_catalog"
                          vs_value_label="ori_id"
                          :vs_placeholder="'请选择' + parent_name"
-                ></vselect>
+               ></vselect>
 
                 {{-- 模板递归 --}}
                 {{-- 生成单选第三项及第四项等的下拉选择框 --}}
                 <div v-if="data[lv][index] ? data[lv][index].haschild : false">
                     <originalwork
-                            :pid="data[lv][index].ori_id"
-                            :data.sync="data"
-                            :orilist="orilist"
-                            :multiple_children="data[lv][index].multiple_children"
-                            :multiple_selected="data[lv][index].multiple_selected"
-                            :haschild="data[lv][index].haschild"
-                            :parent_name="data[lv][index].ori_catalog"
-                            :lv="lv+1"
-                            :index="0"
+                        :pid="data[lv][index].ori_id"
+                        :data.sync="data"
+                        :orilist="orilist"
+                        :multiple_children="data[lv][index].multiple_children"
+                        :multiple_selected="data[lv][index].multiple_selected"
+                        :haschild="data[lv][index].haschild"
+                        :parent_name="data[lv][index].ori_catalog"
+                        :lv="lv+1"
+                        :index="index"
                     ></originalwork>
                 </div>
             </div>
@@ -365,4 +366,3 @@
        </a>
    </div>
 </template>
-

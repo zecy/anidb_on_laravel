@@ -1105,6 +1105,44 @@ var vue = new Vue({
             }
         },
 
+        oriWorksInsertPrepare: function (basicDataOriWorks) {
+            let oriWorks = JSON.parse(JSON.stringify(basicDataOriWorks));
+            oriWorks[0][0].order_index = 0;
+            if (oriWorks[0][0].haschild) {
+                for (let i = 0; i < oriWorks[1].length; i++) {
+                    let lv2 = oriWorks[1][i];
+                    lv2.order_index = i + 1;
+                    if (lv2.haschild) {
+                        for (let j = 0; j < oriWorks[2].length; j++) {
+                            let lv3 = oriWorks[2][j];
+                            if (lv3.ori_pid === lv2.ori_id) {
+                                lv3.order_index = lv2.order_index;
+                            }
+                            if (lv3.haschild) {
+                                for (let k = 0; k < oriWorks[3].length; k++) {
+                                    let lv4 = oriWorks[3][k];
+                                    if (lv4 === 0) {
+                                        oriWorks[3].splice(k, 1);
+                                    } else {
+                                        if (lv3.multiple_selected) {
+                                            for (let l = 0; l < lv4.length; l++) {
+                                                if (lv3.ori_id === lv4[l].ori_pid ) {
+                                                    lv4[l].order_index = lv3.order_index;
+                                                }
+                                            }
+                                        } else if (lv3.ori_id === lv4.ori_pid) {
+                                            lv4.order_index = lv3.order_index;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return oriWorks;
+        },
+
         removeData: function (pos, id, arr, index) {
             let res = 0;
             this.$http.delete('/input/' + pos + '/' + id)

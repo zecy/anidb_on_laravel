@@ -318,7 +318,7 @@ class AnimeInput extends staffController
 
         foreach ($animeOriWorks as $work) {
             $lv = $work['lv'];
-            if ($lv > 0) {
+            if ($lv > 0 && count($basicData['oriWorks']) > 0) {
                 $parentWorks = $basicData['oriWorks'][$lv - 1];
                 $count = 0;
                 foreach ($parentWorks as $parentWork) {

@@ -974,6 +974,9 @@ var vue = new Vue({
 
             switch (pos) {
                 case 'basicData':
+
+                    this.basicData.oriWorks = this.oriWorksInsertPrepare(this.basicData.oriWorks);
+
                     this.$http.post('/input', {data: this.basicData}).then(function (r) {
                         if (r.status == 200) {
                             this.showAnime(r.data.id);

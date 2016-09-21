@@ -84,21 +84,6 @@
             {{-- 子项目单选 --}}
             <div v-if="!multiple_children">
                 {{-- 单选 --}}
-{{--                <select v-model="data[lv][index]"
-                        :multiple="multiple_selected ? 'multiple' : false"
-                        :class="{'ori-multiple' : multiple_selected}"
-                >
-                    <option v-for="item in orilist | filtByValue pid 'ori_pid'"
-                            :value="{ 'id': item.ori_id,
-                                  'haschild': item.haschild,
-                                  'multiple_children': item.multiple_children,
-                                  'multiple_selected': item.multiple_selected,
-                                  'pid': pid
-                                }"
-                    >
-                        @{{ item.ori_id + ' | ' +  item.ori_catalog }}
-                    </option>
-                </select>--}}
                 <vselect :vs_value.sync="data[lv][index]"
                          :multiple="multiple_selected"
                          :class="{'ori-multiple' : multiple_selected}"

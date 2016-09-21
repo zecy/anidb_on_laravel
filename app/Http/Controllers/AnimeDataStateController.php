@@ -17,7 +17,7 @@ class AnimeDataStateController extends Controller
 
             $res = AnimeDataState::create(
                 [
-                    'anime_id'     => $arr['id'],
+                    'anime_id'     => $arr['anime_id'],
                     'series'       => $arr['s_series'],
                     'title'        => $arr['s_title'],
                     'ori_works'    => $arr['s_ori_works'],
@@ -29,7 +29,7 @@ class AnimeDataStateController extends Controller
                     'date'         => $arr['s_date'],
                     'time'         => $arr['s_time'],
                     'story'        => FALSE,
-                    'description'  => $arr['s_description'],
+                    'description'  => $arr['has_description'],
                     'staff'        => $arr['s_staff'],
                     'cv'           => $arr['s_cv'],
                     'thumb'        => $arr['has_thumb'],

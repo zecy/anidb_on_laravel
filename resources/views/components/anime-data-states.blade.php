@@ -234,8 +234,8 @@
     </div>
 
     <createeditbutton
-            :create_condition="data_states.anime_id === 0"
-            :edit_condition="data_states.anime_id != 0"
+            :create_condition="data_states.id === 0"
+            :edit_condition="data_states.id != 0"
             pos="states"
             :anime_id="data_states.anime_id"
             :is_complete.sync="data_states"

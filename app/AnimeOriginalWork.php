@@ -15,7 +15,8 @@ class AnimeOriginalWork extends Model
         'lv',
         'haschild',
         'multiple_children',
-        'multiple_selected'
+        'multiple_selected',
+        'order_index'
     ];
 
     public function orisupport()

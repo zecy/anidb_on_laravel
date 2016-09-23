@@ -431,8 +431,8 @@ Vue.component('originalwork', {
         }
     },
     watch: {
-        'data[0]': function (newVal, oldVal) {
-            if (newVal != oldVal) {
+        'data[0][0].ori_id': function (newVal, oldVal) {
+            if (newVal !== oldVal && oldVal !== 0) {
                 this.data = this.oriChange(newVal);
             }
         }

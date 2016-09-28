@@ -433,14 +433,14 @@ Vue.component('originalwork', {
     watch: {
         'data[0][0].ori_id': function (newVal, oldVal) {
             if (newVal !== oldVal && oldVal !== 0) {
-                this.data = this.oriChange(newVal);
+                this.data = this.oriChange(this.data[0][0]);
             }
         }
     },
     methods:  {
         oriChange: function (val) {
-            let newOri             = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
-            newOri[0]              = val;
+            let newOri   = JSON.parse(JSON.stringify(basicDataTmp)).oriWorks;
+            newOri[0][0] = val;
             return newOri;
         }
     }

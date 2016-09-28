@@ -15,7 +15,10 @@ require('laravel-elixir-vue');
  */
 
 elixir(function(mix) {
-    mix.webpack('app.js');
+    mix.webpack(
+        'main.js',
+        'public/js/bundle.js'
+    );
 });
 
 Elixir.webpack.mergeConfig({

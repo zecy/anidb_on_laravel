@@ -886,7 +886,7 @@ var basicDataTmp = {
     'story':         {'label': '故事', 'value': ''},
     'description':   {'label': '介绍', 'value': ''},
     'oa_year':       {'value': 2016},
-    'oa_season':     {'value': 7},
+    'oa_season':     {'value': 10},
     'oa_timeslot':   {'label': '播放时段', 'value': 'midnight'}
 };
 

@@ -154,7 +154,7 @@
                             <label>简&#x3000;&#x3000;介</label>
                             <div class="anime-info-status__process-bar">
                                 <processbar
-                                        :value="anime.has_descritpion ? 3 : 0"
+                                        :value="anime.has_description ? 3 : 0"
                                         :max="3"
                                 ></processbar>
                             </div>

@@ -54,6 +54,7 @@ class AnimeManagerResource extends Controller
     }
 
     public function filt(Request $request) {
+
         $filter = $request['data'];
 
         $startYear = $filter['startYear'];

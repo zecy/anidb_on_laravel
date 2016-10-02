@@ -22,6 +22,7 @@ class AnimeBasicData extends Model
         'anime_oa_year',
         'anime_oa_season',
         'anime_oa_time',
+        'anime_oa_timesolt',
         'anime_eps_oa',
         'anime_eps_soft'
     ];

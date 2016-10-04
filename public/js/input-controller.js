@@ -1153,6 +1153,10 @@ var vue = new Vue({
             return oriWorks;
         },
 
+        resetOriWorks: function () {
+            this.basicData.oriWorks = JSON.parse(JSON.stringify(basicDataTmp.oriWorks));
+        },
+
         removeData: function (pos, id, arr, index) {
             let res = 0;
             this.$http.delete('/input/' + pos + '/' + id)

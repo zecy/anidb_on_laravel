@@ -129,15 +129,26 @@
             {{-- 原作类型 --}}
             <tr>
                 <td id="ori-works">
-                    <originalwork :orilist="{{ $oriWorks }}"
-                                  :data.sync="basicData.oriWorks"
-                                  :pid=0
-                                  multiple_children="false"
-                                  multiple_selected="false"
-                                  haschild="true"
-                                  :lv=0
-                                  :index="0"
-                    ></originalwork>
+                    <div>
+                        <originalwork :orilist="{{ $oriWorks }}"
+                                      :data.sync="basicData.oriWorks"
+                                      :pid=0
+                                      multiple_children="false"
+                                      multiple_selected="false"
+                                      haschild="true"
+                                      :lv=0
+                                      :index="0"
+                        ></originalwork>
+                    </div>
+                    <div style="float: right;">
+                        <button class="btn btn-danger btn-sm"
+                                type="button"
+                                v-on:click="resetOriWorks"
+                        >
+                            <span class="glyphicon glyphicon-remove"></span>
+                            重置原作类型
+                        </button>
+                    </div>
                 </td>
             </tr>
 
